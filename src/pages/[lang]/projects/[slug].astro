@@ -1,0 +1,212 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import ClapButton from "../../../components/ClapButton.astro";
+import { getEntry } from "astro:content";
+
+export async function getStaticPaths() {
+    const projects = await getCollection("projects");
+    const paths: {
+        params: { lang: string; slug: string };
+        props: { project: any };
+    }[] = [];
+
+    projects.forEach((project) => {
+        paths.push({
+            params: { lang: "en", slug: project.id },
+            props: { project },
+        });
+        paths.push({
+            params: { lang: "id", slug: project.id },
+            props: { project },
+        });
+    });
+
+    return paths;
+}
+
+const { lang } = Astro.params;
+const { project } = Astro.props;
+const siteConfig = await getEntry("site", "config");
+const { data: siteData } = siteConfig || { data: { brandName: "ARHAM" } };
+
+const ui = {
+    en: {
+        back: "BACK TO PROJECTS",
+        demo: "LIVE DEMO",
+        source: "SOURCE CODE",
+        stack: "TECH STACK",
+    },
+    id: {
+        back: "KEMBALI KE PROYEK",
+        demo: "DEMO LANGSUNG",
+        source: "KODE SUMBER",
+        stack: "TEKNOLOGI",
+    },
+};
+
+const t = ui[lang as keyof typeof ui] || ui.en;
+
+const title =
+    lang === "id"
+        ? project.data.title_id || project.data.title
+        : project.data.title;
+const description =
+    lang === "id"
+        ? project.data.description_id || project.data.description
+        : project.data.description;
+// Handle content which is a string in 'data' collection
+const content =
+    lang === "id"
+        ? project.data.content_id || project.data.content
+        : project.data.content;
+---
+
+<Layout
+    title={`${title} | ${siteData.brandName}`}
+    lang={lang}
+    image={project.data.image}
+>
+    <main
+        class="min-h-screen pt-32 pb-20 px-4 md:px-8 bg-neo-white bg-neo-texture"
+    >
+        <div class="max-w-6xl mx-auto">
+            {/* Navigation */}
+            <a
+                href={`/${lang}/projects`}
+                class="inline-flex items-center gap-2 font-mono font-bold hover:-translate-x-1 transition-transform mb-8 bg-white border-2 border-neo-black px-4 py-2 shadow-hard hover:shadow-none text-sm uppercase tracking-wider"
+            >
+                <i class="ri-arrow-left-line"></i>
+                {t.back}
+            </a>
+
+            <article>
+                {/* Header */}
+                <header
+                    class="mb-12 border-4 border-neo-black bg-white p-6 md:p-12 shadow-hard relative overflow-hidden"
+                >
+                    <div
+                        class="absolute top-0 right-0 bg-neo-yellow px-4 py-2 font-black border-l-4 border-b-4 border-neo-black uppercase"
+                    >
+                        CASE STUDY
+                    </div>
+
+                    <h1
+                        class="text-4xl md:text-6xl font-black uppercase mb-6 leading-tight max-w-4xl"
+                    >
+                        {title}
+                    </h1>
+
+                    <p
+                        class="text-xl md:text-2xl font-mono text-gray-700 leading-relaxed border-l-4 border-neo-blue pl-6 bg-gray-50 py-2"
+                    >
+                        {description}
+                    </p>
+                </header>
+
+                {/* Main Content Grid */}
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    {/* Left Column: Gallery & Content */}
+                    <div class="lg:col-span-2 space-y-12">
+                        {/* Featured Image */}
+                        {
+                            project.data.image && (
+                                <div class="border-4 border-neo-black shadow-hard overflow-hidden group">
+                                    <img
+                                        src={project.data.image}
+                                        alt={title}
+                                        class="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                                    />
+                                </div>
+                            )
+                        }
+
+                        {/* Gallery Grid */}
+                        {
+                            project.data.gallery &&
+                                project.data.gallery.length > 0 && (
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {project.data.gallery.map(
+                                            (img: string) => (
+                                                <div class="border-2 border-neo-black shadow-sm hover:shadow-hard transition-shadow overflow-hidden">
+                                                    <img
+                                                        src={img}
+                                                        alt="Gallery"
+                                                        class="w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
+                                                    />
+                                                </div>
+                                            ),
+                                        )}
+                                    </div>
+                                )
+                        }
+
+                        {/* Text Content */}
+                        {
+                            content && (
+                                <div class="prose prose-lg prose-p:font-mono prose-headings:font-black prose-headings:uppercase border-4 border-neo-black p-8 bg-white shadow-hard relative">
+                                    <p class="whitespace-pre-line leading-relaxed">
+                                        {content}
+                                    </p>
+                                    <div class="absolute -bottom-8 -right-8">
+                                        <ClapButton />
+                                    </div>
+                                </div>
+                            )
+                        }
+                    </div>
+
+                    {/* Right Column: Sidebar Info */}
+                    <aside class="space-y-8">
+                        {/* Tech Stack */}
+                        <div
+                            class="bg-white border-4 border-neo-black p-6 shadow-hard"
+                        >
+                            <h3
+                                class="font-black text-xl uppercase mb-4 border-b-2 border-neo-black pb-2 flex items-center gap-2"
+                            >
+                                <i class="ri-code-box-fill"></i>
+                                {t.stack}
+                            </h3>
+                            <div class="flex flex-wrap gap-2">
+                                {
+                                    project.data.techStack.map(
+                                        (tech: string) => (
+                                            <span class="px-3 py-1 bg-neo-black text-neo-green font-mono font-bold text-sm">
+                                                {tech}
+                                            </span>
+                                        ),
+                                    )
+                                }
+                            </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div
+                            class="bg-neo-yellow border-4 border-neo-black p-6 shadow-hard flex flex-col gap-4"
+                        >
+                            <a
+                                href={project.data.link}
+                                target="_blank"
+                                class="bg-white text-black border-2 border-black px-4 py-3 font-bold text-center hover:bg-black hover:text-white transition-colors shadow-[4px_4px_0_0_#000] hover:shadow-none flex items-center justify-center gap-2"
+                            >
+                                <i class="ri-external-link-line"></i>
+                                {t.demo}
+                            </a>
+                            {
+                                /* Assuming GitHub link might be available or generic */
+                            }
+                            <button
+                                class="bg-neo-white text-gray-400 border-2 border-gray-400 px-4 py-3 font-bold text-center cursor-not-allowed flex items-center justify-center gap-2 opacity-50"
+                                disabled
+                            >
+                                <i class="ri-github-fill"></i>
+                                {t.source} (Private)
+                            </button>
+                        </div>
+                    </aside>
+                </div>
+            </article>
+        </div>
+    </main>
+</Layout>

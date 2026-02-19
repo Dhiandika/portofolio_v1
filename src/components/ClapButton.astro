@@ -1,0 +1,108 @@
+---
+
+---
+
+<div class="clap-container relative inline-block group">
+    <button
+        id="clapBtn"
+        class="relative z-10 bg-neo-white border-4 border-black w-16 h-16 rounded-full flex items-center justify-center shadow-hard hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all active:scale-95 group-hover:bg-neo-yellow"
+        aria-label="Clap"
+    >
+        <i
+            class="ri-hand-heart-fill text-2xl group-hover:scale-110 transition-transform"
+        ></i>
+    </button>
+    <div
+        id="clapCount"
+        class="absolute -top-2 -right-2 bg-neo-black text-white text-xs font-mono font-bold px-2 py-1 rounded-full border-2 border-white transform scale-0 transition-transform group-hover:scale-100"
+    >
+        0
+    </div>
+
+    <!-- Particles Container -->
+    <div
+        id="particles"
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-full h-full"
+    >
+    </div>
+</div>
+
+<script>
+    const clapBtn = document.getElementById("clapBtn");
+    const clapCount = document.getElementById("clapCount");
+    const particlesContainer = document.getElementById("particles");
+
+    let count = 0;
+    const MAX_CLAPS = 50;
+
+    // Load from local storage based on URL
+    const storageKey = `claps_${window.location.pathname}`;
+    const stored = localStorage.getItem(storageKey);
+    if (stored) {
+        count = parseInt(stored, 10);
+        if (clapCount) clapCount.innerText = count.toString();
+    }
+
+    clapBtn?.addEventListener("click", (e) => {
+        if (count >= MAX_CLAPS) return;
+
+        count++;
+        localStorage.setItem(storageKey, count.toString());
+        if (clapCount) {
+            clapCount.innerText = count.toString();
+            clapCount.classList.remove("scale-0"); // Show count on first clap
+            clapCount.classList.add("scale-100");
+        }
+
+        // Animation
+        const btn = e.currentTarget as HTMLElement;
+        btn.classList.add("scale-110");
+        setTimeout(() => btn.classList.remove("scale-110"), 100);
+
+        spawnParticles();
+    });
+
+    function spawnParticles() {
+        if (!particlesContainer) return;
+
+        for (let i = 0; i < 5; i++) {
+            const particle = document.createElement("div");
+            particle.classList.add(
+                "absolute",
+                "w-2",
+                "h-2",
+                "bg-black",
+                "rounded-full",
+                "top-1/2",
+                "left-1/2",
+            );
+
+            // Random direction
+            const x = (Math.random() - 0.5) * 100;
+            const y = (Math.random() - 0.5) * 100 - 50; // Bias upwards
+
+            particle.style.setProperty("--x", `${x}px`);
+            particle.style.setProperty("--y", `${y}px`);
+
+            particle.style.animation = `particle-pop 0.6s ease-out forwards`;
+
+            particlesContainer.appendChild(particle);
+
+            setTimeout(() => particle.remove(), 600);
+        }
+    }
+</script>
+
+<style>
+    @keyframes particle-pop {
+        0% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y)))
+                scale(0);
+        }
+    }
+</style>

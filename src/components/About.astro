@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { lang = "en" } = Astro.props;
-const aboutConfig = await getEntry("site", "about");
+const aboutConfig = await getEntry("site", "whoami");
 const siteConfig = await getEntry("site", "config");
 
 const {
@@ -19,54 +19,132 @@ const { location = "Remote" } = siteConfig?.data || {};
 const displayBio = lang === "id" ? bio_id || bio : bio;
 ---
 
-<section
-    id="about"
-    class="py-24 px-4 max-w-7xl mx-auto border-x-4 border-black bg-white my-12 shadow-hard-lg bg-dot-grid"
->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
-        <div class="md:col-span-4 reveal">
-            <div
-                class="aspect-square bg-gray-200 border-4 border-black relative shadow-hard overflow-hidden group bg-dot-grid"
-            >
-                <img
-                    src={profileImage}
-                    alt="Profile"
-                    class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 mix-blend-multiply"
-                />
-                <span
-                    class="absolute top-2 left-2 bg-neo-red text-white px-2 font-mono text-xs border border-black z-10"
-                    >AVATAR.JPG</span
-                >
+<section id="about" class="max-w-7xl mx-auto my-24 shadow-hard-lg">
+    <!-- Main Window Header -->
+    <div
+        class="bg-neo-black text-white px-4 py-2 border-x-4 border-t-4 border-black flex items-center justify-between"
+    >
+        <div class="flex items-center gap-2">
+            <div class="w-3 h-3 bg-neo-red rounded-full border border-white">
+            </div>
+            <div class="w-3 h-3 bg-neo-yellow rounded-full border border-white">
+            </div>
+            <div class="w-3 h-3 bg-neo-green rounded-full border border-white">
             </div>
         </div>
-        <div class="md:col-span-8 flex flex-col justify-center reveal">
-            <h2 class="text-6xl font-black uppercase mb-6">Who am I?</h2>
-            <p
-                class="font-mono text-xl leading-relaxed mb-6 whitespace-pre-line"
-            >
-                {displayBio}
-            </p>
-            <div class="flex flex-wrap gap-4 mb-8">
+        <span class="font-mono text-sm font-bold tracking-widest text-white/50"
+            >WHO_AM_I.TXT</span
+        >
+    </div>
+
+    <!-- Main Window Content -->
+    <div
+        class="py-12 px-8 border-x-4 border-b-4 border-black bg-white bg-dot-grid"
+    >
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+            <!-- Left Column: Image -->
+            <div class="md:col-span-4 reveal">
                 <div
-                    class="bg-neo-black text-white px-4 py-2 font-mono text-sm border-2 border-transparent shadow shadow-neo-green"
+                    class="relative group w-full max-w-sm mx-auto md:max-w-none"
                 >
-                    📍 LOCATION: {location.toUpperCase()}
-                </div>
-                <div
-                    class="bg-neo-green text-black px-4 py-2 font-mono text-sm border-2 border-black shadow"
-                >
-                    🟢 STATUS: AVAILABLE
+                    <!-- Decorative Elements -->
+                    <div
+                        class="absolute top-2 left-2 w-full h-full border-4 border-black bg-dot-grid z-0"
+                    >
+                    </div>
+
+                    <div
+                        class="relative bg-white border-4 border-black z-10 shadow-hard overflow-hidden flex flex-col h-full"
+                    >
+                        <!-- Sub Window Header (Mac Style) -->
+                        <div
+                            class="bg-neo-black text-white px-3 py-2 border-b-4 border-black flex items-center justify-between"
+                        >
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="w-2 h-2 bg-neo-red rounded-full border border-white"
+                                >
+                                </div>
+                                <div
+                                    class="w-2 h-2 bg-neo-yellow rounded-full border border-white"
+                                >
+                                </div>
+                                <div
+                                    class="w-2 h-2 bg-neo-green rounded-full border border-white"
+                                >
+                                </div>
+                            </div>
+                            <span
+                                class="font-mono text-xs font-bold tracking-widest opacity-50"
+                                >profile_v1.0</span
+                            >
+                        </div>
+
+                        <div
+                            class="aspect-square relative overflow-hidden group"
+                        >
+                            <img
+                                src={profileImage}
+                                alt="Profile"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                            />
+
+                            <!-- Tags/Badges -->
+                            <span
+                                class="absolute top-4 left-0 bg-neo-red text-white px-3 py-1 font-mono text-xs border-y-4 border-r-4 border-black font-bold shadow-md"
+                            >
+                                AVATAR.JPG
+                            </span>
+
+                            <div
+                                class="absolute bottom-4 right-4 bg-neo-black text-white p-2 border-2 border-white shadow-lg transform rotate-3"
+                            >
+                                <i class="ri-fingerprint-fill text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tape Effect -->
+                    <div
+                        class="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-yellow-200/90 transform -rotate-1 z-20 backdrop-blur-sm border-2 border-black/20 shadow-sm flex items-center justify-center font-handwriting text-xs text-black font-bold opacity-90"
+                    >
+                        CONFIDENTIAL
+                    </div>
                 </div>
             </div>
 
-            <div>
-                <a
-                    href={`/${lang}/about`}
-                    class="inline-block bg-white text-black font-black px-6 py-3 border-4 border-black shadow-hard hover:bg-neo-yellow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-hover uppercase"
+            <!-- Right Column: Content -->
+            <div
+                class="md:col-span-8 flex flex-col justify-center reveal pl-0 md:pl-8"
+            >
+                <h2 class="text-6xl font-black uppercase mb-6">Who am I?</h2>
+                <p
+                    class="font-mono text-xl leading-relaxed mb-6 whitespace-pre-line"
                 >
-                    {lang === "id" ? "Tentang Saya" : "About Me"}
-                    <i class="ri-arrow-right-line ml-2"></i>
-                </a>
+                    {displayBio}
+                </p>
+                <div class="flex flex-wrap gap-4 mb-8">
+                    <div
+                        class="bg-neo-black text-white px-4 py-2 font-mono text-sm border-2 border-transparent shadow shadow-neo-green"
+                    >
+                        📍 LOCATION: {location.toUpperCase()}
+                    </div>
+                    <div
+                        class="bg-neo-green text-black px-4 py-2 font-mono text-sm border-2 border-black shadow"
+                    >
+                        🟢 STATUS: AVAILABLE
+                    </div>
+                </div>
+
+                <div>
+                    <a
+                        href={`/${lang}/about`}
+                        class="inline-block bg-white text-black font-black px-6 py-3 border-4 border-black shadow-hard hover:bg-neo-yellow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-hover uppercase"
+                    >
+                        {lang === "id" ? "Tentang Saya" : "About Me"}
+                        <i class="ri-arrow-right-line ml-2"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

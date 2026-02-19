@@ -91,20 +91,19 @@ const t = ui[lang as keyof typeof ui] || ui.en;
             </p>
         </header>
 
-        {/* Filter Bar */}
         {/* Search & Filter Bar */}
         <div
-            class="mb-12 sticky top-24 z-30 bg-[#f0f0f0]/95 backdrop-blur-sm py-4 border-b-2 border-black/10 -mx-4 px-4 md:mx-0 md:px-0 flex flex-col gap-4"
+            class="mb-8 z-30 bg-[#f0f0f0] py-2 border-b-2 border-black/10 -mx-4 px-4 md:mx-0 md:px-0 flex flex-col gap-3"
         >
             <div class="relative w-full">
                 <i
-                    class="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-xl opacity-50"
+                    class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-lg opacity-50"
                 ></i>
                 <input
                     type="text"
                     id="searchInput"
                     placeholder={t.search}
-                    class="w-full bg-white border-2 border-neo-black p-3 pl-12 font-mono shadow-hard focus:outline-none focus:shadow-none focus:translate-x-1 focus:translate-y-1 transition-all"
+                    class="w-full bg-white border-2 border-neo-black p-2 pl-10 font-mono shadow-hard focus:outline-none focus:shadow-none focus:translate-x-1 focus:translate-y-1 transition-all text-sm"
                 />
             </div>
 

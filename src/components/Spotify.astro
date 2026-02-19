@@ -1,24 +1,250 @@
 ---
+
 ---
-<div class="fixed bottom-4 left-4 z-50 flex items-center gap-3 bg-neo-black text-white p-2 border-2 border-white shadow-hard pr-6 rounded-full hover:scale-105 transition-transform cursor-hover">
-    <div class="w-10 h-10 bg-neo-green rounded-full flex items-center justify-center border border-white relative overflow-hidden">
-        <div class="flex gap-0.5 items-end h-4">
-            <div class="w-1 bg-black animate-[music-bar_0.8s_ease-in-out_infinite]"></div>
-            <div class="w-1 bg-black animate-[music-bar_1.2s_ease-in-out_infinite]"></div>
-            <div class="w-1 bg-black animate-[music-bar_1.0s_ease-in-out_infinite]"></div>
+
+<div
+    id="spotify-widget"
+    class="fixed bottom-4 left-4 z-50 flex items-center gap-3 bg-neo-black text-white p-2 border-2 border-white shadow-hard pr-6 rounded-full hover:scale-105 transition-transform cursor-pointer group"
+>
+    <div
+        class="w-10 h-10 bg-neo-green rounded-full flex items-center justify-center border border-white relative overflow-hidden shrink-0"
+    >
+        <div id="visualizer" class="flex gap-0.5 items-end h-4">
+            <div
+                class="w-1 bg-black animate-[music-bar_0.8s_ease-in-out_infinite] paused"
+            >
+            </div>
+            <div
+                class="w-1 bg-black animate-[music-bar_1.2s_ease-in-out_infinite] paused"
+            >
+            </div>
+            <div
+                class="w-1 bg-black animate-[music-bar_1.0s_ease-in-out_infinite] paused"
+            >
+            </div>
         </div>
+        <i id="play-icon" class="ri-play-fill text-black absolute text-xl"></i>
     </div>
-    <div class="flex flex-col">
-        <span class="text-[10px] font-bold text-neo-green leading-none">NOW PLAYING</span>
-        <div class="text-xs font-mono font-bold max-w-[120px] truncate">
-            <span class="animate-marquee inline-block">Lo-Fi Beats to Code To</span>
+
+    <div class="flex flex-col overflow-hidden">
+        <div class="flex justify-between items-center w-full gap-2">
+            <span
+                class="text-[10px] font-bold text-neo-green leading-none uppercase"
+                >Now Playing</span
+            >
+            <span id="track-time" class="text-[10px] font-mono leading-none"
+                >0:00</span
+            >
+        </div>
+        <div class="relative w-full max-w-[120px]">
+            <div class="text-xs font-mono font-bold truncate">
+                <span id="track-name" class="inline-block">Offline</span>
+            </div>
+            <!-- Progress Bar -->
+            <div class="h-0.5 bg-gray-600 w-full mt-1">
+                <div
+                    id="progress-bar"
+                    class="h-full bg-neo-green w-0 transition-all duration-1000"
+                >
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<script>
+    // Define types for global window object if needed, or just use 'any' for simplicity in script tag
+
+    function initSpotify() {
+        const widget = document.getElementById("spotify-widget");
+        const visualizer = document.getElementById("visualizer");
+        const playIcon = document.getElementById("play-icon");
+        const trackName = document.getElementById("track-name");
+        const trackTime = document.getElementById("track-time");
+        const progressBar = document.getElementById("progress-bar");
+        const bars = visualizer?.querySelectorAll("div");
+
+        // "Hacker/Coding" Vibe Playlist
+        const tracks = [
+            "Lo-Fi Beats to Code To",
+            "Synthwave Mix 2077",
+            "Deep Focus Alpha Waves",
+            "Jazz Hop Café",
+            "NightCity.exe OST",
+            "System_Failure.mp3",
+            "Hack_The_Planet_Mix",
+            "Binary Sunset (Lofi)",
+            "Mr. Robot Vol. 1",
+            "404 Not Found",
+            "Daft Punk - Tron Legacy",
+            "Matrix_Reloaded_OST",
+            "Neural_Net_Optimization",
+        ];
+
+        // State Management with LocalStorage
+        let isPlaying =
+            localStorage.getItem("spotify_isPlaying") === "false"
+                ? false
+                : true; // Default true
+        let currentTrackIndex = parseInt(
+            localStorage.getItem("spotify_trackIndex") || "0",
+        );
+        let currentTime = parseInt(
+            localStorage.getItem("spotify_currentTime") || "0",
+        );
+        let lastTime = parseInt(
+            localStorage.getItem("spotify_lastTime") || Date.now().toString(),
+        );
+        let interval: any;
+        let trackDuration = 180;
+
+        // Correct for time elapsed while away (optional, simplified for now to just resume)
+        // If we want simulation: currentTime += Math.floor((Date.now() - lastTime) / 1000);
+
+        // Ensure valid index
+        if (isNaN(currentTrackIndex) || currentTrackIndex >= tracks.length) {
+            currentTrackIndex = Math.floor(Math.random() * tracks.length);
+        }
+
+        // Calculate specific duration for the track
+        function getTrackDuration(index: number) {
+            const hash = tracks[index]
+                .split("")
+                .reduce((a, b) => a + b.charCodeAt(0), 0);
+            return 120 + (hash % 120);
+        }
+
+        trackDuration = getTrackDuration(currentTrackIndex);
+
+        // UI Initialization
+        if (trackName) trackName.innerText = tracks[currentTrackIndex];
+
+        // Start or Restore State
+        updateUI();
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            localStorage.setItem("spotify_isPlaying", isPlaying.toString());
+            updateUI();
+        }
+
+        function updateUI() {
+            if (isPlaying) {
+                playIcon?.classList.remove("ri-play-fill");
+                playIcon?.classList.add("ri-pause-fill");
+                playIcon?.classList.add("opacity-0");
+                bars?.forEach(
+                    (bar) => (bar.style.animationPlayState = "running"),
+                );
+                startProgress();
+            } else {
+                playIcon?.classList.remove("ri-pause-fill");
+                playIcon?.classList.add("ri-play-fill");
+                playIcon?.classList.remove("opacity-0");
+                bars?.forEach(
+                    (bar) => (bar.style.animationPlayState = "paused"),
+                );
+                stopProgress();
+            }
+        }
+
+        function startProgress() {
+            stopProgress(); // Clear existing to be safe
+            interval = setInterval(() => {
+                currentTime++;
+
+                // Save state every second
+                localStorage.setItem(
+                    "spotify_currentTime",
+                    currentTime.toString(),
+                );
+                localStorage.setItem("spotify_lastTime", Date.now().toString());
+
+                if (currentTime >= trackDuration) {
+                    nextTrack();
+                }
+
+                updateTimeDisplay();
+                updateProgressBar();
+            }, 1000);
+
+            // Immediate update
+            updateTimeDisplay();
+            updateProgressBar();
+        }
+
+        function updateTimeDisplay() {
+            if (trackTime) {
+                const mins = Math.floor(currentTime / 60);
+                const secs = currentTime % 60;
+                trackTime.innerText = `${mins}:${secs.toString().padStart(2, "0")}`;
+            }
+        }
+
+        function updateProgressBar() {
+            if (progressBar) {
+                const progressPercent = (currentTime / trackDuration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+            }
+        }
+
+        function stopProgress() {
+            clearInterval(interval);
+        }
+
+        function nextTrack() {
+            let nextIndex;
+            do {
+                nextIndex = Math.floor(Math.random() * tracks.length);
+            } while (nextIndex === currentTrackIndex && tracks.length > 1);
+
+            currentTrackIndex = nextIndex;
+            currentTime = 0;
+            trackDuration = getTrackDuration(currentTrackIndex);
+
+            // Save new track info
+            localStorage.setItem(
+                "spotify_trackIndex",
+                currentTrackIndex.toString(),
+            );
+            localStorage.setItem("spotify_currentTime", "0");
+
+            if (trackName) {
+                trackName.style.opacity = "0";
+                setTimeout(() => {
+                    trackName.innerText = tracks[currentTrackIndex];
+                    trackName.style.opacity = "1";
+                }, 200);
+            }
+            updateTimeDisplay();
+            updateProgressBar();
+        }
+
+        widget?.addEventListener("click", togglePlay);
+
+        // Cleanup on navigation (ViewTransitions)
+        document.addEventListener(
+            "astro:before-swap",
+            () => {
+                stopProgress();
+                widget?.removeEventListener("click", togglePlay);
+            },
+            { once: true },
+        );
+    }
+
+    // Run on every page navigation
+    document.addEventListener("astro:page-load", initSpotify);
+</script>
+
 <style>
     @keyframes music-bar {
-        0%, 100% { height: 20%; }
-        50% { height: 80%; }
+        0%,
+        100% {
+            height: 20%;
+        }
+        50% {
+            height: 80%;
+        }
     }
 </style>

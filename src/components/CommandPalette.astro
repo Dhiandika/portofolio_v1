@@ -1,5 +1,32 @@
 ---
 const { lang = "en" } = Astro.props;
+import { getCollection } from "astro:content";
+
+const projects = await getCollection("projects");
+const posts = await getCollection("blog");
+
+const dynamicCommands = [
+    ...projects.map((p) => ({
+        id: `proj-${p.id}`,
+        title: (lang === "id"
+            ? p.data.title_id || p.data.title
+            : p.data.title
+        ).toUpperCase(),
+        icon: "ri-briefcase-2-line",
+        section: "Projects",
+        url: `/${lang}/projects/${p.id}`,
+    })),
+    ...posts.map((p) => ({
+        id: `blog-${p.slug}`,
+        title: (lang === "id"
+            ? p.data.title_id || p.data.title
+            : p.data.title
+        ).toUpperCase(),
+        icon: "ri-article-line",
+        section: "Blog",
+        url: `/${lang}/blog/${p.slug}`,
+    })),
+];
 
 const ui = {
     en: {
@@ -26,11 +53,11 @@ const t = ui[lang as keyof typeof ui] || ui.en;
     class="bg-transparent p-0 m-auto backdrop:bg-black/80 z-[100] open:animate-fade-in backdrop:backdrop-blur-sm"
 >
     <div
-        class="bg-neo-white border-4 border-black w-[90vw] max-w-2xl shadow-[10px_10px_0_0_rgba(0,0,0,1)] flex flex-col max-h-[60vh]"
+        class="bg-neo-white border-4 border-black w-[90vw] max-w-2xl shadow-[10px_10px_0_0_rgba(0,0,0,1)] flex flex-col max-h-[60vh] animate-slide-up"
     >
         <!-- Input -->
         <div class="border-b-4 border-black p-4 flex items-center gap-3">
-            <i class="ri-search-line text-2xl"></i>
+            <i class="ri-terminal-box-fill text-2xl"></i>
             <input
                 type="text"
                 id="cmd-input"
@@ -60,12 +87,12 @@ const t = ui[lang as keyof typeof ui] || ui.en;
     </div>
 </dialog>
 
-<script define:vars={{ lang, t }}>
+<script define:vars={{ lang, t, dynamicCommands }}>
     const palette = document.getElementById("cmd-palette");
     const input = document.getElementById("cmd-input");
     const resultsContainer = document.getElementById("cmd-results");
 
-    const commands = [
+    const staticCommands = [
         // Navigation
         {
             id: "home",
@@ -108,6 +135,13 @@ const t = ui[lang as keyof typeof ui] || ui.en;
             icon: "ri-article-fill",
             section: t.sectionNav,
             action: () => (window.location.href = `/${lang}#blog`),
+        },
+        {
+            id: "snippets",
+            title: "SNIPPETS",
+            icon: "ri-code-s-slash-line",
+            section: t.sectionNav,
+            action: () => (window.location.href = `/${lang}/snippets`),
         },
         {
             id: "contact",
@@ -155,6 +189,14 @@ const t = ui[lang as keyof typeof ui] || ui.en;
             action: () => window.open(`/${lang}/rss.xml`, "_blank"),
         },
     ];
+
+    // Merge Dynamic Commands into format
+    const contentCommands = dynamicCommands.map((cmd) => ({
+        ...cmd,
+        action: () => (window.location.href = cmd.url),
+    }));
+
+    const commands = [...staticCommands, ...contentCommands];
 
     let selectedIndex = 0;
     let filteredCommands = [...commands];

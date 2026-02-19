@@ -99,6 +99,53 @@ const image = Astro.props.image || '/og-default.jpg'; // Ensure this file exists
 
         <script>
             import '../scripts/main.js';
+
+            // Konami Code Logic
+            const konamiCode = [
+                'ArrowUp', 'ArrowUp', 
+                'ArrowDown', 'ArrowDown', 
+                'ArrowLeft', 'ArrowRight', 
+                'ArrowLeft', 'ArrowRight', 
+                'b', 'a'
+            ];
+            let konamiIndex = 0;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === konamiCode[konamiIndex]) {
+                    konamiIndex++;
+                    if (konamiIndex === konamiCode.length) {
+                        activateHackerMode();
+                        konamiIndex = 0;
+                    }
+                } else {
+                    konamiIndex = 0;
+                }
+            });
+
+            function activateHackerMode() {
+                const overlay = document.getElementById('hacker-overlay');
+                if (overlay) {
+                    overlay.classList.remove('hidden');
+                    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-system-failure-2999.mp3'); 
+                    audio.volume = 0.5;
+                    audio.play().catch(e => console.log('Audio autoplay blocked'));
+                    
+                    // Switch Theme
+                    document.documentElement.setAttribute('data-theme', 'cyber');
+                    localStorage.setItem('theme', 'cyber');
+
+                    setTimeout(() => {
+                        overlay.classList.add('hidden');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 2500);
+                }
+            }
         </script>
+
+        <!-- Hacker Mode Overlay -->
+        <div id="hacker-overlay" class="fixed inset-0 bg-black z-[100] hidden flex flex-col items-center justify-center text-neo-green font-mono select-none pointer-events-none">
+            <h1 class="text-4xl md:text-8xl font-black mb-4 animate-pulse">SYSTEM BREACH</h1>
+            <p class="text-xl md:text-2xl">> ACCESS GRANTED: CYBERPUNK MODE ACTIVATED</p>
+        </div>
 	</body>
 </html>

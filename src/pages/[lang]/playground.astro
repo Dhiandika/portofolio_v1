@@ -1,0 +1,188 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getEntry } from "astro:content";
+
+export async function getStaticPaths() {
+    return [{ params: { lang: "en" } }, { params: { lang: "id" } }];
+}
+
+const { lang } = Astro.params;
+const siteConfig = await getEntry("site", "config");
+const { data: siteData } = siteConfig || { data: { brandName: "ARHAM" } };
+
+const ui = {
+    en: {
+        title: "PLAYGROUND",
+        subtitle: "Experimental Area. Proceed with caution.",
+    },
+    id: { title: "ARENA BERMAIN", subtitle: "Area Eksperimental. Hati-hati." },
+};
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<Layout title={`${t.title} | ${siteData.brandName}`} lang={lang}>
+    <main
+        class="min-h-screen pt-32 pb-20 px-4 bg-neo-black text-neo-white relative overflow-hidden"
+    >
+        <div class="max-w-7xl mx-auto relative z-10 pointer-events-none">
+            <h1
+                class="text-[12vw] font-black uppercase leading-none text-transparent text-stroke-white opacity-50 select-none"
+            >
+                {t.title}
+            </h1>
+            <p
+                class="font-mono text-xl md:text-2xl text-neo-green border-l-4 border-neo-green pl-4 mt-8 bg-black/50 inline-block pointer-events-auto"
+            >
+                {t.subtitle}
+            </p>
+        </div>
+
+        <!-- Canvas Container -->
+        <canvas
+            id="playground-canvas"
+            class="absolute inset-0 z-0 cursor-crosshair"></canvas>
+
+        <div
+            class="fixed bottom-8 right-8 z-20 pointer-events-auto flex flex-col gap-2"
+        >
+            <button
+                id="clear-btn"
+                class="bg-neo-red text-white border-2 border-white px-4 py-2 font-mono font-bold shadow-hard hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
+            >
+                CLEAR SYSTEM
+            </button>
+            <div
+                class="bg-white text-black border-2 border-white px-4 py-2 font-mono text-xs"
+            >
+                MODE: <span id="mode-display" class="font-bold"
+                    >CHAOS_LINES</span
+                >
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script lang="ts">
+    const canvas = document.getElementById(
+        "playground-canvas",
+    ) as HTMLCanvasElement;
+    const ctx = canvas?.getContext("2d");
+    const clearBtn = document.getElementById("clear-btn");
+    const modeDisplay = document.getElementById("mode-display");
+
+    let width: number = 0;
+    let height: number = 0;
+    let particles: Particle[] = [];
+    const colors = ["#FBFF48", "#FF4848", "#48FF8E", "#4895FF", "#FFFFFF"];
+
+    function resize() {
+        if (!canvas) return;
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+
+    if (canvas) {
+        window.addEventListener("resize", resize);
+        resize();
+    }
+
+    class Particle {
+        x: number;
+        y: number;
+        vx: number;
+        vy: number;
+        color: string;
+        size: number;
+        life: number;
+
+        constructor(x: number, y: number) {
+            this.x = x;
+            this.y = y;
+            this.vx = (Math.random() - 0.5) * 4;
+            this.vy = (Math.random() - 0.5) * 4;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.size = Math.random() * 5 + 2;
+            this.life = 100;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.life -= 1;
+            this.size *= 0.95;
+        }
+
+        draw() {
+            if (!ctx) return;
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.size, this.size);
+
+            // Connect to neighbors
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 0.5;
+            // Simple chaotic lines
+            if (Math.random() > 0.9) {
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(
+                    this.x + (Math.random() - 0.5) * 50,
+                    this.y + (Math.random() - 0.5) * 50,
+                );
+                ctx.stroke();
+            }
+        }
+    }
+
+    function animate() {
+        if (!ctx) return;
+        // Trail effect
+        ctx.fillStyle = "rgba(18, 18, 18, 0.1)";
+        ctx.fillRect(0, 0, width, height);
+
+        particles.forEach((p, index) => {
+            p.update();
+            p.draw();
+            if (p.life <= 0) particles.splice(index, 1);
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Interaction
+    if (canvas) {
+        let isMouseDown = false;
+
+        canvas.addEventListener("mousedown", () => (isMouseDown = true));
+        canvas.addEventListener("mouseup", () => (isMouseDown = false));
+
+        canvas.addEventListener("mousemove", (e) => {
+            for (let i = 0; i < 2; i++) {
+                particles.push(new Particle(e.clientX, e.clientY));
+            }
+        });
+
+        canvas.addEventListener("click", (e) => {
+            // Explosion
+            for (let i = 0; i < 20; i++) {
+                particles.push(new Particle(e.clientX, e.clientY));
+            }
+        });
+    }
+
+    clearBtn?.addEventListener("click", () => {
+        if (!ctx) return;
+        particles = [];
+        ctx.fillStyle = "#121212";
+        ctx.fillRect(0, 0, width, height);
+    });
+</script>
+
+<style>
+    .text-stroke-white {
+        -webkit-text-stroke: 2px white;
+    }
+</style>

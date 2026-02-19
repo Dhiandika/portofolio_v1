@@ -165,4 +165,14 @@ const blog = defineCollection({
     }),
 });
 
-export const collections = { projects, experience, career, education, skills, reviews, site, blog, certificates };
+const snippets = defineCollection({
+    type: 'content',
+    schema: z.object({
+        title: z.string(),
+        description: z.string(),
+        publishedDate: z.string(),
+        tags: z.array(z.string()).optional(),
+    }),
+});
+
+export const collections = { projects, experience, career, education, skills, reviews, site, blog, certificates, snippets };

@@ -6,7 +6,7 @@ const { brandName } = siteConfig.data;
 const { lang = "en" } = Astro.props;
 ---
 
-<nav class="fixed top-0 w-full z-50 px-4 py-4 pointer-events-none">
+<nav class="fixed top-0 w-full z-[100] px-4 py-4 pointer-events-none">
     <div
         class="max-w-7xl mx-auto flex justify-between items-center pointer-events-auto"
     >
@@ -17,7 +17,7 @@ const { lang = "en" } = Astro.props;
                 class="block bg-neo-white border-2 border-black px-4 py-2 text-2xl font-black shadow-hard hover:bg-neo-yellow transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] cursor-pointer flex items-center gap-2"
             >
                 <i class="ri-command-fill"></i>
-                {brandName || "ARHAM.exe"}
+                {brandName || "Npemburu.exe"}
                 <i
                     class="ri-arrow-down-s-fill text-sm transition-transform"
                     id="brandArrow"></i>

@@ -2,13 +2,70 @@
 @config "../../tailwind.config.mjs";
 
 @layer base {
+  :root {
+    /* Default (Neo-Brutalist) */
+    --neo-yellow: #FBFF48;
+    --neo-pink: #FF70A6;
+    --neo-blue: #3B82F6;
+    --neo-green: #33FF57;
+    --neo-purple: #A855F7;
+    --neo-orange: #FF9F1C;
+    --neo-red: #FF2A2A;
+    --neo-white: #FFFDF5;
+    --neo-black: #121212;
+  }
+
+  [data-theme='cyber'] {
+    --neo-yellow: #fcee0a;
+    --neo-pink: #ff0055;
+    --neo-blue: #00f0ff; 
+    --neo-green: #00ff41;
+    --neo-purple: #bd00ff;
+    --neo-orange: #ff9900;
+    --neo-red: #ff0000;
+    --neo-white: #050505; /* Dark BG */
+    --neo-black: #e0e0e0; /* Light Text */
+  }
+
+  [data-theme='paper'] {
+    --neo-yellow: #e6e6e6;
+    --neo-pink: #d4d4d4;
+    --neo-blue: #404040;
+    --neo-green: #808080;
+    --neo-purple: #a0a0a0;
+    --neo-orange: #c0c0c0;
+    --neo-red: #505050;
+    --neo-white: #f5f5f5;
+    --neo-black: #1a1a1a;
+  }
+
+  /* Lo-Fi (High Contrast / Print) */
+  [data-theme='lofi'] {
+    --neo-yellow: #ffffff;
+    --neo-pink: #ffffff;
+    --neo-blue: #000000;
+    --neo-green: #000000;
+    --neo-purple: #000000;
+    --neo-orange: #ffffff;
+    --neo-red: #000000;
+    --neo-white: #ffffff;
+    --neo-black: #000000;
+  }
+
   html, body {
     cursor: none;
+    background-color: var(--neo-white);
+    color: var(--neo-black);
+  }
+
+  [data-theme='cyber'] .bg-neo-texture {
+     background-image: linear-gradient(0deg, transparent 24%, rgba(0, 255, 65, .05) 25%, rgba(0, 255, 65, .05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, .05) 75%, rgba(0, 255, 65, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 255, 65, .05) 25%, rgba(0, 255, 65, .05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, .05) 75%, rgba(0, 255, 65, .05) 76%, transparent 77%, transparent);
+     background-size: 30px 30px;
   }
 
   ::selection {
-    background-color: #000;
-    color: #FFF000;
+    background-color: var(--neo-black);
+    color: var(--neo-yellow);
   }
 }
 
@@ -75,4 +132,91 @@ html, body, a, button {
 
 a:hover, button:hover, .cursor-hover:hover {
      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewport="0 0 24 24" fill="black" stroke="black" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>') 12 12, pointer;
+}
+
+/* Zen Mode Styles */
+body.zen-mode nav,
+body.zen-mode footer,
+body.zen-mode .toc-container,
+body.zen-mode .zen-hidden {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+body.zen-mode main {
+    padding-top: 4rem;
+}
+
+body.zen-mode article {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+body.zen-mode .zen-controls {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media print {
+    /* Hide Navigation & Interactive Elements */
+    nav, 
+    .zen-controls, 
+    .zen-hidden, 
+    .bg-neo-texture, 
+    .bg-dot-grid,
+    #progressBar,
+    #hacker-overlay,
+    .copy-btn,
+    .cursor-custom {
+        display: none !important;
+    }
+
+    /* Reset Body & Main */
+    body, main {
+        background-color: white !important;
+        background-image: none !important;
+        color: black !important;
+        padding-top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* Remove Shadows/Borders for Ink Saving */
+    .shadow-hard, .shadow-sm {
+        box-shadow: none !important;
+        border: 1px solid #000 !important;
+    }
+
+    /* Typography */
+    h1, h2, h3, p, span, div {
+        color: #000 !important;
+        text-shadow: none !important;
+    }
+
+    /* Links */
+    a {
+        text-decoration: none !important;
+        color: #000 !important;
+    }
+    a[href^="http"]:after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        font-weight: normal;
+    }
+
+    /* Layout Adjustments */
+    .max-w-4xl {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    article {
+        break-inside: avoid;
+    }
+    
+    h1, h2, h3 {
+        break-after: avoid;
+    }
 }

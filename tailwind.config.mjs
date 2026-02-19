@@ -4,15 +4,15 @@ export default {
     theme: {
         extend: {
             colors: {
-                'neo-yellow': '#FBFF48',
-                'neo-pink': '#FF70A6',
-                'neo-blue': '#3B82F6',
-                'neo-green': '#33FF57',
-                'neo-purple': '#A855F7',
-                'neo-orange': '#FF9F1C',
-                'neo-red': '#FF2A2A',
-                'neo-white': '#FFFDF5',
-                'neo-black': '#121212',
+                'neo-yellow': 'var(--neo-yellow)',
+                'neo-pink': 'var(--neo-pink)',
+                'neo-blue': 'var(--neo-blue)',
+                'neo-green': 'var(--neo-green)',
+                'neo-purple': 'var(--neo-purple)',
+                'neo-orange': 'var(--neo-orange)',
+                'neo-red': 'var(--neo-red)',
+                'neo-white': 'var(--neo-white)',
+                'neo-black': 'var(--neo-black)',
             },
             fontFamily: {
                 'display': ['"Space Grotesk"', 'sans-serif'],

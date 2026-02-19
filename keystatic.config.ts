@@ -66,7 +66,7 @@ export default config({
             }
         }),
         about: singleton({
-            label: 'About Section',
+            label: 'About Page (Detailed)',
             path: 'src/content/site/about',
             format: { data: 'json' },
             schema: {
@@ -75,12 +75,22 @@ export default config({
                 profileImage: fields.image({ label: 'Profile Image', directory: 'public/images', publicPath: '/images/', description: 'The photo displayed in the About section.' }),
             }
         }),
+        whoami: singleton({
+            label: 'Who Am I (Homepage)',
+            path: 'src/content/site/whoami',
+            format: { data: 'json' },
+            schema: {
+                bio: fields.text({ label: 'Main Bio', multiline: true, description: 'The text displayed on the homepage "Who Am I" section.' }),
+                bio_id: fields.text({ label: 'Main Bio (ID)', multiline: true, description: 'Indonesian translation.' }),
+                profileImage: fields.image({ label: 'Profile Image', directory: 'public/images', publicPath: '/images/', description: 'Image shown on the homepage card.' }),
+            }
+        }),
     },
     ui: {
         brand: { name: 'ARHAM.exe' },
         navigation: {
             'Site Settings': ['site'],
-            'Page Content': ['hero', 'about'],
+            'Page Content': ['hero', 'whoami', 'about'],
             'Blog': ['blog'],
             'Collections': ['skills', 'projects', 'career', 'experience', 'education', 'certificates', 'reviews'],
         },
