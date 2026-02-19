@@ -1,0 +1,20 @@
+---
+// ⚠️ CRITICAL: DO NOT DELETE OR MODIFY THIS FILE ⚠️
+// This manual route is required because the official integration fails with white screen errors.
+// The HTML structure below is essential for proper React hydration.
+import { KeystaticAdmin } from "../../components/KeystaticAdmin";
+
+export const prerender = false;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Keystatic Admin</title>
+    </head>
+    <body style="margin: 0; padding: 0; height: 100vh;">
+        <KeystaticAdmin client:only="react" />
+    </body>
+</html>

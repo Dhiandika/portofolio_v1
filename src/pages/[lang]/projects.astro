@@ -1,0 +1,471 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+    return [{ params: { lang: "en" } }, { params: { lang: "id" } }];
+}
+
+const { lang } = Astro.params;
+const projects = await getCollection("projects");
+
+const ui = {
+    en: {
+        title: "Projects",
+        subtitle: "Curated Works & Experiments",
+        search: "Search projects...",
+        all: "All",
+        web: "Web",
+        mobile: "Mobile",
+        uiux: "UI/UX",
+        other: "Other",
+        view: "View Detail",
+    },
+    id: {
+        title: "Proyek",
+        subtitle: "Karya Terpilih & Eksperimen",
+        search: "Cari proyek...",
+        all: "Semua",
+        web: "Web",
+        mobile: "Mobile",
+        uiux: "UI/UX",
+        other: "Lainnya",
+        view: "Lihat Detail",
+    },
+};
+
+const t = ui[lang] || ui.en;
+---
+
+<Layout title={`${t.title} | Arham.exe`} lang={lang}>
+    <main class="min-h-screen bg-neo-white pt-32 px-4 pb-20 bg-neo-texture">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="mb-12">
+                <h1
+                    class="text-5xl md:text-7xl font-black uppercase mb-4 tracking-tighter"
+                >
+                    {t.title}
+                </h1>
+                <p
+                    class="font-mono text-xl md:text-2xl text-neo-black/70 border-l-4 border-black pl-4"
+                >
+                    {t.subtitle}
+                </p>
+            </div>
+
+            <!-- Controls -->
+            <div
+                class="flex flex-col md:flex-row gap-4 mb-12 sticky top-24 z-30 bg-neo-white py-4 border-b-2 border-black/10"
+            >
+                <div class="relative flex-grow">
+                    <i
+                        class="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-xl opacity-50"
+                    ></i>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder={t.search}
+                        class="w-full bg-white border-2 border-black p-4 pl-12 font-mono shadow-hard focus:outline-none focus:shadow-none focus:translate-x-1 focus:translate-y-1 transition-all"
+                    />
+                </div>
+                <div
+                    class="flex gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide"
+                >
+                    <button
+                        class="filter-btn active bg-black text-white px-6 py-4 border-2 border-black font-bold uppercase shadow-hard hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex-shrink-0"
+                        data-filter="all">{t.all}</button
+                    >
+                    <!-- Simulated categories, assuming standard tags -->
+                    <button
+                        class="filter-btn bg-white px-6 py-4 border-2 border-black font-bold uppercase shadow-hard hover:bg-neo-yellow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex-shrink-0"
+                        data-filter="Web">{t.web}</button
+                    >
+                    <button
+                        class="filter-btn bg-white px-6 py-4 border-2 border-black font-bold uppercase shadow-hard hover:bg-neo-blue hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex-shrink-0"
+                        data-filter="Mobile">{t.mobile}</button
+                    >
+                    <button
+                        class="filter-btn bg-white px-6 py-4 border-2 border-black font-bold uppercase shadow-hard hover:bg-neo-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex-shrink-0"
+                        data-filter="UI/UX">{t.uiux}</button
+                    >
+                </div>
+            </div>
+
+            <!-- Grid -->
+            <div
+                id="projectGrid"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+                {
+                    projects.map((project) => {
+                        const title = project.data.title;
+                        const desc = project.data.description;
+                        // Fallback category detection
+                        const tags = project.data.techStack
+                            ? project.data.techStack.join(" ").toLowerCase()
+                            : "";
+                        let category = "Other";
+                        if (
+                            tags.includes("react") ||
+                            tags.includes("astro") ||
+                            tags.includes("web")
+                        )
+                            category = "Web";
+                        if (
+                            tags.includes("flutter") ||
+                            tags.includes("native") ||
+                            tags.includes("android")
+                        )
+                            category = "Mobile";
+                        if (tags.includes("figma") || tags.includes("design"))
+                            category = "UI/UX";
+
+                        const uniqueId = `modal-${project.id.replace(/[^a-zA-Z0-9-_]/g, "-")}`;
+                        const galleryImages =
+                            project.data.gallery &&
+                            project.data.gallery.length > 0
+                                ? project.data.gallery
+                                : project.data.image
+                                  ? [project.data.image]
+                                  : [];
+
+                        return (
+                            <>
+                                <article
+                                    class="project-card group bg-white border-4 border-black shadow-hard hover:shadow-[10px_10px_0_0_#000] hover:-translate-y-1 hover:-translate-x-1 transition-all duration-300 flex flex-col h-full"
+                                    data-category={category}
+                                    data-title={title.toLowerCase()}
+                                >
+                                    <div class="aspect-video bg-gray-200 border-b-4 border-black overflow-hidden relative">
+                                        {project.data.image ? (
+                                            <img
+                                                src={project.data.image}
+                                                alt={title}
+                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 grayscale group-hover:grayscale-0"
+                                            />
+                                        ) : (
+                                            <div class="w-full h-full flex items-center justify-center bg-neo-black text-white">
+                                                <i class="ri-code-s-slash-line text-6xl opacity-50" />
+                                            </div>
+                                        )}
+                                        <div class="absolute top-2 right-2 bg-neo-yellow border-2 border-black px-2 py-1 text-xs font-black uppercase shadow-sm">
+                                            {category}
+                                        </div>
+                                    </div>
+                                    <div class="p-6 flex-grow flex flex-col">
+                                        <h3 class="text-2xl font-black uppercase leading-tight mb-2 line-clamp-2">
+                                            {title}
+                                        </h3>
+                                        <div class="flex flex-wrap gap-2 mb-4">
+                                            {project.data.techStack &&
+                                                project.data.techStack
+                                                    .slice(0, 3)
+                                                    .map((tech) => (
+                                                        <span class="text-[10px] font-mono border border-black px-1 bg-gray-100">
+                                                            {tech}
+                                                        </span>
+                                                    ))}
+                                        </div>
+                                        <p class="text-sm border-t-2 border-black pt-4 mt-auto line-clamp-3 mb-6 font-mono text-gray-600">
+                                            {desc}
+                                        </p>
+
+                                        <button
+                                            class="w-full bg-neo-black text-white border-2 border-black py-3 font-bold uppercase hover:bg-neo-blue transition-colors flex items-center justify-center gap-2 mt-auto shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+                                            onclick={`document.getElementById('${uniqueId}').showModal()`}
+                                        >
+                                            <i class="ri-eye-line" /> {t.view}
+                                        </button>
+                                    </div>
+                                </article>
+
+                                {/* Modal (Matching Home) */}
+                                <dialog
+                                    id={uniqueId}
+                                    class="p-0 bg-transparent backdrop:bg-black/90 max-w-7xl w-[95vw] h-[90vh] m-auto z-[100] open:animate-fade-in"
+                                >
+                                    <div class="bg-neo-white border-4 border-black shadow-[15px_15px_0_0_#fff] flex flex-col md:flex-row h-full overflow-hidden">
+                                        {/* Left: Gallery Carousel (No Scroll) */}
+                                        <div class="md:w-2/3 bg-black border-r-4 border-black relative flex flex-col group/gallery">
+                                            {/* Main Image */}
+                                            <div class="flex-1 relative overflow-hidden flex items-center justify-center bg-neutral-900">
+                                                {galleryImages.length > 0 ? (
+                                                    <>
+                                                        <img
+                                                            id={`${uniqueId}-main-img`}
+                                                            src={
+                                                                galleryImages[0]
+                                                            }
+                                                            alt={title}
+                                                            class="w-full h-full object-contain"
+                                                        />
+                                                        {/* Navigation Buttons */}
+                                                        {galleryImages.length >
+                                                            1 && (
+                                                            <>
+                                                                <button
+                                                                    class="absolute left-4 top-1/2 -translate-y-1/2 bg-black text-white p-3 border-2 border-white hover:bg-neo-yellow hover:text-black transition-colors z-20"
+                                                                    onclick={`prevImage('${uniqueId}', ${JSON.stringify(galleryImages)})`}
+                                                                >
+                                                                    <i class="ri-arrow-left-line text-2xl" />
+                                                                </button>
+                                                                <button
+                                                                    class="absolute right-4 top-1/2 -translate-y-1/2 bg-black text-white p-3 border-2 border-white hover:bg-neo-yellow hover:text-black transition-colors z-20"
+                                                                    onclick={`nextImage('${uniqueId}', ${JSON.stringify(galleryImages)})`}
+                                                                >
+                                                                    <i class="ri-arrow-right-line text-2xl" />
+                                                                </button>
+                                                            </>
+                                                        )}
+                                                        <div class="absolute bottom-4 left-4 bg-black/80 px-3 py-1 text-white text-xs font-mono border border-white/20">
+                                                            <span
+                                                                id={`${uniqueId}-counter`}
+                                                            >
+                                                                1
+                                                            </span>{" "}
+                                                            /{" "}
+                                                            {
+                                                                galleryImages.length
+                                                            }
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <div class="text-white/50 flex flex-col items-center">
+                                                        <i class="ri-image-line text-6xl mb-4" />
+                                                        <p class="font-mono">
+                                                            NO SIGNAL
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Thumbnails (Bottom Bar) */}
+                                            {galleryImages.length > 1 && (
+                                                <div class="h-20 bg-black border-t-2 border-white/20 flex items-center gap-2 px-4 overflow-x-auto">
+                                                    {galleryImages.map(
+                                                        (img, i) => (
+                                                            <button
+                                                                class={`w-16 h-12 border-2 ${i === 0 ? "border-neo-yellow" : "border-white/20"} hover:border-white transition-colors flex-shrink-0 bg-neutral-800`}
+                                                                onclick={`setImage('${uniqueId}', '${img}', ${i}, ${galleryImages.length})`}
+                                                            >
+                                                                <img
+                                                                    src={img}
+                                                                    class="w-full h-full object-cover"
+                                                                />
+                                                            </button>
+                                                        ),
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Right: Details */}
+                                        <div class="md:w-1/3 flex flex-col bg-white h-full relative">
+                                            {/* Header */}
+                                            <div class="p-6 border-b-4 border-black flex justify-between items-start bg-neo-yellow">
+                                                <div>
+                                                    <h2 class="text-3xl font-black uppercase leading-none mb-1">
+                                                        {title}
+                                                    </h2>
+                                                    <p class="font-mono text-xs font-bold">
+                                                        PROJECT LOG_2024
+                                                    </p>
+                                                </div>
+                                                <form method="dialog">
+                                                    <button class="bg-red-500 text-white w-10 h-10 border-2 border-black hover:bg-black hover:text-red-500 transition-colors shadow-hard-sm">
+                                                        <i class="ri-close-line text-xl" />
+                                                    </button>
+                                                </form>
+                                            </div>
+
+                                            {/* Scrollable Content */}
+                                            <div class="flex-1 overflow-y-auto p-8">
+                                                <div class="mb-8">
+                                                    <h3 class="font-black text-xl uppercase mb-4 flex items-center gap-2">
+                                                        <i class="ri-file-list-3-line" />{" "}
+                                                        Briefing
+                                                    </h3>
+                                                    <p class="font-mono text-sm leading-relaxed whitespace-pre-line text-gray-800 border-l-4 border-black pl-4">
+                                                        {desc}
+                                                    </p>
+                                                </div>
+
+                                                <div class="mb-8">
+                                                    <h3 class="font-black text-xl uppercase mb-4 flex items-center gap-2">
+                                                        <i class="ri-cpu-line" />{" "}
+                                                        Arsenal
+                                                    </h3>
+                                                    <div class="flex flex-wrap gap-2">
+                                                        {project.data
+                                                            .techStack &&
+                                                            project.data.techStack.map(
+                                                                (tech) => (
+                                                                    <span class="bg-black text-white px-2 py-1 font-mono text-xs border border-transparent shadow-sm">
+                                                                        {tech}
+                                                                    </span>
+                                                                ),
+                                                            )}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Footer Actions */}
+                                            <div class="p-6 border-t-4 border-black bg-gray-50 mt-auto">
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <a
+                                                        href={project.data.link}
+                                                        target="_blank"
+                                                        class="col-span-2 bg-neo-black text-white hover:bg-neo-blue py-3 font-black uppercase text-center border-2 border-black shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-2"
+                                                    >
+                                                        DEPLOYMENT{" "}
+                                                        <i class="ri-external-link-line" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </dialog>
+                            </>
+                        );
+                    })
+                }
+            </div>
+
+            <!-- Empty State -->
+            <div
+                id="emptyState"
+                class="hidden flex-col items-center justify-center py-24 text-center"
+            >
+                <i class="ri-folder-unknow-line text-6xl mb-4 text-neo-black"
+                ></i>
+                <h3 class="text-2xl font-black uppercase">No projects found</h3>
+                <p class="font-mono">Try adjusting your search or filter.</p>
+            </div>
+        </div>
+    </main>
+
+    <script is:inline>
+        // Global Gallery Functions (Shared with Home)
+        window.currentImageIndices = window.currentImageIndices || {};
+
+        window.setImage = (modalId, imgSrc, index, total) => {
+            const mainImg = document.querySelector(`#${modalId}-main-img`);
+            const counter = document.querySelector(`#${modalId}-counter`);
+
+            if (mainImg) {
+                mainImg.style.opacity = "0.5";
+                setTimeout(() => {
+                    mainImg.src = imgSrc;
+                    mainImg.style.opacity = "1";
+                }, 150);
+            }
+
+            if (counter) counter.textContent = index + 1;
+            window.currentImageIndices[modalId] = index;
+
+            // Update active thumbnail border
+            const buttons = document.querySelectorAll(
+                `#${modalId} .border-neo-yellow`,
+            );
+            buttons.forEach((b) => {
+                b.classList.remove("border-neo-yellow");
+                b.classList.add("border-white/20");
+            });
+
+            // Find the specific button clicked
+            const allThumbBtns = document.querySelectorAll(
+                `#${modalId} button.w-16`,
+            );
+            if (allThumbBtns[index]) {
+                allThumbBtns[index].classList.remove("border-white/20");
+                allThumbBtns[index].classList.add("border-neo-yellow");
+            }
+        };
+
+        window.nextImage = (modalId, images) => {
+            let currentIndex = window.currentImageIndices[modalId] || 0;
+            let nextIndex = (currentIndex + 1) % images.length;
+            window.setImage(
+                modalId,
+                images[nextIndex],
+                nextIndex,
+                images.length,
+            );
+        };
+
+        window.prevImage = (modalId, images) => {
+            let currentIndex = window.currentImageIndices[modalId] || 0;
+            let prevIndex = (currentIndex - 1 + images.length) % images.length;
+            window.setImage(
+                modalId,
+                images[prevIndex],
+                prevIndex,
+                images.length,
+            );
+        };
+
+        const searchInput = document.getElementById("searchInput");
+        const filterBtns = document.querySelectorAll(".filter-btn");
+        const cards = document.querySelectorAll(".project-card");
+        const emptyState = document.getElementById("emptyState");
+
+        function filter() {
+            const query = searchInput.value.toLowerCase();
+            const activeCategory =
+                document.querySelector(".filter-btn.active").dataset.filter;
+            let visibleCount = 0;
+
+            cards.forEach((card) => {
+                const title = card.dataset.title;
+                const category = card.dataset.category;
+                const matchesSearch = title.includes(query);
+                const matchesCategory =
+                    activeCategory === "all" || category === activeCategory;
+
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = "flex";
+                    visibleCount++;
+                } else {
+                    card.style.display = "none";
+                }
+            });
+
+            emptyState.style.display = visibleCount === 0 ? "flex" : "none";
+        }
+
+        searchInput.addEventListener("input", filter);
+
+        filterBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                document
+                    .querySelector(".filter-btn.active")
+                    .classList.remove("active", "bg-black", "text-white");
+                document
+                    .querySelector(".filter-btn.active")
+                    .classList.add("bg-white", "text-black");
+
+                btn.classList.add("active", "bg-black", "text-white");
+                btn.classList.remove("bg-white");
+
+                filter();
+            });
+        });
+
+        // Close modal when clicking outside
+        const dialogs = document.querySelectorAll("dialog");
+        dialogs.forEach((dialog) => {
+            dialog.addEventListener("click", (event) => {
+                const rect = dialog.getBoundingClientRect();
+                const isInDialog =
+                    rect.top <= event.clientY &&
+                    event.clientY <= rect.top + rect.height &&
+                    rect.left <= event.clientX &&
+                    event.clientX <= rect.left + rect.width;
+                if (!isInDialog) {
+                    dialog.close();
+                }
+            });
+        });
+    </script>
+</Layout>

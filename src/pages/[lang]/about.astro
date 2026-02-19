@@ -1,0 +1,90 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CareerAccordion from '../../components/CareerAccordion.astro';
+import EducationList from '../../components/EducationList.astro';
+import { getEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'id' } },
+  ];
+}
+
+const { lang } = Astro.params;
+
+// Fetch site config
+const siteConfig = await getEntry('site', 'config');
+const aboutConfig = await getEntry('site', 'about');
+const { data: site } = siteConfig;
+const { data: about } = aboutConfig;
+
+// Multilingual text
+const bio = lang === 'id' ? about.bio_id || about.bio : about.bio;
+const ui = {
+    en: { title: "About", subtitle: "Brief introduction about me." },
+    id: { title: "Tentang", subtitle: "Pengenalan singkat mengenai siapa saya." }
+};
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<Layout title={`${t.title} | ${site.brandName}`} lang={lang}>
+    <main class="min-h-screen pt-32 pb-24 px-4 bg-neo-white text-neo-black bg-neo-texture">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <header class="mb-16 border-4 border-black bg-white shadow-hard p-8 md:p-12">
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-8 mb-8">
+                    <div class="relative w-32 h-32 md:w-40 md:h-40 flex-shrink-0 bg-neo-yellow border-4 border-black shadow-[4px_4px_0px_0px_#000]">
+                        {about.profileImage ? (
+                            <img src={about.profileImage} alt="Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300" />
+                        ) : (
+                            <div class="w-full h-full bg-gray-200 animate-pulse"></div>
+                        )}
+                        <div class="absolute -bottom-2 -right-2 bg-neo-black text-white px-2 text-xs font-mono font-bold border-2 border-white">PRO</div>
+                    </div>
+                    
+                    <div class="flex-1 text-center md:text-left">
+                        <div class="inline-block bg-neo-black text-white px-3 py-1 text-sm font-mono font-bold mb-2 transform -rotate-2">
+                            @{site.github?.split('/').pop() || 'username'}
+                        </div>
+                        <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-2 leading-none">
+                            {site.brandName || 'Satria Bahari'}
+                            <i class="ri-verified-badge-fill text-blue-500 text-3xl align-middle"></i>
+                        </h1>
+                        <p class="text-gray-600 font-mono text-sm md:text-base border-l-4 border-neo-green pl-3 ml-1">
+                            {lang === 'id' ? 'Pengembang Full Stack & Desainer' : 'Full Stack Developer & Designer'}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-t-4 border-black border-dashed my-8"></div>
+
+                <div class="bg-neo-white p-6 border-2 border-black relative">
+                    <h2 class="text-2xl font-black uppercase mb-4 bg-neo-yellow inline-block px-2 border-2 border-black transform -rotate-1 shadow-[2px_2px_0_0_#000]">
+                        {t.title}
+                    </h2>
+                    <div class="prose prose-lg prose-p:font-mono prose-p:text-neo-black prose-p:leading-relaxed max-w-none">
+                        <p class="whitespace-pre-line">{bio}</p>
+                    </div>
+
+                    {site.signature && (
+                        <div class="mt-8 flex flex-col items-start md:items-end">
+                            <p class="text-sm font-bold font-mono text-gray-500 mb-2 transform rotate-1">{lang === 'id' ? 'Salam hangat,' : 'Warm regards,'}</p>
+                            <img src={site.signature} alt="Signature" class="h-16 w-auto filter contrast-125" />
+                        </div>
+                    )}
+                </div>
+            </header>
+
+            <!-- Career -->
+            <div class="mb-16">
+                <CareerAccordion lang={lang} />
+            </div>
+
+            <!-- Education -->
+            <div class="mb-16">
+                <EducationList lang={lang} />
+            </div>
+        </div>
+    </main>
+</Layout>

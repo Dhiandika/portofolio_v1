@@ -1,0 +1,159 @@
+---
+import { getEntry } from "astro:content";
+
+interface Props {
+    lang?: string;
+}
+
+const { lang = "en" } = Astro.props;
+const siteConfig = await getEntry("site", "config");
+const {
+    github,
+    leetcode,
+    instagram,
+    linkedin,
+    brandName = "ARHAM",
+} = siteConfig?.data || {};
+
+const year = new Date().getFullYear();
+
+const ui = {
+    en: {
+        tagline:
+            "Designing for the future with the raw aesthetics of the past. No cookies, no trackers, just code.",
+        home: "Home",
+        works: "Works",
+        about: "About",
+        contact: "Contact",
+        sitemap: "SITEMAP",
+        socials: "SOCIALS",
+    },
+    id: {
+        tagline:
+            "Merancang masa depan dengan estetika mentah masa lalu. Tanpa cookie, tanpa pelacak, hanya kode.",
+        home: "Beranda",
+        works: "Karya",
+        about: "Tentang",
+        contact: "Kontak",
+        sitemap: "PETA SITUS",
+        socials: "SOSIAL",
+    },
+};
+
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<footer
+    class="bg-black text-white py-16 px-4 border-t-8 border-neo-green font-mono relative overflow-hidden"
+>
+    <div
+        class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10"
+    >
+        <div class="col-span-1 md:col-span-2">
+            <h2 class="text-4xl font-black mb-6">{brandName}.</h2>
+            <p class="text-gray-400 max-w-sm">
+                {t.tagline}
+            </p>
+        </div>
+
+        <div>
+            <h3
+                class="font-bold text-neo-green mb-4 border-b border-gray-700 pb-2"
+            >
+                {t.sitemap}
+            </h3>
+            <ul class="space-y-2 text-gray-400">
+                <li>
+                    <a
+                        href="#"
+                        class="hover:text-white hover:underline decoration-neo-pink decoration-2 cursor-hover"
+                        >{t.home}</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="#projects"
+                        class="hover:text-white hover:underline decoration-neo-pink decoration-2 cursor-hover"
+                        >{t.works}</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="#about"
+                        class="hover:text-white hover:underline decoration-neo-pink decoration-2 cursor-hover"
+                        >{t.about}</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="#contact"
+                        class="hover:text-white hover:underline decoration-neo-pink decoration-2 cursor-hover"
+                        >{t.contact}</a
+                    >
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <h3
+                class="font-bold text-neo-green mb-4 border-b border-gray-700 pb-2"
+            >
+                {t.socials}
+            </h3>
+            <div class="flex gap-4">
+                {
+                    leetcode && (
+                        <a
+                            href={leetcode}
+                            class="text-2xl hover:text-neo-blue transition-colors cursor-hover"
+                        >
+                            <i class="ri-code-fill" />
+                        </a>
+                    )
+                }
+                {
+                    instagram && (
+                        <a
+                            href={instagram}
+                            class="text-2xl hover:text-neo-pink transition-colors cursor-hover"
+                        >
+                            <i class="ri-instagram-fill" />
+                        </a>
+                    )
+                }
+                {
+                    github && (
+                        <a
+                            href={github}
+                            class="text-2xl hover:text-neo-yellow transition-colors cursor-hover"
+                        >
+                            <i class="ri-github-fill" />
+                        </a>
+                    )
+                }
+                {
+                    linkedin && (
+                        <a
+                            href={linkedin}
+                            class="text-2xl hover:text-neo-purple transition-colors cursor-hover"
+                        >
+                            <i class="ri-linkedin-fill" />
+                        </a>
+                    )
+                }
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="text-center mt-16 pt-8 border-t border-gray-800 text-gray-500 text-sm"
+    >
+        <p>© {year} {brandName}.exe // SYSTEM_END</p>
+    </div>
+
+    <div
+        class="absolute bottom-0 left-0 w-full text-[20vw] font-black text-white opacity-[0.03] leading-none select-none pointer-events-none text-center"
+    >
+        BRUTAL
+    </div>
+</footer>

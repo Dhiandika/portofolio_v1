@@ -1,0 +1,73 @@
+---
+import { getEntry } from "astro:content";
+
+interface Props {
+    lang?: string;
+}
+
+const { lang = "en" } = Astro.props;
+const aboutConfig = await getEntry("site", "about");
+const siteConfig = await getEntry("site", "config");
+
+const {
+    bio = "Creative Developer.",
+    bio_id,
+    profileImage = "/images/img.jpg",
+} = aboutConfig?.data || {};
+const { location = "Remote" } = siteConfig?.data || {};
+
+const displayBio = lang === "id" ? bio_id || bio : bio;
+---
+
+<section
+    id="about"
+    class="py-24 px-4 max-w-7xl mx-auto border-x-4 border-black bg-white my-12 shadow-hard-lg bg-dot-grid"
+>
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+        <div class="md:col-span-4 reveal">
+            <div
+                class="aspect-square bg-gray-200 border-4 border-black relative shadow-hard overflow-hidden group bg-dot-grid"
+            >
+                <img
+                    src={profileImage}
+                    alt="Profile"
+                    class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 mix-blend-multiply"
+                />
+                <span
+                    class="absolute top-2 left-2 bg-neo-red text-white px-2 font-mono text-xs border border-black z-10"
+                    >AVATAR.JPG</span
+                >
+            </div>
+        </div>
+        <div class="md:col-span-8 flex flex-col justify-center reveal">
+            <h2 class="text-6xl font-black uppercase mb-6">Who am I?</h2>
+            <p
+                class="font-mono text-xl leading-relaxed mb-6 whitespace-pre-line"
+            >
+                {displayBio}
+            </p>
+            <div class="flex flex-wrap gap-4 mb-8">
+                <div
+                    class="bg-neo-black text-white px-4 py-2 font-mono text-sm border-2 border-transparent shadow shadow-neo-green"
+                >
+                    📍 LOCATION: {location.toUpperCase()}
+                </div>
+                <div
+                    class="bg-neo-green text-black px-4 py-2 font-mono text-sm border-2 border-black shadow"
+                >
+                    🟢 STATUS: AVAILABLE
+                </div>
+            </div>
+
+            <div>
+                <a
+                    href={`/${lang}/about`}
+                    class="inline-block bg-white text-black font-black px-6 py-3 border-4 border-black shadow-hard hover:bg-neo-yellow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-hover uppercase"
+                >
+                    {lang === "id" ? "Tentang Saya" : "About Me"}
+                    <i class="ri-arrow-right-line ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

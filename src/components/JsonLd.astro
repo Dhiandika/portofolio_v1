@@ -1,0 +1,32 @@
+---
+import { getEntry } from 'astro:content';
+
+const siteConfig = await getEntry('site', 'config');
+const { brandName, pageTitle, domainUrl, github, linkedin, instagram } = siteConfig.data;
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": brandName || "Arham",
+  "url": domainUrl,
+  "sameAs": [
+    github,
+    linkedin,
+    instagram
+  ].filter(Boolean),
+  "jobTitle": "Full Stack Developer",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Freelance"
+  }  
+};
+
+const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": pageTitle,
+    "url": domainUrl,
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />

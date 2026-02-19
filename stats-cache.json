@@ -1,0 +1,268 @@
+{
+  "wakatime": {
+    "id": "dc4b7636-628d-4ec5-843b-bf10629f46b7",
+    "user_id": "f64538f6-eaa9-4ce2-a021-ff11cf565d88",
+    "range": "last_7_days",
+    "start": "2026-02-10T16:00:00Z",
+    "end": "2026-02-17T15:59:59Z",
+    "timeout": 15,
+    "writes_only": false,
+    "timezone": "Asia/Makassar",
+    "ai_additions": 0,
+    "ai_deletions": 0,
+    "human_additions": 43,
+    "human_deletions": 35,
+    "holidays": 0,
+    "status": "ok",
+    "created_at": "2026-02-17T19:24:38Z",
+    "modified_at": "2026-02-17T19:24:38Z",
+    "best_day": {
+      "date": "2026-02-17",
+      "total_seconds": 6344.876,
+      "text": "1 hr 45 mins"
+    },
+    "days_minus_holidays": 7,
+    "projects": [
+      {
+        "total_seconds": 6344.876,
+        "name": "portofolio_v1",
+        "ai_additions": 0,
+        "ai_deletions": 0,
+        "human_additions": 43,
+        "human_deletions": 35,
+        "percent": 100,
+        "digital": "1:45",
+        "decimal": "1.75",
+        "text": "1 hr 45 mins",
+        "hours": 1,
+        "minutes": 45
+      }
+    ],
+    "human_readable_total_including_other_language": "1 hr 45 mins",
+    "editors": [
+      {
+        "total_seconds": 6344.876,
+        "name": "Antigravity",
+        "percent": 100,
+        "digital": "1:45",
+        "decimal": "1.75",
+        "text": "1 hr 45 mins",
+        "hours": 1,
+        "minutes": 45
+      }
+    ],
+    "human_readable_daily_average": "15 mins",
+    "is_up_to_date": true,
+    "daily_average_including_other_language": 906,
+    "operating_systems": [
+      {
+        "total_seconds": 6344.876,
+        "name": "Windows",
+        "percent": 100,
+        "digital": "1:45",
+        "decimal": "1.75",
+        "text": "1 hr 45 mins",
+        "hours": 1,
+        "minutes": 45
+      }
+    ],
+    "categories": [
+      {
+        "name": "Coding",
+        "total_seconds": 6344.876,
+        "percent": 100,
+        "digital": "1:45",
+        "decimal": "1.75",
+        "text": "1 hr 45 mins",
+        "hours": 1,
+        "minutes": 45
+      }
+    ],
+    "is_up_to_date_pending_future": false,
+    "is_already_updating": false,
+    "human_readable_total": "1 hr 45 mins",
+    "days_including_holidays": 7,
+    "machines": [
+      {
+        "total_seconds": 6344.876,
+        "name": "ZERO",
+        "machine_name_id": "07f915dd-0cf8-40de-a5d5-22908c6d8c9e",
+        "percent": 100,
+        "digital": "1:45",
+        "decimal": "1.75",
+        "text": "1 hr 45 mins",
+        "hours": 1,
+        "minutes": 45
+      }
+    ],
+    "daily_average": 906,
+    "human_readable_daily_average_including_other_language": "15 mins",
+    "languages": [
+      {
+        "name": "Astro",
+        "total_seconds": 4705.769,
+        "percent": 74.17,
+        "digital": "1:18",
+        "decimal": "1.30",
+        "text": "1 hr 18 mins",
+        "hours": 1,
+        "minutes": 18
+      },
+      {
+        "name": "TypeScript",
+        "total_seconds": 1046.229,
+        "percent": 16.49,
+        "digital": "0:17",
+        "decimal": "0.28",
+        "text": "17 mins",
+        "hours": 0,
+        "minutes": 17
+      },
+      {
+        "name": "JavaScript",
+        "total_seconds": 592.878,
+        "percent": 9.34,
+        "digital": "0:09",
+        "decimal": "0.15",
+        "text": "9 mins",
+        "hours": 0,
+        "minutes": 9
+      }
+    ],
+    "dependencies": [
+      {
+        "total_seconds": 1639.107,
+        "name": "react",
+        "percent": 24.48,
+        "digital": "0:27",
+        "decimal": "0.45",
+        "text": "27 mins",
+        "hours": 0,
+        "minutes": 27
+      },
+      {
+        "total_seconds": 1046.229,
+        "name": "ui",
+        "percent": 15.62,
+        "digital": "0:17",
+        "decimal": "0.28",
+        "text": "17 mins",
+        "hours": 0,
+        "minutes": 17
+      },
+      {
+        "total_seconds": 1046.229,
+        "name": "keystatic.config",
+        "percent": 15.62,
+        "digital": "0:17",
+        "decimal": "0.28",
+        "text": "17 mins",
+        "hours": 0,
+        "minutes": 17
+      },
+      {
+        "total_seconds": 592.878,
+        "name": "vercel",
+        "percent": 8.85,
+        "digital": "0:09",
+        "decimal": "0.15",
+        "text": "9 mins",
+        "hours": 0,
+        "minutes": 9
+      },
+      {
+        "total_seconds": 592.878,
+        "name": "vite",
+        "percent": 8.85,
+        "digital": "0:09",
+        "decimal": "0.15",
+        "text": "9 mins",
+        "hours": 0,
+        "minutes": 9
+      },
+      {
+        "total_seconds": 592.878,
+        "name": "config",
+        "percent": 8.85,
+        "digital": "0:09",
+        "decimal": "0.15",
+        "text": "9 mins",
+        "hours": 0,
+        "minutes": 9
+      },
+      {
+        "total_seconds": 592.878,
+        "name": "astro",
+        "percent": 8.85,
+        "digital": "0:09",
+        "decimal": "0.15",
+        "text": "9 mins",
+        "hours": 0,
+        "minutes": 9
+      },
+      {
+        "total_seconds": 592.878,
+        "name": "sitemap",
+        "percent": 8.85,
+        "digital": "0:09",
+        "decimal": "0.15",
+        "text": "9 mins",
+        "hours": 0,
+        "minutes": 9
+      }
+    ],
+    "total_seconds": 6344.876,
+    "percent_calculated": 100,
+    "is_stuck": false,
+    "total_seconds_including_other_language": 6344.876,
+    "is_cached": true,
+    "username": null,
+    "is_including_today": false,
+    "human_readable_range": "last week",
+    "is_coding_activity_visible": false,
+    "is_language_usage_visible": false,
+    "is_editor_usage_visible": false,
+    "is_category_usage_visible": false,
+    "is_os_usage_visible": false
+  },
+  "monkeytype": {
+    "name": "npemburu6",
+    "addedAt": 1771393810373,
+    "typingStats": {
+      "completedTests": 1,
+      "startedTests": 1,
+      "timeTyping": 69.33
+    },
+    "personalBests": {
+      "time": {},
+      "words": {
+        "50": [
+          {
+            "acc": 94.19,
+            "consistency": 61.6,
+            "difficulty": "normal",
+            "lazyMode": false,
+            "language": "indonesian",
+            "punctuation": false,
+            "raw": 53.48,
+            "wpm": 51.06,
+            "numbers": false,
+            "timestamp": 1771393903707
+          }
+        ]
+      }
+    },
+    "xp": 123,
+    "streak": 1,
+    "maxStreak": 1,
+    "isPremium": false,
+    "allTimeLbs": {
+      "time": {
+        "15": {},
+        "60": {}
+      }
+    },
+    "uid": "ZdL3r4RjLbM4ypJd0qFs7OsGglf2"
+  },
+  "lastUpdated": 1771394664769
+}

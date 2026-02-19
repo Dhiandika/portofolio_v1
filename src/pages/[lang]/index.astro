@@ -1,0 +1,43 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Hero from "../../components/Hero.astro";
+import Marquee from "../../components/Marquee.astro";
+import About from "../../components/About.astro";
+import Skills from "../../components/Skills.astro";
+import Experience from "../../components/Experience.astro";
+import CodingStats from "../../components/CodingStats.astro";
+import Projects from "../../components/Projects.astro";
+import BlogShowcase from "../../components/BlogShowcase.astro";
+import Reports from "../../components/Reports.astro";
+import Contact from "../../components/Contact.astro";
+import Footer from "../../components/Footer.astro";
+
+import { getEntry } from "astro:content";
+
+export async function getStaticPaths() {
+	return [{ params: { lang: "en" } }, { params: { lang: "id" } }];
+}
+
+const { lang } = Astro.params;
+
+// Fetch site config for page title (fallback to EN if ID missing)
+const siteConfig = await getEntry("site", "config");
+const pageTitle =
+	lang === "id"
+		? siteConfig.data.pageTitle_id || siteConfig.data.pageTitle
+		: siteConfig.data.pageTitle;
+---
+
+<Layout title={pageTitle || "ARHAM | Full Stack Brutalist"} lang={lang}>
+	<Hero lang={lang} />
+	<Marquee lang={lang} />
+	<About lang={lang} />
+	<Skills lang={lang} />
+	<Experience lang={lang} />
+	<CodingStats lang={lang} />
+	<Projects lang={lang} />
+	<BlogShowcase lang={lang} />
+	<Reports lang={lang} />
+	<Contact lang={lang} />
+	<Footer lang={lang} />
+</Layout>

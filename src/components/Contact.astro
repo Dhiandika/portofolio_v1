@@ -1,0 +1,127 @@
+---
+import { getEntry } from "astro:content";
+
+interface Props {
+    lang?: string;
+}
+
+const { lang = "en" } = Astro.props;
+const siteConfig = await getEntry("site", "config");
+const { email = "hello@kuzup.dev", location = "Remote / Earth" } =
+    siteConfig?.data || {};
+
+const ui = {
+    en: {
+        start: "START A PROJECT",
+        title: "Let's\nTalk\nCode.",
+        avail: "I am currently available for freelance work and open to full-time opportunities.",
+        identity: "Identity",
+        namePlace: "NAME / COMPANY",
+        coords: "Coordinates",
+        emailPlace: "EMAIL ADDRESS",
+        trans: "Transmission",
+        details: "PROJECT DETAILS...",
+        btn: "TRANSMIT DATA",
+    },
+    id: {
+        start: "MULAI PROYEK",
+        title: "Mari\nBicara\nKode.",
+        avail: "Saya tersedia untuk pekerjaan freelance dan terbuka untuk peluang purna waktu.",
+        identity: "Identitas",
+        namePlace: "NAMA / PERUSAHAAN",
+        coords: "Koordinat",
+        emailPlace: "ALAMAT EMAIL",
+        trans: "Transmisi",
+        details: "DETAIL PROYEK...",
+        btn: "KIRIM DATA",
+    },
+};
+
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<section id="contact" class="py-24 px-4 max-w-5xl mx-auto">
+    <div
+        class="bg-white border-4 border-black shadow-hard-xl p-8 md:p-12 relative reveal mt-12"
+    >
+        <div
+            class="absolute -top-10 -left-6 bg-neo-yellow border-4 border-black px-6 py-2 shadow-hard rotate-[-5deg]"
+        >
+            <span class="font-black text-2xl uppercase">{t.start}</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+                <h2
+                    class="text-6xl font-black uppercase mb-6 leading-[0.85] whitespace-pre-line"
+                >
+                    {t.title}
+                </h2>
+                <p class="font-mono text-lg mb-8 text-gray-600">
+                    {t.avail}
+                </p>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 bg-neo-black text-white flex items-center justify-center border-2 border-black"
+                        >
+                            <i class="ri-mail-line text-xl"></i>
+                        </div>
+                        <a
+                            href={`mailto:${email}`}
+                            class="text-xl font-bold hover:bg-neo-blue cursor-hover"
+                            >{email}</a
+                        >
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 bg-neo-black text-white flex items-center justify-center border-2 border-black"
+                        >
+                            <i class="ri-map-pin-line text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold">{location}</span>
+                    </div>
+                </div>
+            </div>
+
+            <form class="space-y-6 bg-gray-50 p-6 border-2 border-black">
+                <div class="flex flex-col">
+                    <label class="font-mono font-bold mb-1 uppercase text-xs"
+                        >{t.identity}</label
+                    >
+                    <input
+                        type="text"
+                        placeholder={t.namePlace}
+                        class="bg-white border-2 border-black p-3 font-bold focus:outline-none focus:bg-neo-yellow focus:shadow-hard-sm transition-all cursor-hover"
+                    />
+                </div>
+                <div class="flex flex-col">
+                    <label class="font-mono font-bold mb-1 uppercase text-xs"
+                        >{t.coords}</label
+                    >
+                    <input
+                        type="email"
+                        placeholder={t.emailPlace}
+                        class="bg-white border-2 border-black p-3 font-bold focus:outline-none focus:bg-neo-yellow focus:shadow-hard-sm transition-all cursor-hover"
+                    />
+                </div>
+                <div class="flex flex-col">
+                    <label class="font-mono font-bold mb-1 uppercase text-xs"
+                        >{t.trans}</label
+                    >
+                    <textarea
+                        rows="4"
+                        placeholder={t.details}
+                        class="bg-white border-2 border-black p-3 font-bold focus:outline-none focus:bg-neo-yellow focus:shadow-hard-sm transition-all resize-none cursor-hover"
+                    ></textarea>
+                </div>
+                <button
+                    type="submit"
+                    class="w-full bg-neo-blue text-white font-black text-xl py-4 border-2 border-black shadow-hard neo-button hover:bg-neo-black hover:translate-y-1 hover:shadow-none transition-all cursor-hover"
+                >
+                    {t.btn}
+                </button>
+            </form>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+    lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
+const education = await getCollection('education');
+
+const ui = {
+    en: { title: "Education", subtitle: "Academic Journey" },
+    id: { title: "Pendidikan", subtitle: "Perjalanan Akademik" }
+};
+
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<section class="border-4 border-black bg-white shadow-hard relative overflow-hidden">
+    <!-- Decor -->
+    <div class="absolute -right-4 -top-4 w-24 h-24 bg-neo-green/20 rounded-full blur-xl pointer-events-none"></div>
+
+    <div class="bg-neo-black text-white p-4 flex items-center justify-between border-b-4 border-black relative z-10">
+        <div class="flex items-center gap-3">
+            <i class="ri-graduation-cap-fill text-2xl text-neo-green"></i>
+            <div>
+                <h2 class="text-xl font-black font-mono uppercase leading-none">{t.title}</h2>
+                <p class="text-xs text-gray-400 font-mono tracking-widest">{t.subtitle}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-0 divide-y-4 divide-black">
+        {education.length > 0 ? education.map((edu, index) => {
+            const degree = lang === 'id' ? edu.data.degree_id || edu.data.degree : edu.data.degree;
+            const description = lang === 'id' ? edu.data.description_id || edu.data.description : edu.data.description;
+            
+            return (
+                <div class="p-6 bg-white hover:bg-neo-green/10 transition-colors group">
+                    <div class="flex flex-col gap-4 h-full">
+                        <div class="flex justify-between items-start">
+                             <div class="w-16 h-16 bg-white border-4 border-black flex items-center justify-center shadow-[4px_4px_0_0_#000] group-hover:-translate-y-1 group-hover:shadow-[6px_6px_0_0_#000] transition-all">
+                                {edu.data.logo ? (
+                                    <img src={edu.data.logo} alt={edu.data.institution} class="w-full h-full object-cover p-1" />
+                                ) : (
+                                    <i class="ri-school-fill text-3xl text-neo-black"></i>
+                                )}
+                            </div>
+                            <span class="bg-neo-black text-white px-2 py-1 font-mono text-xs font-bold border-2 border-transparent">{edu.data.date}</span>
+                        </div>
+                        
+                        <div>
+                            {edu.data.link ? (
+                                <a href={edu.data.link} target="_blank" rel="noopener noreferrer" class="group/link flex items-center gap-2 text-xl font-black text-neo-black uppercase leading-tight mb-1 hover:text-neo-blue transition-colors">
+                                    {edu.data.institution}
+                                    <i class="ri-external-link-line text-sm opacity-50 group-hover/link:opacity-100 transition-opacity"></i>
+                                </a>
+                            ) : (
+                                <h3 class="text-xl font-black text-neo-black uppercase leading-tight mb-1">{edu.data.institution}</h3>
+                            )}
+                            
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <div class="inline-block bg-neo-green text-black px-2 py-0.5 border-2 border-black font-mono text-xs font-bold">{degree}</div>
+                                {edu.data.gpa && (
+                                    <div class="inline-block bg-white text-black px-2 py-0.5 border-2 border-black font-mono text-xs font-bold">GPA: {edu.data.gpa}</div>
+                                )}
+                                {edu.data.location && (
+                                    <div class="inline-block bg-white text-gray-500 px-2 py-0.5 border-2 border-dashed border-gray-400 font-mono text-xs font-bold">{edu.data.location}</div>
+                                )}
+                            </div>
+                            
+                            {description && (
+                                <p class="text-sm font-mono text-gray-600 border-l-4 border-gray-300 pl-3 leading-relaxed">
+                                    {description}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }) : (
+             <div class="col-span-2 p-8 text-center bg-gray-100 font-mono text-gray-500 border-2 border-dashed border-gray-400 m-4">
+                NO_DATA_FOUND
+             </div>
+        )}
+    </div>
+</section>

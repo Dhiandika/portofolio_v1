@@ -1,0 +1,104 @@
+---
+import '../styles/global.css';
+import { getEntry } from 'astro:content';
+import { ViewTransitions } from 'astro:transitions';
+import Loader from '../components/Loader.astro';
+import ThemeSettings from '../components/ThemeSettings.astro';
+import InteractiveGrid from '../components/InteractiveGrid.astro';
+import Spotify from '../components/Spotify.astro';
+import Navigation from '../components/Navigation.astro';
+import JsonLd from '../components/JsonLd.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+import RandomDecorations from '../components/RandomDecorations.astro';
+
+interface Props {
+	title?: string;
+    lang?: string;
+    image?: string;
+}
+
+const siteConfig = await getEntry('site', 'config');
+const { data } = siteConfig || { data: {} as any };
+
+const { 
+    pageTitle = 'Arham | Full Stack Brutalist', 
+    pageTitle_id,
+    metaDescription = 'A Neo-Brutalist portfolio showcasing full-stack development skills.', 
+    metaDescription_id,
+    metaKeywords = 'full stack, developer, neo-brutalist, portfolio',
+    favicon = '/favicon.svg',
+    gtmId
+} = data;
+
+const { lang = 'en' } = Astro.props;
+const title = Astro.props.title || (lang === 'id' ? pageTitle_id || pageTitle : pageTitle);
+const description = lang === 'id' ? metaDescription_id || metaDescription : metaDescription;
+const image = Astro.props.image || '/og-default.jpg'; // Ensure this file exists or use a placeholder
+---
+
+<!doctype html>
+<html lang={lang} class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={description} />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href={favicon} />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+
+        <!-- Legacy Meta Tags -->
+        <!-- Meta Tags -->
+        <meta name="keywords" content={metaKeywords}>
+        <meta name="author" content={data.brandName || "Arham"}>
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={Astro.url} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={new URL(image, Astro.url)} />
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={Astro.url} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
+        <meta property="twitter:image" content={new URL(image, Astro.url)} />
+        
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+        
+        {gtmId && (
+            <!-- GTM Script Placeholder if needed -->
+            <script define:vars={{ gtmId }}>
+                console.log('GTM Loaded:', gtmId);
+            </script>
+        )}
+        <JsonLd />
+        <ViewTransitions />
+	</head>
+	<body class="text-neo-black font-display antialiased selection:bg-neo-black selection:text-neo-yellow relative bg-neo-texture">
+        <!-- Interactive Background -->
+        <InteractiveGrid />
+        
+        <!-- Random Decorative Elements -->
+        <RandomDecorations />
+
+        <!-- Custom Cursor (CSS Based now) -->
+        <div class="fixed top-0 left-0 h-2 bg-neo-green z-[60] border-b-2 border-black" id="progressBar" style="width: 0%"></div>
+
+        <!-- UI Components -->
+        <Loader lang={lang} />
+        <Navigation lang={lang} />
+        <CommandPalette lang={lang} />
+        <ThemeSettings lang={lang} />
+        <Spotify />
+
+		<slot />
+
+        <script>
+            import '../scripts/main.js';
+        </script>
+	</body>
+</html>

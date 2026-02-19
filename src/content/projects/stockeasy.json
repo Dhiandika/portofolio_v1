@@ -1,0 +1,23 @@
+{
+    "title": "StockEasy",
+    "title_id": "StockEasy",
+    "description": "An Online Stock Market Platform with Stock analysis, Chatbot and admin panel for user support.",
+    "description_id": "Platform Pasar Saham Online dengan analisis Saham, Chatbot, dan panel admin untuk dukungan pengguna.",
+    "image": "/images/stoceasy.png",
+    "link": "https://github.com/Arham43-ops/StockEasy",
+    "techStack": [
+        "Django",
+        "Python",
+        "Streamlit",
+        "Redis - Websockets",
+        "MySQL",
+        "Yfinance API"
+    ],
+    "gallery": [
+        "/images/stoceasy.png",
+        "/images/stoceasy.png",
+        "/images/stoceasy.png"
+    ],
+    "content": "StockEasy is a comprehensive platform for stock market analysis.",
+    "content_id": "StockEasy adalah platform komprehensif untuk analisis pasar saham."
+}

@@ -1,0 +1,156 @@
+---
+// RandomDecorations.astro
+// Generates random decorative elements on the page
+---
+
+<div
+    id="random-decor-container"
+    class="fixed inset-0 pointer-events-none z-0 overflow-hidden mix-blend-multiply opacity-50"
+>
+    <!-- Elements will be injected here by JS -->
+</div>
+
+<script>
+    const shapes = [
+        // Neo-Brutalist Shapes (CSS/SVG)
+        `<div class="w-16 h-16 bg-neo-pink border-4 border-black shadow-hard transform rotate-12"></div>`,
+        `<div class="w-20 h-20 bg-neo-blue border-4 border-black rounded-full shadow-hard"></div>`,
+        `<div class="w-12 h-12 bg-neo-yellow border-4 border-black skew-x-12"></div>`,
+        `<div class="w-24 h-8 bg-black text-white font-mono flex items-center justify-center border-2 border-white rotate-[-5deg]">VOID</div>`,
+    ];
+
+    function generateDecorations() {
+        const container = document.getElementById(
+            "random-decorations-container",
+        );
+        if (!container) return;
+
+        // Clear previous
+        container.innerHTML = "";
+
+        const shapes = [
+            "circle",
+            "square",
+            "triangle",
+            "cross",
+            "plus",
+            "bracket-left",
+            "bracket-right",
+            "brace-left",
+            "brace-right",
+            "slash",
+            "dot-grid",
+        ];
+        const colors = [
+            "bg-neo-black",
+            "bg-neo-green",
+            "bg-neo-pink",
+            "bg-neo-blue",
+            "border-black",
+        ];
+
+        // Number of elements
+        const count = 15;
+
+        for (let i = 0; i < count; i++) {
+            const el = document.createElement("div");
+            el.classList.add(
+                "absolute",
+                "opacity-20",
+                "transition-all",
+                "duration-1000",
+            ); // Low opacity
+
+            // Random Position
+            const top = Math.random() * 100;
+            const left = Math.random() * 100;
+            el.style.top = `${top}%`;
+            el.style.left = `${left}%`;
+
+            // Avoid center area (roughly) where text usually is
+            if (top > 30 && top < 70 && left > 20 && left < 80) {
+                el.classList.add("opacity-5"); // Extra faint in center
+            }
+
+            // Random Shape
+            const shape = shapes[Math.floor(Math.random() * shapes.length)];
+            const size = Math.floor(Math.random() * 40) + 10; // 10px to 50px
+
+            const colorClass =
+                colors[Math.floor(Math.random() * colors.length)];
+
+            if (shape === "circle") {
+                el.classList.add("rounded-full", colorClass);
+                if (colorClass.startsWith("border"))
+                    el.classList.add("border-2");
+                el.style.width = `${size}px`;
+                el.style.height = `${size}px`;
+                el.style.transform = `rotate(${Math.random() * 360}deg)`;
+            } else if (shape === "square") {
+                el.classList.add(colorClass);
+                if (colorClass.startsWith("border"))
+                    el.classList.add("border-2");
+                el.style.width = `${size}px`;
+                el.style.height = `${size}px`;
+                el.style.transform = `rotate(${Math.random() * 360}deg)`;
+            } else if (shape === "cross" || shape === "plus") {
+                el.textContent = "+";
+                el.classList.add(
+                    "font-mono",
+                    "font-black",
+                    "text-neo-black",
+                    "flex",
+                    "items-center",
+                    "justify-center",
+                );
+                el.style.fontSize = `${size}px`;
+                el.style.width = `${size}px`; // Ensure text fits
+                el.style.height = `${size}px`;
+                el.style.transform = `rotate(${Math.random() * 360}deg)`;
+            } else if (shape.includes("bracket")) {
+                el.textContent = shape.includes("left") ? "[" : "]";
+                el.classList.add(
+                    "font-mono",
+                    "font-black",
+                    "text-neo-black",
+                    "opacity-30",
+                );
+                el.style.fontSize = `${size * 1.5}px`;
+                el.style.transform = `rotate(${Math.random() * 360}deg)`;
+            } else if (shape.includes("brace")) {
+                el.textContent = shape.includes("left") ? "{" : "}";
+                el.classList.add(
+                    "font-mono",
+                    "font-black",
+                    "text-neo-green",
+                    "opacity-30",
+                );
+                el.style.fontSize = `${size * 1.5}px`;
+                el.style.transform = `rotate(${Math.random() * 360}deg)`;
+            } else if (shape === "slash") {
+                el.textContent = "//";
+                el.classList.add(
+                    "font-mono",
+                    "font-black",
+                    "text-gray-400",
+                    "opacity-20",
+                );
+                el.style.fontSize = `${size}px`;
+                el.style.transform = `rotate(${Math.random() * 360}deg)`;
+            } else {
+                // Triangle (using borders)
+                el.style.width = "0";
+                el.style.height = "0";
+                el.style.borderLeft = `${size / 2}px solid transparent`;
+                el.style.borderRight = `${size / 2}px solid transparent`;
+                el.style.borderBottom = `${size}px solid rgba(0,0,0,0.2)`;
+                el.style.transform = `rotate(${Math.random() * 360}deg)`;
+            }
+
+            container.appendChild(el);
+        }
+    }
+
+    document.addEventListener("astro:page-load", generateDecorations);
+    document.addEventListener("DOMContentLoaded", generateDecorations);
+</script>

@@ -1,0 +1,267 @@
+---
+const { lang = "en" } = Astro.props;
+
+const ui = {
+    en: {
+        placeholder: "Type a command or search...",
+        noResults: "No results found.",
+        sectionNav: "Navigation",
+        sectionTheme: "Theme",
+        sectionSystem: "System",
+    },
+    id: {
+        placeholder: "Ketik perintah atau cari...",
+        noResults: "Tidak ada hasil.",
+        sectionNav: "Navigasi",
+        sectionTheme: "Tema",
+        sectionSystem: "Sistem",
+    },
+};
+
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<dialog
+    id="cmd-palette"
+    class="bg-transparent p-0 m-auto backdrop:bg-black/80 z-[100] open:animate-fade-in backdrop:backdrop-blur-sm"
+>
+    <div
+        class="bg-neo-white border-4 border-black w-[90vw] max-w-2xl shadow-[10px_10px_0_0_rgba(0,0,0,1)] flex flex-col max-h-[60vh]"
+    >
+        <!-- Input -->
+        <div class="border-b-4 border-black p-4 flex items-center gap-3">
+            <i class="ri-search-line text-2xl"></i>
+            <input
+                type="text"
+                id="cmd-input"
+                placeholder={t.placeholder}
+                class="w-full bg-transparent border-none outline-none font-mono text-xl uppercase placeholder:text-gray-400"
+                autocomplete="off"
+            />
+            <div
+                class="px-2 py-1 bg-gray-200 border border-black text-xs font-bold font-mono rounded"
+            >
+                ESC
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="cmd-results" class="overflow-y-auto p-2 flex flex-col gap-1">
+            <!-- Items will be injected here via JS -->
+        </div>
+
+        <!-- Footer -->
+        <div
+            class="border-t-4 border-black p-2 bg-neo-black text-white flex justify-between px-4 text-xs font-mono uppercase"
+        >
+            <span>Navigation & Actions</span>
+            <span class="opacity-50">ARHAM.exe SYSTEM</span>
+        </div>
+    </div>
+</dialog>
+
+<script define:vars={{ lang, t }}>
+    const palette = document.getElementById("cmd-palette");
+    const input = document.getElementById("cmd-input");
+    const resultsContainer = document.getElementById("cmd-results");
+
+    const commands = [
+        // Navigation
+        {
+            id: "home",
+            title: "HOME",
+            icon: "ri-home-4-fill",
+            section: t.sectionNav,
+            action: () => (window.location.href = `/${lang}`),
+        },
+        {
+            id: "about",
+            title: "ABOUT",
+            icon: "ri-user-3-fill",
+            section: t.sectionNav,
+            action: () => (window.location.href = `/${lang}/about`),
+        },
+        {
+            id: "projects",
+            title: "PROJECTS",
+            icon: "ri-briefcase-fill",
+            section: t.sectionNav,
+            action: () => (window.location.href = `/${lang}/projects`),
+        },
+        {
+            id: "achievements",
+            title: "ACHIEVEMENTS",
+            icon: "ri-trophy-fill",
+            section: t.sectionNav,
+            action: () => (window.location.href = `/${lang}/achievements`),
+        },
+        {
+            id: "dashboard",
+            title: "DASHBOARD",
+            icon: "ri-dashboard-fill",
+            section: t.sectionNav,
+            action: () => (window.location.href = `/${lang}/dashboard`),
+        },
+        {
+            id: "blog",
+            title: "TRANSMISSION (BLOG)",
+            icon: "ri-article-fill",
+            section: t.sectionNav,
+            action: () => (window.location.href = `/${lang}#blog`),
+        },
+        {
+            id: "contact",
+            title: "CONTACT",
+            icon: "ri-mail-send-fill",
+            section: t.sectionNav,
+            action: () => (window.location.href = `/${lang}/contact`),
+        },
+
+        // Actions
+        {
+            id: "theme-toggle",
+            title: "TOGGLE THEME",
+            icon: "ri-contrast-drop-line",
+            section: t.sectionTheme,
+            action: () => document.getElementById("theme-toggle")?.click(),
+        },
+        {
+            id: "lang-en",
+            title: "SWITCH TO ENGLISH",
+            icon: "ri-translate",
+            section: t.sectionSystem,
+            action: () =>
+                (window.location.href = window.location.pathname.replace(
+                    `/${lang}`,
+                    "/en",
+                )),
+        },
+        {
+            id: "lang-id",
+            title: "GANTI KE INDONESIA",
+            icon: "ri-translate",
+            section: t.sectionSystem,
+            action: () =>
+                (window.location.href = window.location.pathname.replace(
+                    `/${lang}`,
+                    "/id",
+                )),
+        },
+        {
+            id: "rss",
+            title: "RSS FEED",
+            icon: "ri-rss-fill",
+            section: t.sectionSystem,
+            action: () => window.open(`/${lang}/rss.xml`, "_blank"),
+        },
+    ];
+
+    let selectedIndex = 0;
+    let filteredCommands = [...commands];
+
+    function togglePalette() {
+        if (palette.open) {
+            palette.close();
+        } else {
+            palette.showModal();
+            input.value = "";
+            filterCommands("");
+            input.focus();
+        }
+    }
+
+    // Open/Close
+    window.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+            e.preventDefault();
+            togglePalette();
+        }
+    });
+
+    palette.addEventListener("click", (e) => {
+        if (e.target === palette) palette.close();
+    });
+
+    // Filtering & Rendering
+    function render() {
+        resultsContainer.innerHTML = "";
+
+        let currentSection = null;
+
+        if (filteredCommands.length === 0) {
+            resultsContainer.innerHTML = `<div class="p-4 text-center text-gray-500 font-mono">${t.noResults}</div>`;
+            return;
+        }
+
+        filteredCommands.forEach((cmd, index) => {
+            if (cmd.section !== currentSection) {
+                currentSection = cmd.section;
+                const header = document.createElement("div");
+                header.className =
+                    "px-2 py-1 text-xs font-bold text-gray-400 uppercase tracking-widest mt-2 first:mt-0 font-mono";
+                header.textContent = currentSection;
+                resultsContainer.appendChild(header);
+            }
+
+            const item = document.createElement("button");
+            item.className = `w-full text-left px-4 py-3 font-bold font-mono border-2 border-transparent flex items-center justify-between group transition-colors ${index === selectedIndex ? "bg-neo-black text-white border-black" : "hover:bg-gray-100"}`;
+            item.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="${cmd.icon} text-lg ${index === selectedIndex ? "text-neo-yellow" : "text-gray-500"}"></i>
+                    <span>${cmd.title}</span>
+                </div>
+                ${index === selectedIndex ? '<i class="ri-arrow-left-line"></i>' : ""}
+            `;
+            item.onclick = () => {
+                cmd.action();
+                palette.close();
+            };
+            item.onmouseenter = () => {
+                selectedIndex = index;
+                render(); // Re-render to update selection style
+            };
+            resultsContainer.appendChild(item);
+        });
+
+        // Scroll selected into view
+        const items = resultsContainer.querySelectorAll("button");
+        if (items[selectedIndex]) {
+            items[selectedIndex].scrollIntoView({ block: "nearest" });
+        }
+    }
+
+    function filterCommands(query) {
+        const q = query.toLowerCase();
+        filteredCommands = commands.filter(
+            (cmd) =>
+                cmd.title.toLowerCase().includes(q) ||
+                cmd.section.toLowerCase().includes(q),
+        );
+        selectedIndex = 0;
+        render();
+    }
+
+    input.addEventListener("input", (e) => filterCommands(e.target.value));
+
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            selectedIndex = (selectedIndex + 1) % filteredCommands.length;
+            render();
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            selectedIndex =
+                (selectedIndex - 1 + filteredCommands.length) %
+                filteredCommands.length;
+            render();
+        } else if (e.key === "Enter") {
+            e.preventDefault();
+            if (filteredCommands[selectedIndex]) {
+                filteredCommands[selectedIndex].action();
+                palette.close();
+            }
+        }
+    });
+
+    render();
+</script>

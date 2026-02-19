@@ -1,0 +1,233 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+    return [
+        { params: { lang: 'en' } },
+        { params: { lang: 'id' } },
+    ];
+}
+
+const { lang } = Astro.params;
+const certificates = await getCollection('certificates');
+
+const ui = {
+    en: { title: "Achievements", subtitle: "Certificates & Awards", search: "Search certificates...", all: "All", course: "Course", bootcamp: "Bootcamp", event: "Event", competition: "Competition" },
+    id: { title: "Pencapaian", subtitle: "Sertifikat & Penghargaan", search: "Cari sertifikat...", all: "Semua", course: "Kursus", bootcamp: "Bootcamp", event: "Acara", competition: "Kompetisi" },
+};
+
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<Layout title={`${t.title} | Arham.exe`} lang={lang}>
+    <main class="min-h-screen bg-neo-white pt-32 px-4 pb-20">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="mb-12">
+                <h1 class="text-5xl md:text-7xl font-black uppercase mb-4 tracking-tighter">{t.title}</h1>
+                <p class="font-mono text-xl md:text-2xl text-neo-black/70 border-l-4 border-black pl-4">{t.subtitle}</p>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex flex-col md:flex-row gap-4 mb-12 sticky top-24 z-30 bg-neo-white py-4 border-b-2 border-black/10">
+                <div class="relative flex-grow">
+                    <i class="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-xl opacity-50"></i>
+                    <input type="text" id="searchInput" placeholder={t.search} class="w-full bg-white border-2 border-black p-4 pl-12 font-mono shadow-hard focus:outline-none focus:shadow-none focus:translate-x-1 focus:translate-y-1 transition-all" />
+                </div>
+                <div class="flex gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+                    <button class="filter-btn active bg-black text-white px-6 py-4 border-2 border-black font-bold uppercase shadow-hard hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex-shrink-0" data-filter="all">{t.all}</button>
+                    <button class="filter-btn bg-white px-6 py-4 border-2 border-black font-bold uppercase shadow-hard hover:bg-neo-yellow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex-shrink-0" data-filter="Course">{t.course}</button>
+                    <button class="filter-btn bg-white px-6 py-4 border-2 border-black font-bold uppercase shadow-hard hover:bg-neo-blue hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex-shrink-0" data-filter="Bootcamp">{t.bootcamp}</button>
+                    <button class="filter-btn bg-white px-6 py-4 border-2 border-black font-bold uppercase shadow-hard hover:bg-neo-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex-shrink-0" data-filter="Event">{t.event}</button>
+                </div>
+            </div>
+
+            <!-- Grid -->
+            <div id="certGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {certificates.map((cert) => {
+                    const title = lang === 'id' ? cert.data.title_id || cert.data.title : cert.data.title;
+                    const desc = (lang === 'id' ? cert.data.description_id || cert.data.description : cert.data.description) || "";
+                    
+                    return (
+                    <article class="cert-card group bg-white border-2 border-black shadow-hard hover:shadow-[8px_8px_0_0_#000] transition-all duration-300 flex flex-col h-full" data-category={cert.data.category} data-title={title.toLowerCase()} data-issuer={cert.data.issuer.toLowerCase()} data-desc={desc.toLowerCase()}>
+                        <div class="aspect-video bg-gray-200 border-b-2 border-black overflow-hidden relative">
+                            {cert.data.image ? (
+                                <img src={cert.data.image} alt={title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            ) : (
+                                <div class="w-full h-full flex items-center justify-center bg-neo-black text-white">
+                                    <i class="ri-trophy-line text-6xl opacity-50"></i>
+                                </div>
+                            )}
+                            <button 
+                                class="category-badge absolute top-2 right-2 bg-neo-yellow border-2 border-black px-2 py-1 text-xs font-black uppercase shadow-sm hover:bg-black hover:text-white transition-colors cursor-pointer z-50 pointer-events-auto"
+                                onclick={`event.preventDefault(); event.stopPropagation(); filterByCategory('${cert.data.category}')`}
+                            >
+                                {cert.data.category}
+                            </button>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h3 class="text-2xl font-black uppercase leading-tight mb-2 line-clamp-2">{title}</h3>
+                            <p class="font-mono text-sm text-gray-600 mb-4">{cert.data.issuer} • {cert.data.date}</p>
+                            <p class="text-sm border-t-2 border-black pt-4 mt-auto line-clamp-3 mb-6">{desc}</p>
+                            
+                            <button class="w-full bg-neo-black text-white border-2 border-black py-3 font-bold uppercase hover:bg-neo-blue transition-colors flex items-center justify-center gap-2 mt-auto" onclick={`document.getElementById('modal-${cert.id}').showModal()`}>
+                                <i class="ri-eye-line"></i> View Detail
+                            </button>
+                        </div>
+
+                        {/* Modal */}
+                        <dialog id={`modal-${cert.id}`} class="p-0 border-4 border-black shadow-[10px_10px_0_0_#000] backdrop:bg-black/80 max-w-4xl w-[90vw] m-auto z-50">
+                            <div class="bg-white p-0 overflow-hidden flex flex-col md:flex-row max-h-[85vh] overflow-y-auto relative">
+                                <!-- Watermark/Background decoration -->
+                                <div class="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-center overflow-hidden">
+                                     <i class="ri-award-fill text-[400px]"></i>
+                                </div>
+
+                                <div class="md:w-1/2 bg-neo-black p-8 flex items-center justify-center sticky top-0 md:h-full min-h-[300px]">
+                                     {cert.data.image ? (
+                                        <img src={cert.data.image} alt={title} class="w-full h-auto border-4 border-white shadow-[0_0_20px_rgba(255,255,255,0.2)]" />
+                                    ) : (
+                                        <div class="w-full h-64 border-4 border-white flex flex-col items-center justify-center text-white p-8 text-center bg-black/50 backdrop-blur-sm">
+                                            <i class="ri-award-line text-6xl mb-4"></i>
+                                            <h3 class="font-black uppercase text-xl">{title}</h3>
+                                            <p class="font-mono text-sm mt-2">{cert.data.issuer}</p>
+                                        </div>
+                                    )}
+                                </div>
+                                <div class="md:w-1/2 p-8 flex flex-col relative z-10">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <span class="bg-neo-yellow border-2 border-black px-3 py-1 font-black uppercase text-xs tracking-widest">{cert.data.category}</span>
+                                        <form method="dialog">
+                                            <button class="bg-red-500 text-white border-2 border-black w-10 h-10 flex items-center justify-center hover:bg-black transition-colors shadow-hard hover:shadow-none">
+                                                <i class="ri-close-line text-xl"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    
+                                    <div class="border-b-4 border-black pb-4 mb-6">
+                                        <p class="font-mono text-gray-500 text-sm uppercase tracking-widest mb-1">Certificate of Completion</p>
+                                        <h2 class="text-3xl md:text-4xl font-black uppercase leading-none mb-2">{title}</h2>
+                                        <div class="flex flex-wrap gap-4 text-sm font-bold mt-4">
+                                            <span class="flex items-center gap-1"><i class="ri-building-line"></i> {cert.data.issuer}</span>
+                                            <span class="flex items-center gap-1"><i class="ri-calendar-line"></i> {cert.data.date}</span>
+                                        </div>
+                                    </div>
+
+                                    {cert.data.credentialId && (
+                                        <div class="mb-6 font-mono text-xs bg-gray-100 p-2 border border-black inline-block self-start">
+                                            <span class="font-bold">ID:</span> {cert.data.credentialId}
+                                        </div>
+                                    )}
+                                    
+                                    <div class="prose max-w-none mb-8 font-mono text-sm">
+                                        <p>{desc}</p>
+                                    </div>
+
+                                    {cert.data.skills_verified && (
+                                        <div class="mb-8">
+                                            <h4 class="font-black uppercase text-sm mb-2 flex items-center gap-2">
+                                                <i class="ri-check-double-line"></i> Skills Verified
+                                            </h4>
+                                            <div class="flex flex-wrap gap-2">
+                                                {cert.data.skills_verified.map(skill => (
+                                                    <span class="bg-neo-black text-white px-2 py-1 text-xs font-mono">{skill}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {cert.data.link && (
+                                        <a href={cert.data.link} target="_blank" class="mt-auto bg-neo-green text-black border-2 border-black py-4 font-black uppercase text-center hover:bg-black hover:text-white shadow-hard hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-2">
+                                            Verify Credential <i class="ri-external-link-line"></i>
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        </dialog>
+                    </article>
+                    );
+                })}
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden flex-col items-center justify-center py-24 text-center">
+                 <i class="ri-file-search-line text-6xl mb-4 text-neo-black"></i>
+                 <h3 class="text-2xl font-black uppercase">No certificates found</h3>
+                 <p class="font-mono">Try adjusting your search or filter.</p>
+            </div>
+        </div>
+    </main>
+
+    <script is:inline>
+        const searchInput = document.getElementById('searchInput');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.cert-card');
+        const emptyState = document.getElementById('emptyState');
+
+        function filter() {
+            const query = searchInput.value.toLowerCase();
+            const activeCategory = document.querySelector('.filter-btn.active').dataset.filter;
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = card.dataset.title || "";
+                const issuer = card.dataset.issuer || "";
+                const desc = card.dataset.desc || "";
+                const category = card.dataset.category;
+                
+                const matchesSearch = title.includes(query) || issuer.includes(query) || desc.includes(query);
+                const matchesCategory = activeCategory === 'all' || category === activeCategory;
+
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            emptyState.style.display = visibleCount === 0 ? 'flex' : 'none';
+        }
+
+        searchInput.addEventListener('input', filter);
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelector('.filter-btn.active').classList.remove('active', 'bg-black', 'text-white');
+                document.querySelector('.filter-btn.active').classList.add('bg-white', 'text-black');
+                
+                btn.classList.add('active', 'bg-black', 'text-white');
+                btn.classList.remove('bg-white');
+                
+                filter();
+            });
+        });
+
+        // Global function for category clicks (Re-exposed)
+        window.filterByCategory = (category) => {
+            const btn = document.querySelector(`.filter-btn[data-filter="${category}"]`);
+            if (btn) {
+                btn.click();
+                
+                // Force scroll after a short delay to ensure UI updates
+                setTimeout(() => {
+                     document.getElementById('certGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        };
+
+        // Close modal when clicking outside
+        const dialogs = document.querySelectorAll('dialog');
+        dialogs.forEach(dialog => {
+            dialog.addEventListener('click', (event) => {
+                const rect = dialog.getBoundingClientRect();
+                const isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height &&
+                  rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
+                if (!isInDialog) {
+                    dialog.close();
+                }
+            });
+        });
+    </script>
+</Layout>

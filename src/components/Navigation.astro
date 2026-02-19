@@ -1,0 +1,154 @@
+---
+import { getEntry } from "astro:content";
+const siteConfig = await getEntry("site", "config");
+const { brandName } = siteConfig.data;
+
+const { lang = "en" } = Astro.props;
+---
+
+<nav class="fixed top-0 w-full z-50 px-4 py-4 pointer-events-none">
+    <div
+        class="max-w-7xl mx-auto flex justify-between items-center pointer-events-auto"
+    >
+        <!-- Brand Hover Menu (Click Trigger for Stability) -->
+        <div class="relative group">
+            <button
+                id="brandMenuBtn"
+                class="block bg-neo-white border-2 border-black px-4 py-2 text-2xl font-black shadow-hard hover:bg-neo-yellow transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] cursor-pointer flex items-center gap-2"
+            >
+                <i class="ri-command-fill"></i>
+                {brandName || "ARHAM.exe"}
+                <i
+                    class="ri-arrow-down-s-fill text-sm transition-transform"
+                    id="brandArrow"></i>
+            </button>
+
+            <!-- Dropdown (Hidden initially, toggled by click) -->
+            <div
+                id="brandDropdown"
+                class="absolute top-full left-0 mt-2 w-64 bg-neo-black border-2 border-black shadow-[8px_8px_0_0_#fff] hidden z-50"
+            >
+                <div class="p-2 flex flex-col gap-1">
+                    <a
+                        href={`/${lang}`}
+                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-yellow hover:text-black font-mono font-bold transition-colors border-b border-gray-800"
+                    >
+                        <i class="ri-home-4-fill"></i> HOME
+                    </a>
+                    <a
+                        href={`/${lang}/about`}
+                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-blue hover:text-white font-mono font-bold transition-colors border-b border-gray-800"
+                    >
+                        <i class="ri-user-3-fill"></i> ABOUT
+                    </a>
+                    <a
+                        href={`/${lang}/projects`}
+                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-pink hover:text-white font-mono font-bold transition-colors border-b border-gray-800"
+                    >
+                        <i class="ri-briefcase-fill"></i> PROJECTS
+                    </a>
+                    <a
+                        href={`/${lang}/achievements`}
+                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-green hover:text-black font-mono font-bold transition-colors border-b border-gray-800"
+                    >
+                        <i class="ri-trophy-fill"></i> ACHIEVEMENTS
+                    </a>
+                    <a
+                        href={`/${lang}/dashboard`}
+                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-purple hover:text-white font-mono font-bold transition-colors border-b border-gray-800"
+                    >
+                        <i class="ri-dashboard-fill"></i> DASHBOARD
+                    </a>
+                    <a
+                        href={`/${lang}/blog`}
+                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-orange hover:text-black font-mono font-bold transition-colors border-b border-gray-800"
+                    >
+                        <i class="ri-article-fill"></i> BLOG
+                    </a>
+                    <a
+                        href={`/${lang}/contact`}
+                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-red hover:text-white font-mono font-bold transition-colors"
+                    >
+                        <i class="ri-mail-send-fill"></i> CONTACT
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="hidden md:flex gap-4 bg-white border-2 border-black p-2 shadow-hard"
+        >
+            <a
+                href={`/${lang}#about`}
+                class="px-3 py-1 font-mono font-bold text-sm hover:bg-black hover:text-white transition-colors cursor-hover"
+                >/ABOUT</a
+            >
+            <a
+                href={`/${lang}#experience`}
+                class="px-3 py-1 font-mono font-bold text-sm hover:bg-black hover:text-white transition-colors cursor-hover"
+                >/LOGS</a
+            >
+            <a
+                href={`/${lang}#works`}
+                class="px-3 py-1 font-mono font-bold text-sm hover:bg-black hover:text-white transition-colors cursor-hover"
+                >/WORKS</a
+            >
+            <a
+                href={`/${lang}#blog`}
+                class="px-3 py-1 font-mono font-bold text-sm hover:bg-neo-purple hover:text-white transition-colors cursor-hover"
+                >/BLOG</a
+            >
+            <a
+                href={`/${lang}#contact`}
+                class="px-3 py-1 font-mono font-bold text-sm bg-neo-yellow border border-black hover:bg-neo-pink transition-colors cursor-hover"
+                >HIRE ME</a
+            >
+        </div>
+    </div>
+</nav>
+
+<script>
+    document.addEventListener("astro:page-load", () => {
+        const brandMenuBtn = document.getElementById("brandMenuBtn");
+        const brandDropdown = document.getElementById("brandDropdown");
+        const brandArrow = document.getElementById("brandArrow");
+
+        if (brandMenuBtn && brandDropdown && brandArrow) {
+            // Remove any existing event listeners to avoid duplicates (optional but good practice)
+            // But since this runs on new page load, simple attachment is usually fine.
+
+            // Toggle menu on click
+            brandMenuBtn.onclick = (e) => {
+                e.stopPropagation();
+                const isHidden = brandDropdown.classList.contains("hidden");
+                if (isHidden) {
+                    brandDropdown.classList.remove("hidden");
+                    brandArrow.classList.add("rotate-180");
+                } else {
+                    brandDropdown.classList.add("hidden");
+                    brandArrow.classList.remove("rotate-180");
+                }
+            };
+
+            // Close on click outside
+            document.onclick = (e) => {
+                if (
+                    !brandMenuBtn.contains(e.target) &&
+                    !brandDropdown.contains(e.target)
+                ) {
+                    brandDropdown.classList.add("hidden");
+                    brandArrow.classList.remove("rotate-180");
+                }
+            };
+
+            // Close when a link inside is clicked
+            const links = brandDropdown.querySelectorAll("a");
+            links.forEach((link) => {
+                link.addEventListener("click", () => {
+                    brandDropdown.classList.add("hidden");
+                    brandArrow.classList.remove("rotate-180");
+                });
+            });
+        }
+    });
+</script>

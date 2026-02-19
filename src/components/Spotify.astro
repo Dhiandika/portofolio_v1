@@ -1,0 +1,24 @@
+---
+---
+<div class="fixed bottom-4 left-4 z-50 flex items-center gap-3 bg-neo-black text-white p-2 border-2 border-white shadow-hard pr-6 rounded-full hover:scale-105 transition-transform cursor-hover">
+    <div class="w-10 h-10 bg-neo-green rounded-full flex items-center justify-center border border-white relative overflow-hidden">
+        <div class="flex gap-0.5 items-end h-4">
+            <div class="w-1 bg-black animate-[music-bar_0.8s_ease-in-out_infinite]"></div>
+            <div class="w-1 bg-black animate-[music-bar_1.2s_ease-in-out_infinite]"></div>
+            <div class="w-1 bg-black animate-[music-bar_1.0s_ease-in-out_infinite]"></div>
+        </div>
+    </div>
+    <div class="flex flex-col">
+        <span class="text-[10px] font-bold text-neo-green leading-none">NOW PLAYING</span>
+        <div class="text-xs font-mono font-bold max-w-[120px] truncate">
+            <span class="animate-marquee inline-block">Lo-Fi Beats to Code To</span>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes music-bar {
+        0%, 100% { height: 20%; }
+        50% { height: 80%; }
+    }
+</style>

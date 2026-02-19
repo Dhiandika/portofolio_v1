@@ -1,0 +1,343 @@
+---
+import { getCollection } from "astro:content";
+import { getTechIcon } from "../utils/techIcons";
+
+interface Props {
+    lang?: string;
+}
+
+const { lang = "en" } = Astro.props;
+const projects = await getCollection("projects");
+
+const ui = {
+    en: { title: "Selected Works", viewGithub: "VIEW ALL WORKS" },
+    id: { title: "Karya Pilihan", viewGithub: "LIHAT SEMUA KARYA" },
+};
+
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<section id="works" class="py-24 bg-neo-black px-4 relative overflow-hidden">
+    <!-- Grid Pattern -->
+    <div
+        class="absolute inset-0 opacity-20 pointer-events-none"
+        style="background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px); background-size: 40px 40px;"
+    >
+    </div>
+
+    <!-- Decorative Elements -->
+    <div
+        class="absolute top-12 left-12 text-gray-800 pointer-events-none select-none"
+    >
+        <i class="ri-add-line text-6xl rotate-12"></i>
+    </div>
+    <div
+        class="absolute bottom-12 right-12 text-gray-800 pointer-events-none select-none"
+    >
+        <i class="ri-add-line text-6xl -rotate-12"></i>
+    </div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+        <!-- Header -->
+        <h2
+            class="text-6xl md:text-9xl font-black mb-24 text-center uppercase tracking-tighter text-white select-none relative group"
+        >
+            <span
+                class="absolute inset-0 text-gray-800 blur-sm transform translate-x-2 translate-y-2 select-none"
+                aria-hidden="true">SHOWCASE</span
+            >
+            <span class="relative z-10 text-white drop-shadow-[4px_4px_0_#000]"
+                >SHOWCASE</span
+            >
+        </h2>
+
+        <!-- Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+            {
+                projects.slice(0, 3).map((project, index) => {
+                    const num = `0${index + 1}`;
+                    const title =
+                        lang === "id"
+                            ? project.data.title_id || project.data.title
+                            : project.data.title;
+                    const description =
+                        lang === "id"
+                            ? project.data.description_id ||
+                              project.data.description
+                            : project.data.description;
+                    const techIconsList = project.data.techStack.map(
+                        (tech) => ({ name: tech, icon: getTechIcon(tech) }),
+                    );
+                    const galleryImages =
+                        project.data.gallery && project.data.gallery.length > 0
+                            ? project.data.gallery
+                            : project.data.image
+                              ? [project.data.image]
+                              : [];
+                    const uniqueId = `showcase-${index}`;
+
+                    return (
+                        <>
+                            {/* Card Trigger */}
+                            <article
+                                class="group relative cursor-pointer h-[450px]"
+                                onclick={`document.getElementById('${uniqueId}').showModal()`}
+                            >
+                                <div class="bg-neo-black border-4 border-[#333] h-full flex flex-col p-8 relative overflow-hidden transition-all duration-300 group-hover:border-white group-hover:shadow-[10px_10px_0_0_#fff] group-hover:-translate-y-2 group-hover:-translate-x-2">
+                                    {/* Background Image */}
+                                    {project.data.image && (
+                                        <div class="absolute inset-0 z-0 opacity-40 group-hover:opacity-60 transition-opacity grayscale group-hover:grayscale-0 duration-500">
+                                            <img
+                                                src={project.data.image}
+                                                alt={title}
+                                                class="w-full h-full object-cover"
+                                            />
+                                            <div class="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-colors" />
+                                        </div>
+                                    )}
+
+                                    {/* Content */}
+                                    <div class="relative z-10 flex flex-col h-full">
+                                        <div class="flex justify-between items-start">
+                                            <span class="text-6xl font-black text-white/20 group-hover:text-white transition-colors select-none">
+                                                {num}
+                                            </span>
+                                            <i class="ri-arrow-right-up-line text-3xl text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        </div>
+
+                                        <div class="mt-auto">
+                                            <h3 class="text-3xl font-black text-white uppercase leading-none mb-4 group-hover:text-neo-yellow transition-colors drop-shadow-[2px_2px_0_#000]">
+                                                {title}
+                                            </h3>
+                                            <div class="flex flex-wrap gap-2">
+                                                {project.data.techStack
+                                                    .slice(0, 3)
+                                                    .map((tech) => (
+                                                        <span class="bg-black border border-white text-white text-[10px] font-bold px-2 py-1 uppercase">
+                                                            {tech}
+                                                        </span>
+                                                    ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+
+                            {/* Modal */}
+                            <dialog
+                                id={uniqueId}
+                                class="p-0 bg-transparent backdrop:bg-black/90 max-w-7xl w-[95vw] h-[90vh] m-auto z-[100] open:animate-fade-in"
+                            >
+                                <div class="bg-neo-white border-4 border-black shadow-[15px_15px_0_0_#fff] flex flex-col md:flex-row h-full overflow-hidden">
+                                    {/* Left: Gallery Carousel (No Scroll) */}
+                                    <div class="md:w-2/3 bg-black border-r-4 border-black relative flex flex-col group/gallery">
+                                        {/* Main Image */}
+                                        <div class="flex-1 relative overflow-hidden flex items-center justify-center bg-neutral-900">
+                                            {galleryImages.length > 0 ? (
+                                                <>
+                                                    <img
+                                                        id={`${uniqueId}-main-img`}
+                                                        src={galleryImages[0]}
+                                                        alt={title}
+                                                        class="w-full h-full object-contain"
+                                                    />
+                                                    {/* Navigation Buttons */}
+                                                    {galleryImages.length >
+                                                        1 && (
+                                                        <>
+                                                            <button
+                                                                class="absolute left-4 top-1/2 -translate-y-1/2 bg-black text-white p-3 border-2 border-white hover:bg-neo-yellow hover:text-black transition-colors z-20"
+                                                                onclick={`prevImage('${uniqueId}', ${JSON.stringify(galleryImages)})`}
+                                                            >
+                                                                <i class="ri-arrow-left-line text-2xl" />
+                                                            </button>
+                                                            <button
+                                                                class="absolute right-4 top-1/2 -translate-y-1/2 bg-black text-white p-3 border-2 border-white hover:bg-neo-yellow hover:text-black transition-colors z-20"
+                                                                onclick={`nextImage('${uniqueId}', ${JSON.stringify(galleryImages)})`}
+                                                            >
+                                                                <i class="ri-arrow-right-line text-2xl" />
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                    <div class="absolute bottom-4 left-4 bg-black/80 px-3 py-1 text-white text-xs font-mono border border-white/20">
+                                                        <span
+                                                            id={`${uniqueId}-counter`}
+                                                        >
+                                                            1
+                                                        </span>{" "}
+                                                        / {galleryImages.length}
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div class="text-white/50 flex flex-col items-center">
+                                                    <i class="ri-image-line text-6xl mb-4" />
+                                                    <p class="font-mono">
+                                                        NO SIGNAL
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Thumbnails (Bottom Bar) */}
+                                        {galleryImages.length > 1 && (
+                                            <div class="h-20 bg-black border-t-2 border-white/20 flex items-center gap-2 px-4 overflow-x-auto">
+                                                {galleryImages.map((img, i) => (
+                                                    <button
+                                                        class={`w-16 h-12 border-2 ${i === 0 ? "border-neo-yellow" : "border-white/20"} hover:border-white transition-colors flex-shrink-0 bg-neutral-800`}
+                                                        onclick={`setImage('${uniqueId}', '${img}', ${i}, ${galleryImages.length})`}
+                                                    >
+                                                        <img
+                                                            src={img}
+                                                            class="w-full h-full object-cover"
+                                                        />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Right: Details */}
+                                    <div class="md:w-1/3 flex flex-col bg-white h-full relative">
+                                        {/* Header */}
+                                        <div class="p-6 border-b-4 border-black flex justify-between items-start bg-neo-yellow">
+                                            <div>
+                                                <h2 class="text-3xl font-black uppercase leading-none mb-1">
+                                                    {title}
+                                                </h2>
+                                                <p class="font-mono text-xs font-bold">
+                                                    PROJECT LOG_2024
+                                                </p>
+                                            </div>
+                                            <form method="dialog">
+                                                <button class="bg-red-500 text-white w-10 h-10 border-2 border-black hover:bg-black hover:text-red-500 transition-colors shadow-hard-sm">
+                                                    <i class="ri-close-line text-xl" />
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        {/* Scrollable Content */}
+                                        <div class="flex-1 overflow-y-auto p-8">
+                                            <div class="mb-8">
+                                                <h3 class="font-black text-xl uppercase mb-4 flex items-center gap-2">
+                                                    <i class="ri-file-list-3-line" />{" "}
+                                                    Briefing
+                                                </h3>
+                                                <p class="font-mono text-sm leading-relaxed whitespace-pre-line text-gray-800 border-l-4 border-black pl-4">
+                                                    {description}
+                                                </p>
+                                            </div>
+
+                                            <div class="mb-8">
+                                                <h3 class="font-black text-xl uppercase mb-4 flex items-center gap-2">
+                                                    <i class="ri-cpu-line" />{" "}
+                                                    Arsenal
+                                                </h3>
+                                                <div class="flex flex-wrap gap-3">
+                                                    {techIconsList.map(
+                                                        (item) => (
+                                                            <div class="group/tech relative">
+                                                                <div class="w-10 h-10 bg-white border-2 border-black flex items-center justify-center shadow-hard-sm group-hover/tech:translate-x-[2px] group-hover/tech:translate-y-[2px] group-hover/tech:shadow-none transition-all">
+                                                                    <img
+                                                                        src={
+                                                                            item.icon
+                                                                        }
+                                                                        class="w-6 h-6 object-contain"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        ),
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Footer Actions */}
+                                        <div class="p-6 border-t-4 border-black bg-gray-50 mt-auto">
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <a
+                                                    href={project.data.link}
+                                                    target="_blank"
+                                                    class="col-span-2 bg-neo-black text-white hover:bg-neo-blue py-3 font-black uppercase text-center border-2 border-black shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-2"
+                                                >
+                                                    DEPLOYMENT{" "}
+                                                    <i class="ri-external-link-line" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </dialog>
+                        </>
+                    );
+                })
+            }
+        </div>
+
+        <div class="flex justify-center items-center gap-4">
+            <span class="h-[4px] w-24 bg-white/20"></span>
+            <a
+                href={`/${lang}/projects`}
+                class="bg-white text-black px-8 py-3 font-black uppercase border-4 border-transparent hover:border-white hover:bg-transparent hover:text-white transition-all tracking-widest text-sm flex items-center gap-2 group"
+            >
+                {t.viewGithub}
+                <i
+                    class="ri-arrow-right-line group-hover:translate-x-1 transition-transform"
+                ></i>
+            </a>
+            <span class="h-[4px] w-24 bg-white/20"></span>
+        </div>
+    </div>
+</section>
+
+<script is:inline>
+    // Global Gallery Functions
+    window.currentImageIndices = {};
+
+    window.setImage = (modalId, imgSrc, index, total) => {
+        const mainImg = document.querySelector(`#${modalId}-main-img`);
+        const counter = document.querySelector(`#${modalId}-counter`);
+        const thumbnails = document.querySelectorAll(`#${modalId} button img`); // Simplified selector
+
+        if (mainImg) {
+            mainImg.style.opacity = "0.5";
+            setTimeout(() => {
+                mainImg.src = imgSrc;
+                mainImg.style.opacity = "1";
+            }, 150);
+        }
+
+        if (counter) counter.textContent = index + 1;
+        window.currentImageIndices[modalId] = index;
+
+        // Update active thumbnail border
+        const buttons = document.querySelectorAll(
+            `#${modalId} .border-neo-yellow`,
+        );
+        buttons.forEach((b) => {
+            b.classList.remove("border-neo-yellow");
+            b.classList.add("border-white/20");
+        });
+
+        // Find the specific button clicked (or by index) and highlight it
+        // This part needs robust selecting, simpler to just re-render or select by index
+        const allThumbBtns = document.querySelectorAll(
+            `#${modalId} button.w-16`,
+        );
+        if (allThumbBtns[index]) {
+            allThumbBtns[index].classList.remove("border-white/20");
+            allThumbBtns[index].classList.add("border-neo-yellow");
+        }
+    };
+
+    window.nextImage = (modalId, images) => {
+        let currentIndex = window.currentImageIndices[modalId] || 0;
+        let nextIndex = (currentIndex + 1) % images.length;
+        window.setImage(modalId, images[nextIndex], nextIndex, images.length);
+    };
+
+    window.prevImage = (modalId, images) => {
+        let currentIndex = window.currentImageIndices[modalId] || 0;
+        let prevIndex = (currentIndex - 1 + images.length) % images.length;
+        window.setImage(modalId, images[prevIndex], prevIndex, images.length);
+    };
+</script>

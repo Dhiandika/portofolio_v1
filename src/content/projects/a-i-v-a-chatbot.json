@@ -1,0 +1,16 @@
+{
+    "title": "A.I.V.A Chatbot",
+    "title_id": "A.I.V.A Chatbot",
+    "description": "Chatbot AI which answers all questions, does tasks assigned and also analyzes documents given by users.",
+    "description_id": "Chatbot AI yang menjawab semua pertanyaan, melakukan tugas yang diberikan, dan juga menganalisis dokumen dari pengguna.",
+    "image": "/images/aiva.png",
+    "link": "https://github.com/Arham43-ops/AIVA_chatbot",
+    "techStack": [
+        "Django",
+        "Python",
+        "MySQL",
+        "AI"
+    ],
+    "content": "A.I.V.A is an advanced AI virtual assistant capable of document analysis and task execution.",
+    "content_id": "A.I.V.A adalah asisten virtual AI canggih yang mampu menganalisis dokumen dan mengeksekusi tugas."
+}

@@ -1,0 +1,145 @@
+---
+interface Props {
+    lang?: string;
+}
+
+const { lang = "en" } = Astro.props;
+
+const ui = {
+    en: {
+        title: "CODING_ACTIVITY",
+        github: "GITHUB_STATS",
+        wakatime: "WAKATIME_LOGS",
+        leetcode: "LEETCODE_DOJO",
+    },
+    id: {
+        title: "AKTIVITAS_KODING",
+        github: "STATISTIK_GITHUB",
+        wakatime: "LOG_WAKATIME",
+        leetcode: "DOJO_LEETCODE",
+    },
+};
+
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+    <!-- GitHub Stats (Using github-readme-stats) -->
+    <div class="bg-white border-2 border-black shadow-hard p-1 relative group">
+        <h3
+            class="absolute -top-4 left-4 bg-black text-white px-2 py-1 font-mono text-xs font-bold uppercase z-10"
+        >
+            {t.github}
+        </h3>
+        <div
+            class="bg-neo-black p-4 h-full flex items-center justify-center overflow-hidden relative"
+        >
+            <div
+                class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"
+            >
+            </div>
+            <!-- Customize username 'Dhiandika' here -->
+            <img
+                src="https://github-readme-stats.vercel.app/api?username=Dhiandika&show_icons=true&theme=transparent&hide_border=true&title_color=ffffff&text_color=999&icon_color=33ff57&bg_color=00000000"
+                alt="GitHub Stats"
+                class="w-full h-auto object-contain relative z-10 filter grayscale group-hover:grayscale-0 transition-all duration-500"
+            />
+        </div>
+    </div>
+
+    <!-- WakaTime (Using wakatime-readme-stats or similar) -->
+    <div class="bg-white border-2 border-black shadow-hard p-1 relative group">
+        <h3
+            class="absolute -top-4 left-4 bg-neo-green text-black px-2 py-1 font-mono text-xs font-bold uppercase z-10 border border-black"
+        >
+            {t.wakatime}
+        </h3>
+        <div
+            class="bg-neo-black p-4 h-full flex items-center justify-center overflow-hidden relative"
+        >
+            <div
+                class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"
+            >
+            </div>
+            <!-- Replace with user's WakaTime embed or stats image -->
+            <img
+                src="https://github-readme-stats.vercel.app/api/wakatime?username=Dhiandika&layout=compact&theme=transparent&hide_border=true&title_color=ffffff&text_color=999&icon_color=fbff48&bg_color=00000000"
+                alt="WakaTime Stats"
+                class="w-full h-auto object-contain relative z-10 filter grayscale group-hover:grayscale-0 transition-all duration-500"
+            />
+        </div>
+    </div>
+
+    <!-- LeetCode & Streaks -->
+    <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- LeetCode -->
+        <div
+            class="bg-white border-2 border-black shadow-hard p-6 flex flex-col items-center justify-center relative overflow-hidden group"
+        >
+            <h3 class="font-black uppercase text-xl mb-4 relative z-10">
+                {t.leetcode}
+            </h3>
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="text-center">
+                    <div class="text-xs font-mono text-gray-500">SOLVED</div>
+                    <div
+                        class="text-4xl font-black text-neo-yellow"
+                        id="lc-solved"
+                    >
+                        --
+                    </div>
+                </div>
+                <div class="w-[1px] h-12 bg-black/10"></div>
+                <div class="text-center">
+                    <div class="text-xs font-mono text-gray-500">RANK</div>
+                    <div class="text-xl font-black" id="lc-rank">--</div>
+                </div>
+            </div>
+            <!-- Decorative Background -->
+            <i
+                class="ri-code-box-line absolute -bottom-4 -right-4 text-9xl opacity-5 group-hover:opacity-10 transition-opacity"
+            ></i>
+        </div>
+
+        <!-- GitHub Top Langs -->
+        <div
+            class="md:col-span-2 bg-white border-2 border-black shadow-hard p-1 relative group h-48 md:h-auto"
+        >
+            <div
+                class="bg-neo-black w-full h-full flex items-center justify-center overflow-hidden"
+            >
+                <img
+                    src="https://github-readme-stats.vercel.app/api/top-langs/?username=Dhiandika&layout=compact&theme=transparent&hide_border=true&title_color=ffffff&text_color=999&icon_color=33ff57&bg_color=00000000"
+                    alt="Top Languages"
+                    class="h-full w-auto object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500"
+                />
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // LeetCode Stats Fetcher (Client Side to avoid rate limits/build blocks)
+    async function fetchLeetCode() {
+        try {
+            // Using a proxy or direct if CORS allows (usually need a proxy for LeetCode)
+            // Fallback to a mock or open API wrapper
+            const response = await fetch(
+                "https://leetcode-stats-api.herokuapp.com/Dhiandika",
+            );
+            const data = await response.json();
+
+            if (data.status === "success") {
+                const solved = document.getElementById("lc-solved");
+                const rank = document.getElementById("lc-rank");
+
+                if (solved) solved.textContent = data.totalSolved;
+                if (rank) rank.textContent = data.ranking;
+            }
+        } catch (e) {
+            console.error("LC Fetch Error", e);
+        }
+    }
+
+    document.addEventListener("astro:page-load", fetchLeetCode);
+</script>

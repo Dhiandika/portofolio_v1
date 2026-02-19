@@ -1,0 +1,165 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+    lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
+const career = await getCollection('career');
+
+const ui = {
+    en: { title: "Career", subtitle: "Professional Journey", show: "Show Details", hide: "Hide Details" },
+    id: { title: "Karier", subtitle: "Perjalanan Profesional", show: "Tampilkan Detail", hide: "Sembunyikan" }
+};
+
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<section class="border-4 border-black bg-white shadow-hard">
+    <div class="bg-neo-black text-white p-4 flex items-center justify-between border-b-4 border-black">
+        <div class="flex items-center gap-3">
+            <i class="ri-briefcase-fill text-2xl text-neo-yellow"></i>
+            <div>
+                <h2 class="text-xl font-black font-mono uppercase leading-none">{t.title}</h2>
+                <p class="text-xs text-gray-400 font-mono tracking-widest">{t.subtitle}</p>
+            </div>
+        </div>
+        <div class="w-3 h-3 bg-neo-red rounded-full border border-white animate-pulse"></div>
+    </div>
+
+    <div class="divide-y-4 divide-black">
+        {career.map((job, index) => {
+            const role = lang === 'id' ? job.data.role_id || job.data.role : job.data.role;
+            const content = lang === 'id' ? job.data.content_id || job.data.content : job.data.content;
+            const itemId = `job-${index}`;
+            
+            return (
+                <div class="group bg-white hover:bg-neo-white transition-colors">
+                    <div class="p-6">
+                        <div class="flex flex-col md:flex-row gap-6 items-start">
+                            <div class="w-16 h-16 bg-white border-4 border-black flex-shrink-0 flex items-center justify-center shadow-[4px_4px_0_0_#000]">
+                                {job.data.logo ? (
+                                    <img src={job.data.logo} alt={job.data.company} class="w-full h-full object-contain p-1" />
+                                ) : (
+                                    <span class="text-3xl font-black text-neo-black">{job.data.company.charAt(0)}</span>
+                                )}
+                            </div>
+                            
+                            <div class="flex-1 w-full">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-2">
+                                    <h3 class="text-2xl font-black text-neo-black uppercase leading-tight">{role}</h3>
+                                    <span class="inline-block bg-neo-black text-white px-2 py-1 font-mono text-xs font-bold whitespace-nowrap">{job.data.date}</span>
+                                </div>
+                                
+                                <div class="flex flex-wrap gap-2 text-sm font-mono font-bold mb-4">
+                                    {job.data.link ? (
+                                        <a href={job.data.link} target="_blank" rel="noopener noreferrer" class="bg-neo-blue text-white px-2 py-0.5 border-2 border-black hover:bg-black hover:underline underline-offset-2">
+                                            {job.data.company} <i class="ri-external-link-line ml-1"></i>
+                                        </a>
+                                    ) : (
+                                        <span class="bg-neo-blue text-white px-2 py-0.5 border-2 border-black">{job.data.company}</span>
+                                    )}
+                                    {job.data.location && (
+                                        <span class="bg-white text-black px-2 py-0.5 border-2 border-black">{job.data.location}</span>
+                                    )}
+                                    {job.data.type && (
+                                        <span class="bg-neo-yellow text-black px-2 py-0.5 border-2 border-black">{job.data.type}</span>
+                                    )}
+                                </div>
+                                
+                                <!-- Accordion Toggle -->
+                                <button 
+                                    onclick={`
+                                        const el = document.getElementById('${itemId}');
+                                        const btn = this;
+                                        el.classList.toggle('hidden');
+                                        btn.querySelector('.icon').classList.toggle('rotate-180');
+                                        btn.querySelector('.text').innerText = el.classList.contains('hidden') ? '${t.show}' : '${t.hide}';
+                                        btn.classList.toggle('bg-neo-black');
+                                        btn.classList.toggle('text-white');
+                                        btn.classList.toggle('bg-white');
+                                        btn.classList.toggle('text-black');
+                                    `}
+                                    class="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2 border-2 border-black font-bold text-sm bg-white hover:bg-black hover:text-white transition-all shadow-[4px_4px_0_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none cursor-pointer"
+                                >
+                                    <span class="text">{t.show}</span>
+                                    <i class="ri-arrow-down-fill icon transition-transform duration-300"></i>
+                                </button>
+
+                                <!-- Collapsible Content -->
+                                <div id={itemId} class="hidden mt-6 pt-6 border-t-2 border-black font-mono text-sm leading-relaxed text-neo-black bg-white p-6 border-2 border-black shadow-[4px_4px_0_0_#000]">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                        <!-- Tasks -->
+                                        <div>
+                                            <h4 class="font-black uppercase mb-4 flex items-center gap-2">
+                                                <i class="ri-list-check text-xl bg-neo-yellow text-black p-1 border-2 border-black"></i>
+                                                <span class="bg-neo-yellow text-black px-2 py-1 border-2 border-black shadow-[2px_2px_0_0_#000] text-sm">
+                                                    {lang === 'id' ? 'TUGAS' : 'TASKS'}
+                                                </span>
+                                            </h4>
+                                            <ul class="space-y-2">
+                                                {(lang === 'id' && job.data.tasks_id ? job.data.tasks_id : job.data.tasks || []).map(item => (
+                                                    <li class="flex items-start gap-2">
+                                                        <i class="ri-check-line font-bold mt-0.5 text-neo-black"></i>
+                                                        <span>{item}</span>
+                                                    </li>
+                                                ))}
+                                                {(!job.data.tasks && !job.data.tasks_id) && <li class="italic text-gray-500">-</li>}
+                                            </ul>
+                                        </div>
+
+                                        <!-- Learned -->
+                                        <div>
+                                            <h4 class="font-black uppercase mb-4 flex items-center gap-2">
+                                                <i class="ri-lightbulb-flash-line text-xl bg-neo-blue text-white p-1 border-2 border-black"></i>
+                                                <span class="bg-neo-blue text-white px-2 py-1 border-2 border-black shadow-[2px_2px_0_0_#000] text-sm">
+                                                    {lang === 'id' ? 'PELAJARAN' : 'LEARNED'}
+                                                </span>
+                                            </h4>
+                                            <ul class="space-y-2">
+                                                {(lang === 'id' && job.data.skills_learned_id ? job.data.skills_learned_id : job.data.skills_learned || []).map(item => (
+                                                    <li class="flex items-start gap-2">
+                                                        <i class="ri-arrow-right-s-fill mt-0.5 text-neo-blue"></i>
+                                                        <span>{item}</span>
+                                                    </li>
+                                                ))}
+                                                {(!job.data.skills_learned && !job.data.skills_learned_id) && <li class="italic text-gray-500">-</li>}
+                                            </ul>
+                                        </div>
+
+                                        <!-- Impact -->
+                                        <div>
+                                            <h4 class="font-black uppercase mb-4 flex items-center gap-2">
+                                                <i class="ri-rocket-line text-xl bg-neo-green text-black p-1 border-2 border-black"></i>
+                                                <span class="bg-neo-green text-black px-2 py-1 border-2 border-black shadow-[2px_2px_0_0_#000] text-sm">
+                                                    {lang === 'id' ? 'DAMPAK' : 'IMPACT'}
+                                                </span>
+                                            </h4>
+                                            <ul class="space-y-2">
+                                                {(lang === 'id' && job.data.impact_id ? job.data.impact_id : job.data.impact || []).map(item => (
+                                                    <li class="flex items-start gap-2">
+                                                        <i class="ri-fire-fill mt-0.5 text-neo-green"></i>
+                                                        <span>{item}</span>
+                                                    </li>
+                                                ))}
+                                                {(!job.data.impact && !job.data.impact_id) && <li class="italic text-gray-500">-</li>}
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    {/* Fallback for legacy content */}
+                                    {(job.data.content || job.data.content_id) && (
+                                        <div class="mt-8 pt-8 border-t-2 border-dashed border-gray-400">
+                                            <p class="whitespace-pre-line">{lang === 'id' ? job.data.content_id || job.data.content : job.data.content}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        })}
+    </div>
+</section>

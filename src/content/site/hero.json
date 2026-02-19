@@ -1,0 +1,20 @@
+{
+  "title": "FULL STACK DEVELOPER",
+  "title_id": "FULL STACK DEVELOPER",
+  "bio": "I build digital products that refuse to be boring. \nReact • Python • Java • Node",
+  "bio_id": "Saya membangun produk digital yang tidak membosankan. \nReact • Python • Java • Node",
+  "techStack": [
+    {
+      "name": "React"
+    },
+    {
+      "name": "Python"
+    },
+    {
+      "name": "Java"
+    },
+    {
+      "name": "Node.js"
+    }
+  ]
+}

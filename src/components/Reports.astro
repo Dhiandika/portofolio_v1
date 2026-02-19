@@ -1,0 +1,131 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+    lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
+const reviews = await getCollection('reviews');
+// Duplicate the array to ensure smooth seamless scroll if items are few
+const displayReviews = [...reviews, ...reviews, ...reviews]; 
+
+const colorMap = {
+    'neo-green': 'bg-neo-green border-neo-green/50 text-neo-green/60',
+    'neo-blue': 'bg-neo-blue border-neo-blue/50 text-neo-blue/60',
+    'neo-pink': 'bg-neo-pink border-neo-pink/50 text-neo-pink/60',
+    'neo-purple': 'bg-neo-purple border-neo-purple/50 text-neo-purple/60',
+    'neo-orange': 'bg-neo-orange border-neo-orange/50 text-neo-orange/60',
+};
+
+const borderColorMap = {
+    'neo-green': 'hover:border-neo-green/50',
+    'neo-blue': 'hover:border-neo-blue/50',
+    'neo-pink': 'hover:border-neo-pink/50',
+    'neo-purple': 'hover:border-neo-purple/50',
+    'neo-orange': 'hover:border-neo-orange/50',
+}
+
+const textColorMap = {
+    'neo-green': 'text-neo-green',
+    'neo-blue': 'text-neo-blue',
+    'neo-pink': 'text-neo-pink',
+    'neo-purple': 'text-neo-purple',
+    'neo-orange': 'text-neo-orange',
+}
+
+const bgMap = {
+    'neo-green': 'bg-neo-green',
+    'neo-blue': 'bg-neo-blue',
+    'neo-pink': 'bg-neo-pink',
+    'neo-purple': 'bg-neo-purple',
+    'neo-orange': 'bg-neo-orange',
+}
+
+const ui = {
+    en: { title: "USER_REPORTS.txt", live: "LIVE_FEED", from: "FROM:" },
+    id: { title: "LAPORAN_USER.txt", live: "UMPAN_LANGSUNG", from: "DARI:" }
+};
+
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<section id="reports" class="py-24 bg-neo-black border-t-4 border-black overflow-hidden relative">
+    <!-- Scanline Pattern -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background: repeating-linear-gradient(0deg, transparent, transparent 2px, #fff 2px, #fff 4px);"></div>
+
+    <div class="max-w-7xl mx-auto px-4 relative z-10">
+        <div class="flex items-center gap-2 mb-16 bg-white/5 border-2 border-white/10 p-4 inline-flex shadow-hard shadow-neo-blue/20">
+            <div class="flex gap-2">
+                <div class="h-3 w-3 bg-red-500 rounded-full border border-black"></div>
+                <div class="h-3 w-3 bg-yellow-500 rounded-full border border-black"></div>
+                <div class="h-3 w-3 bg-green-500 rounded-full border border-black"></div>
+            </div>
+            <h2 class="font-mono text-white text-xl font-bold ml-4 tracking-tighter">{t.title}</h2>
+            <div class="ml-8 px-2 bg-neo-blue text-black text-[10px] font-black uppercase">{t.live}</div>
+        </div>
+    </div>
+
+    <div class="marquee-container group relative z-10 overflow-hidden">
+        <div class="reports-marquee flex gap-8 py-12 px-4 select-none w-max">
+            {
+                displayReviews.map((review, index) => {
+                    const color = review.data.color as keyof typeof colorMap || 'neo-green';
+                    const hoverBorder = borderColorMap[color] || borderColorMap['neo-green'];
+                    const textColor = textColorMap[color] || textColorMap['neo-green'];
+                    const bgColor = bgMap[color] || bgMap['neo-green'];
+                    const reportId = String(index + 1).padStart(3, '0');
+                    
+                    const quote = lang === 'id' ? review.data.quote_id || review.data.quote : review.data.quote;
+
+                    return (
+                        <div class={`flex-shrink-0 w-[450px] bg-neo-black border-4 border-white/10 p-8 shadow-hard ${hoverBorder} hover:-translate-y-2 transition-all duration-500 relative group/card overflow-hidden text-left whitespace-normal`}>
+                            <div class={`absolute top-0 left-0 w-full h-1 ${bgColor}`}></div>
+                            <div class="absolute -top-4 -right-4 w-12 h-12 bg-white/5 rotate-45"></div>
+                            <div class="flex justify-between items-start mb-6">
+                                <div class={`font-mono ${textColor} text-xs font-bold tracking-widest uppercase`}>REPORT_{reportId}.log</div>
+                                <div class="text-[10px] font-mono text-gray-500">2025.txt</div>
+                            </div>
+                            <div class="font-mono text-gray-400 text-[10px] mb-2 uppercase tracking-tight">{t.from} {review.data.author}</div>
+                            <p class="font-bold text-xl leading-snug mb-6 text-white/90">"{quote}"</p>
+                            <div class={`flex ${textColor}/60 gap-1 text-lg`}>
+                                {Array.from({ length: review.data.rating }).map(() => <i class="ri-star-fill"></i>)}
+                            </div>
+                        </div>
+                    );
+                })
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.addEventListener('astro:page-load', () => {
+        const container = document.querySelector('.reports-marquee');
+        
+        if (container) {
+            // Clone items for seamless loop if needed, but handled in component prop
+            const totalWidth = container.scrollWidth;
+            const viewportWidth = window.innerWidth;
+            
+            // Auto scroll
+            const anim = gsap.to(container, {
+                x: () => -(totalWidth - viewportWidth), // Scroll to end
+                ease: "none",
+                duration: 100, // Slower speed
+                repeat: -1,
+                yoyo: true // or restart for loop
+            });
+
+            // Pause on hover
+            const wrapper = document.querySelector('.marquee-container');
+            wrapper?.addEventListener('mouseenter', () => anim.pause());
+            wrapper?.addEventListener('mouseleave', () => anim.play());
+        }
+    });
+</script>

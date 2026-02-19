@@ -1,0 +1,79 @@
+---
+import { getCollection } from "astro:content";
+
+interface Props {
+    lang?: string;
+}
+
+const { lang = "en" } = Astro.props;
+const experience = await getCollection("experience");
+---
+
+<section id="experience" class="py-24 px-4 max-w-7xl mx-auto">
+    <h2
+        class="text-5xl md:text-8xl font-black uppercase mb-12 tracking-tighter text-center"
+    >
+        Experience<span class="text-neo-red">_Log</span>
+    </h2>
+
+    <div class="relative border-l-4 border-black ml-4 md:ml-10 space-y-12">
+        {
+            experience.map(async (entry, index) => {
+                const colorMap = {
+                    "neo-yellow": {
+                        bg: "bg-neo-yellow",
+                        text: "text-black bg-neo-yellow px-2 inline-block transform -rotate-1",
+                    }, // High contrast: Black on Yellow
+                    "neo-red": { bg: "bg-neo-red", text: "text-neo-red" },
+                    "neo-green": { bg: "bg-neo-green", text: "text-neo-green" },
+                    "neo-blue": { bg: "bg-neo-blue", text: "text-neo-blue" },
+                    "neo-pink": { bg: "bg-neo-pink", text: "text-neo-pink" },
+                };
+                const colors = [
+                    "neo-yellow",
+                    "neo-red",
+                    "neo-green",
+                    "neo-blue",
+                    "neo-pink",
+                ];
+                const colorKey = colors[index % colors.length];
+                const theme = colorMap[colorKey as keyof typeof colorMap];
+
+                const role =
+                    lang === "id"
+                        ? entry.data.role_id || entry.data.role
+                        : entry.data.role;
+                const content =
+                    lang === "id"
+                        ? entry.data.content_id || entry.data.content
+                        : entry.data.content;
+
+                return (
+                    <div class="reveal relative pl-8 md:pl-16">
+                        <div
+                            class={`absolute -left-[14px] top-2 w-6 h-6 ${theme.bg} border-4 border-black`}
+                        />
+                        <div class="bg-white border-4 border-black p-6 shadow-hard hover:shadow-hard-xl transition-all">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-dashed border-gray-300 pb-4 mb-4">
+                                <h3 class="text-3xl font-black uppercase">
+                                    {role}
+                                </h3>
+                                <span class="font-mono font-bold bg-neo-black text-white px-2 py-1">
+                                    {entry.data.date}
+                                </span>
+                            </div>
+                            <p
+                                class={`font-mono text-xl mb-2 ${theme.text} font-bold uppercase`}
+                            >
+                                @ {entry.data.company}
+                            </p>
+                            <div class="font-mono text-gray-700 space-y-1 prose prose-sm max-w-none">
+                                <p class="whitespace-pre-line">{content}</p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })
+        }
+    </div>
+</section>
