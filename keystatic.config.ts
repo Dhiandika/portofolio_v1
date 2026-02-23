@@ -26,12 +26,14 @@ import { config, fields, collection, singleton } from '@keystatic/core';
 export default config({
     storage: import.meta.env?.MODE === 'production'
         ? {
-            kind: 'github',
-            repo: 'Dhiandika/portofolio_v1',
+            kind: 'cloud',
         }
         : {
             kind: 'local',
         },
+    cloud: {
+        project: 'dhiandika/portofoliov1',
+    },
     singletons: {
         site: singleton({
             label: 'Site Settings (Identity, SEO, Contact)',
