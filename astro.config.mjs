@@ -26,7 +26,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://arham-exe.vercel.app',
+  site: 'https://npemburu.my.id',
   vite: {
     plugins: [tailwindcss()],
 
