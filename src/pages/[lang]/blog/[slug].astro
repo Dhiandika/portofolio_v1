@@ -5,30 +5,19 @@ import ClapButton from "../../../components/ClapButton.astro";
 import { getCollection } from "astro:content";
 import { getEntry } from "astro:content";
 
-export async function getStaticPaths() {
-    const posts = await getCollection("blog");
+const { lang, slug } = Astro.params;
 
-    const paths: {
-        params: { lang: string; slug: string };
-        props: { post: any };
-    }[] = [];
-
-    posts.forEach((post) => {
-        paths.push({
-            params: { lang: "en", slug: post.slug },
-            props: { post },
-        });
-        paths.push({
-            params: { lang: "id", slug: post.slug },
-            props: { post },
-        });
-    });
-
-    return paths;
+if (!slug) {
+    return Astro.redirect("/404");
 }
 
-const { lang } = Astro.params;
-const { post } = Astro.props;
+const posts = await getCollection("blog");
+const post = posts.find((p: any) => p.slug === slug);
+
+if (!post) {
+    return Astro.redirect("/404");
+}
+
 const siteConfig = await getEntry("site", "config");
 const { data: siteData } = siteConfig || { data: { brandName: "ARHAM" } };
 
@@ -45,7 +34,7 @@ const title =
 ---
 
 <Layout
-    title={`${title} | ${siteData.brandName || "ARHAM"}`}
+    title={`${title} | ${siteData.brandName || "Npemburu"}`}
     lang={lang}
     image={`/og/${post.slug}.png`}
 >
@@ -113,6 +102,12 @@ const title =
                                         },
                                     )
                                 }
+                            </span>
+                            <span
+                                id="view-count"
+                                class="font-mono text-xs font-black bg-neo-yellow text-neo-black px-3 py-1 opacity-0 transition-opacity duration-300 border-2 border-neo-black shadow-[2px_2px_0px_#000]"
+                            >
+                                ... VIEWS
                             </span>
                             {
                                 post.data.topics && (
@@ -232,6 +227,42 @@ const title =
 
             scrollTop?.addEventListener("click", () => {
                 window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+
+            // View Counter Logic
+            document.addEventListener("astro:page-load", () => {
+                const viewCountEl = document.getElementById("view-count");
+                if (viewCountEl) {
+                    const pathname = window.location.pathname;
+                    if (pathname.includes("/blog/")) {
+                        // strip trailing slash for cleaner split
+                        const slug = pathname
+                            .replace(/\/$/, "")
+                            .split("/")
+                            .pop();
+                        if (slug) {
+                            fetch(`/api/views/${slug}`, { method: "POST" })
+                                .then((res) => res.json())
+                                .then((data) => {
+                                    if (data.views !== undefined) {
+                                        viewCountEl.textContent = `${data.views} VIEWS`;
+                                        viewCountEl.classList.remove(
+                                            "opacity-0",
+                                        );
+                                        viewCountEl.classList.add(
+                                            "opacity-100",
+                                        );
+                                    }
+                                })
+                                .catch((err) =>
+                                    console.error(
+                                        "Failed to update views",
+                                        err,
+                                    ),
+                                );
+                        }
+                    }
+                }
             });
         </script>
     </main>

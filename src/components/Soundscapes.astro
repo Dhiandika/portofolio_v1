@@ -1,0 +1,80 @@
+---
+
+---
+
+<div
+    id="soundscapes-container"
+    class="fixed inset-0 pointer-events-none z-[9999] overflow-hidden"
+>
+</div>
+
+<script>
+    const container = document.getElementById("soundscapes-container");
+    const words = [
+        "CLICK!",
+        "POW!",
+        "ZAP!",
+        "BOOM!",
+        "BANG!",
+        "CRACK!",
+        "SNAP!",
+        "POP!",
+    ];
+    const colors = ["#00FF00", "#FFFF00", "#FF00FF", "#00FFFF", "#FF0000"];
+
+    document.addEventListener("click", (e) => {
+        if (!container) return;
+
+        const word = words[Math.floor(Math.random() * words.length)];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        const el = document.createElement("div");
+        el.textContent = word;
+        el.style.position = "absolute";
+        el.style.left = `${e.clientX}px`;
+        el.style.top = `${e.clientY}px`;
+        el.style.color = color;
+        el.style.fontFamily = "'JetBrains Mono', monospace";
+        el.style.fontWeight = "900";
+        el.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
+        el.style.textShadow = "4px 4px 0px #000";
+        el.style.pointerEvents = "none";
+        el.style.userSelect = "none";
+        el.style.zIndex = "9999";
+        el.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 40 - 20}deg)`;
+        el.style.whiteSpace = "nowrap";
+
+        // Neo-brutalist border/bg for some
+        if (Math.random() > 0.5) {
+            el.style.backgroundColor = "#000";
+            el.style.color = color;
+            el.style.padding = "0.2rem 0.5rem";
+            el.style.border = `2px solid ${color}`;
+        }
+
+        container.appendChild(el);
+
+        // Animation
+        const animation = el.animate(
+            [
+                { transform: el.style.transform + " scale(0.5)", opacity: 0 },
+                {
+                    transform: el.style.transform + " scale(1.2)",
+                    opacity: 1,
+                    offset: 0.2,
+                },
+                {
+                    transform:
+                        el.style.transform + " scale(1) translateY(-50px)",
+                    opacity: 0,
+                },
+            ],
+            {
+                duration: 800,
+                easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+            },
+        );
+
+        animation.onfinish = () => el.remove();
+    });
+</script>

@@ -87,56 +87,92 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 </div>
 
 <script>
-    const toggle = document.getElementById("settings-toggle");
-    const panel = document.getElementById("settings-panel");
-    const close = document.getElementById("close-settings");
-    const themeBtns = document.querySelectorAll(".theme-btn");
+    document.addEventListener("astro:page-load", () => {
+        const toggle = document.getElementById("settings-toggle");
+        const panel = document.getElementById("settings-panel");
+        const close = document.getElementById("close-settings");
+        const themeBtns = document.querySelectorAll(".theme-btn");
 
-    // Toggle Panel
-    toggle?.addEventListener("click", () => {
-        panel?.classList.toggle("hidden");
-    });
+        // UI State
+        let isPanelOpen = false;
 
-    close?.addEventListener("click", () => {
-        panel?.classList.add("hidden");
-    });
-
-    // Theme Logic
-    const html = document.documentElement;
-    const savedTheme = localStorage.getItem("theme") || "default";
-    applyTheme(savedTheme);
-
-    themeBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-            // Remove active state from all
-            themeBtns.forEach((b) =>
-                b.classList.remove("bg-neo-yellow", "text-black"),
-            );
-
-            // Add active state to clicked
-            btn.classList.add("bg-neo-yellow", "text-black");
-
-            const theme = btn.getAttribute("data-theme") || "default";
-            applyTheme(theme);
-            localStorage.setItem("theme", theme);
-        });
-    });
-
-    function applyTheme(theme) {
-        if (theme === "default") {
-            html.removeAttribute("data-theme");
-        } else {
-            html.setAttribute("data-theme", theme);
+        function updatePanelState() {
+            if (isPanelOpen) {
+                panel?.classList.remove("hidden");
+            } else {
+                panel?.classList.add("hidden");
+            }
         }
 
-        // Visual indicator update on load
-        themeBtns.forEach((btn) => {
-            const btnTheme = btn.getAttribute("data-theme");
-            if (btnTheme === theme) {
-                btn.classList.add("bg-neo-yellow", "text-black");
-            } else {
-                btn.classList.remove("bg-neo-yellow", "text-black");
+        // Toggle Panel
+        toggle?.addEventListener("click", (e) => {
+            e.stopPropagation();
+            isPanelOpen = !isPanelOpen;
+            updatePanelState();
+        });
+
+        close?.addEventListener("click", () => {
+            isPanelOpen = false;
+            updatePanelState();
+        });
+
+        // Close when clicking outside
+        document.addEventListener("click", (e) => {
+            if (
+                isPanelOpen &&
+                panel &&
+                !panel.contains(e.target as Node) &&
+                !toggle?.contains(e.target as Node)
+            ) {
+                isPanelOpen = false;
+                updatePanelState();
             }
         });
-    }
+
+        // Theme Logic
+        const html = document.documentElement;
+
+        // Initial Theme Load (Force Default/Neo on load as requested)
+        const savedTheme = "default"; // Was: localStorage.getItem("theme") || "default";
+
+        // Apply theme
+        if (savedTheme === "default") {
+            html.removeAttribute("data-theme");
+        } else {
+            html.setAttribute("data-theme", savedTheme);
+        }
+
+        // We still save to local storage for session consistency if they change it later
+        localStorage.setItem("theme", savedTheme);
+
+        // Sync Buttons
+        themeBtns.forEach((btn) => {
+            // Reset
+            btn.classList.remove("bg-neo-yellow", "text-black");
+
+            const btnTheme = btn.getAttribute("data-theme");
+            if (btnTheme === savedTheme) {
+                btn.classList.add("bg-neo-yellow", "text-black");
+            }
+
+            // Click Handler
+            btn.addEventListener("click", () => {
+                const theme = btn.getAttribute("data-theme") || "default";
+
+                if (theme === "default") {
+                    html.removeAttribute("data-theme");
+                } else {
+                    html.setAttribute("data-theme", theme);
+                }
+
+                localStorage.setItem("theme", theme);
+
+                // Update Buttons Visuals
+                themeBtns.forEach((b) =>
+                    b.classList.remove("bg-neo-yellow", "text-black"),
+                );
+                btn.classList.add("bg-neo-yellow", "text-black");
+            });
+        });
+    });
 </script>

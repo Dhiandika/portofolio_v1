@@ -1,0 +1,185 @@
+---
+
+---
+
+<div
+    id="custom-cursor"
+    class="fixed top-0 left-0 pointer-events-none z-[99999] flex opacity-0 items-center justify-center transition-opacity duration-300"
+>
+    <!-- Solid bright dot by default -->
+    <div
+        id="cursor-dot"
+        class="w-3 h-3 bg-neo-yellow border-2 border-black rounded-full shadow-[2px_2px_0_0_#000]"
+    >
+    </div>
+    <div
+        id="cursor-text"
+        class="absolute left-6 bg-white border-2 border-black text-black font-mono font-bold text-xs px-2 py-1 opacity-0 transition-opacity whitespace-nowrap hidden shadow-[2px_2px_0_0_#000]"
+    >
+    </div>
+    <div
+        id="cursor-icon"
+        class="absolute text-white text-xl opacity-0 transition-opacity hidden drop-shadow-[2px_2px_0_rgba(0,0,0,1)]"
+    >
+    </div>
+</div>
+
+<script>
+    function initCursor() {
+        const cursor = document.getElementById("custom-cursor");
+        const dot = document.getElementById("cursor-dot");
+        const text = document.getElementById("cursor-text");
+        const icon = document.getElementById("cursor-icon");
+
+        // Prevent double initialization
+        if (!cursor || cursor.dataset.initialized === "true") return;
+        cursor.dataset.initialized = "true";
+
+        if (cursor && dot && text && icon) {
+            // Instant movement (No Lerp/Lag)
+            window.addEventListener(
+                "mousemove",
+                (e) => {
+                    const x = e.clientX;
+                    const y = e.clientY;
+
+                    // Direct transform with centering
+                    cursor.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+                    cursor.style.opacity = "1";
+                },
+                { passive: true },
+            );
+
+            // Hover Detection
+            const handleHover = (e: MouseEvent) => {
+                let target = e.target as HTMLElement;
+
+                // Reset state
+                let state = "default";
+                let iconClass = "";
+
+                // Check hierarchy safely (wrap in try-catch for SVG elements that might not have closest)
+                try {
+                    if (!target || typeof target.closest !== "function") return;
+
+                    const link = target.closest("a, button, [role='button']");
+                    const project = target.closest(".project-card");
+                    const blog = target.closest("article");
+                    const img = target.closest("img");
+
+                    // Specific logic for tags so it doesn't trigger blog
+                    if (
+                        target.closest(".tag-pill") ||
+                        target.closest(".filter-btn")
+                    ) {
+                        state = "hover";
+                        iconClass = "ri-cursor-fill";
+                    } else if (link) {
+                        state = "hover";
+                        const href = (link as HTMLAnchorElement).href || "";
+                        if (href.includes("mailto")) {
+                            iconClass = "ri-mail-send-fill";
+                        } else if (href.includes("github")) {
+                            iconClass = "ri-github-fill";
+                        } else {
+                            iconClass = "ri-arrow-right-up-line";
+                        }
+                    } else if (project) {
+                        state = "project";
+                        const shapes = [
+                            "ri-shape-2-fill",
+                            "ri-checkbox-blank-fill",
+                            "ri-checkbox-blank-circle-fill",
+                            "ri-star-fill",
+                            "ri-add-fill",
+                            "ri-flash-fill",
+                        ];
+                        iconClass =
+                            shapes[Math.floor(Math.random() * shapes.length)];
+                    } else if (blog) {
+                        state = "read";
+                        iconClass = "ri-eye-2-line";
+                    } else if (img) {
+                        state = "zoom";
+                        iconClass = "ri-zoom-in-line";
+                    }
+                } catch (err) {
+                    // Ignore DOM errors on SVG or weird shadow roots
+                    return;
+                }
+
+                // Apply Styles
+                if (state !== "default") {
+                    // Expand dot via size (centered by container transform)
+                    dot.style.width = "40px";
+                    dot.style.height = "40px";
+
+                    dot.classList.remove("bg-neo-yellow");
+                    dot.classList.add("bg-white", "border-4", "border-black");
+
+                    icon.className = `absolute text-black drop-shadow-none ${state === "project" ? "text-2xl" : "text-lg"} ${iconClass}`;
+                    icon.style.opacity = "1";
+                    icon.classList.remove("hidden");
+                } else {
+                    // Reset size
+                    dot.style.width = "12px";
+                    dot.style.height = "12px";
+
+                    dot.classList.remove(
+                        "bg-white",
+                        "border-4",
+                        "border-black",
+                    );
+                    dot.classList.add(
+                        "bg-neo-yellow",
+                        "border-2",
+                        "border-black",
+                    );
+
+                    text.style.opacity = "0";
+                    text.classList.add("hidden");
+
+                    icon.style.opacity = "0";
+                    icon.classList.add("hidden");
+                }
+            };
+
+            // Attach to window for safety (catches events globally)
+            window.addEventListener("mouseover", handleHover, {
+                passive: true,
+            });
+
+            // Hide system cursor via global class
+            document.body.classList.add("custom-cursor-active");
+
+            // Initial check just in case mount happened after mouse moved
+            cursor.style.opacity = "1";
+        }
+    }
+
+    // Run immediately
+    initCursor();
+    // Re-run on Astro page transitions
+    document.addEventListener("astro:page-load", initCursor);
+</script>
+
+<style>
+    #custom-cursor {
+        pointer-events: none;
+        will-change: transform;
+    }
+    #cursor-dot {
+        transition:
+            width 0.2s,
+            height 0.2s,
+            background-color 0.2s,
+            transform 0.2s;
+        border-radius: 50%;
+    }
+    /* Hide on touch devices */
+    @media (pointer: coarse) {
+        #custom-cursor {
+            display: none !important;
+        }
+    }
+</style>

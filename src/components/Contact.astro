@@ -9,6 +9,12 @@ const { lang = "en" } = Astro.props;
 const siteConfig = await getEntry("site", "config");
 const { email = "hello@kuzup.dev", location = "Remote / Earth" } =
     siteConfig?.data || {};
+const availabilityConfig = await getEntry("site", "availability");
+const availabilityData = availabilityConfig?.data || {};
+console.log("Available Config:", availabilityConfig);
+console.log("Available Data:", availabilityData);
+
+const { socials = [] } = availabilityData;
 
 const ui = {
     en: {
@@ -40,88 +46,159 @@ const ui = {
 const t = ui[lang as keyof typeof ui] || ui.en;
 ---
 
-<section id="contact" class="py-24 px-4 max-w-5xl mx-auto">
+<section id="contact" class="py-0 relative">
     <div
-        class="bg-white border-4 border-black shadow-hard-xl p-8 md:p-12 relative reveal mt-12"
+        class="w-full bg-neo-yellow border-t-4 border-black p-6 md:p-12 lg:p-20 relative"
     >
         <div
-            class="absolute -top-10 -left-6 bg-neo-yellow border-4 border-black px-6 py-2 shadow-hard rotate-[-5deg]"
+            <section
+            id="contact"
+            class="py-0 relative w-full overflow-hidden border-t-4 border-black"
         >
-            <span class="font-black text-2xl uppercase">{t.start}</span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div>
-                <h2
-                    class="text-6xl font-black uppercase mb-6 leading-[0.85] whitespace-pre-line"
+            <div class="w-full bg-neo-yellow p-6 md:p-12 lg:p-24 relative">
+                <!-- Decor -->
+                <div
+                    class="absolute top-0 right-0 w-[600px] h-[600px] bg-white/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none mix-blend-overlay"
                 >
-                    {t.title}
-                </h2>
-                <p class="font-mono text-lg mb-8 text-gray-600">
-                    {t.avail}
-                </p>
-                <div class="space-y-4">
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-12 h-12 bg-neo-black text-white flex items-center justify-center border-2 border-black"
-                        >
-                            <i class="ri-mail-line text-xl"></i>
+                </div>
+
+                <div
+                    class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start relative z-10"
+                >
+                    <!-- Left: Text & Info -->
+                    <div class="relative flex flex-col gap-8 md:gap-12">
+                        <div>
+                            <div
+                                class="bg-black text-white inline-block px-3 py-1 font-mono font-bold text-xs transform -rotate-2 mb-6"
+                            >
+                                /// {t.start}
+                            </div>
+
+                            <h2
+                                class="text-5xl md:text-6xl lg:text-7xl xl:text-[8rem] leading-[0.85] font-black uppercase tracking-tighter text-black mix-blend-multiply break-words"
+                            >
+                                LET'S<br />TALK<br />CODE.
+                            </h2>
                         </div>
-                        <a
-                            href={`mailto:${email}`}
-                            class="text-xl font-bold hover:bg-neo-blue cursor-hover"
-                            >{email}</a
+
+                        <div
+                            class="border-l-4 border-black pl-6 flex flex-col gap-6"
                         >
+                            <p
+                                class="font-mono text-lg md:text-xl font-bold leading-relaxed max-w-md"
+                            >
+                                {t.avail}
+                            </p>
+
+                            <div class="flex flex-col gap-2">
+                                <a
+                                    href={`mailto:${email}`}
+                                    class="text-2xl md:text-4xl font-black underline decoration-4 decoration-black underline-offset-4 hover:decoration-white transition-all cursor-hover truncate"
+                                    >{email}</a
+                                >
+
+                                <div class="flex items-center gap-2">
+                                    <i class="ri-map-pin-fill text-xl"></i>
+                                    <span class="font-bold text-xl"
+                                        >{location}</span
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Socials (Simple Row) -->
+                            <div class="flex flex-wrap gap-3 mt-2">
+                                {
+                                    socials.map((social: any) => (
+                                        <a
+                                            href={social.url}
+                                            target="_blank"
+                                            class="w-12 h-12 bg-black text-white flex items-center justify-center text-xl border-2 border-transparent hover:bg-white hover:text-black hover:border-black shadow-hard hover:shadow-none transition-all"
+                                            title={social.platform}
+                                        >
+                                            <i class={social.icon} />
+                                        </a>
+                                    ))
+                                }
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-4">
+
+                    <!-- Right: Form -->
+                    <div class="relative w-full lg:mt-12">
                         <div
-                            class="w-12 h-12 bg-neo-black text-white flex items-center justify-center border-2 border-black"
+                            class="bg-white border-4 border-black p-6 md:p-10 shadow-[12px_12px_0_0_rgba(0,0,0,1)] relative"
                         >
-                            <i class="ri-map-pin-line text-xl"></i>
+                            <!-- Form Header -->
+                            <div
+                                class="mb-6 border-b-4 border-black pb-4 flex justify-between items-center"
+                            >
+                                <span class="font-mono font-bold text-lg"
+                                    >/// INITIATE_UPLINK</span
+                                >
+                                <div class="flex gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-black">
+                                    </div>
+                                    <div class="w-3 h-3 rounded-full bg-black">
+                                    </div>
+                                    <div class="w-3 h-3 rounded-full bg-black">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form class="space-y-6">
+                                <div class="group">
+                                    <label
+                                        class="font-mono font-black mb-1 uppercase text-xs block group-focus-within:text-neo-blue transition-colors"
+                                    >
+                                        {t.identity}
+                                        <span class="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder={t.namePlace}
+                                        class="w-full bg-gray-50 border-4 border-black p-3 font-bold text-lg focus:outline-none focus:bg-neo-yellow focus:shadow-hard transition-all placeholder:text-gray-300"
+                                    />
+                                </div>
+                                <div class="group">
+                                    <label
+                                        class="font-mono font-black mb-1 uppercase text-xs block group-focus-within:text-neo-blue transition-colors"
+                                    >
+                                        {t.coords}
+                                        <span class="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="email"
+                                        placeholder={t.emailPlace}
+                                        class="w-full bg-gray-50 border-4 border-black p-3 font-bold text-lg focus:outline-none focus:bg-neo-yellow focus:shadow-hard transition-all placeholder:text-gray-300"
+                                    />
+                                </div>
+                                <div class="group">
+                                    <label
+                                        class="font-mono font-black mb-1 uppercase text-xs flex justify-between group-focus-within:text-neo-blue transition-colors"
+                                    >
+                                        <span>{t.trans}</span>
+                                        <span
+                                            class="text-[10px] bg-black text-white px-1 py-0.5"
+                                            >TXT_ONLY</span
+                                        >
+                                    </label>
+                                    <textarea
+                                        rows="5"
+                                        placeholder={t.details}
+                                        class="w-full bg-gray-50 border-4 border-black p-3 font-bold text-lg focus:outline-none focus:bg-neo-yellow focus:shadow-hard transition-all resize-none placeholder:text-gray-300"
+                                    ></textarea>
+                                </div>
+                                <button
+                                    type="submit"
+                                    class="w-full bg-black text-white font-black text-xl py-4 border-4 border-transparent hover:bg-white hover:text-black hover:border-black shadow-none hover:shadow-hard transition-all cursor-hover uppercase tracking-widest"
+                                >
+                                    {t.btn}
+                                </button>
+                            </form>
                         </div>
-                        <span class="text-xl font-bold">{location}</span>
                     </div>
                 </div>
             </div>
-
-            <form class="space-y-6 bg-gray-50 p-6 border-2 border-black">
-                <div class="flex flex-col">
-                    <label class="font-mono font-bold mb-1 uppercase text-xs"
-                        >{t.identity}</label
-                    >
-                    <input
-                        type="text"
-                        placeholder={t.namePlace}
-                        class="bg-white border-2 border-black p-3 font-bold focus:outline-none focus:bg-neo-yellow focus:shadow-hard-sm transition-all cursor-hover"
-                    />
-                </div>
-                <div class="flex flex-col">
-                    <label class="font-mono font-bold mb-1 uppercase text-xs"
-                        >{t.coords}</label
-                    >
-                    <input
-                        type="email"
-                        placeholder={t.emailPlace}
-                        class="bg-white border-2 border-black p-3 font-bold focus:outline-none focus:bg-neo-yellow focus:shadow-hard-sm transition-all cursor-hover"
-                    />
-                </div>
-                <div class="flex flex-col">
-                    <label class="font-mono font-bold mb-1 uppercase text-xs"
-                        >{t.trans}</label
-                    >
-                    <textarea
-                        rows="4"
-                        placeholder={t.details}
-                        class="bg-white border-2 border-black p-3 font-bold focus:outline-none focus:bg-neo-yellow focus:shadow-hard-sm transition-all resize-none cursor-hover"
-                    ></textarea>
-                </div>
-                <button
-                    type="submit"
-                    class="w-full bg-neo-blue text-white font-black text-xl py-4 border-2 border-black shadow-hard neo-button hover:bg-neo-black hover:translate-y-1 hover:shadow-none transition-all cursor-hover"
-                >
-                    {t.btn}
-                </button>
-            </form>
         </div>
     </div>
 </section>

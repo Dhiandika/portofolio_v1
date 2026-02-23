@@ -1,0 +1,55 @@
+{
+    "status": "available",
+    "message": "Open for Freelance",
+    "message_id": "Terbuka untuk Freelance",
+    "socials": [
+        {
+            "platform": "Email",
+            "url": "mailto:npemburu6@gmail.com",
+            "icon": "ri-mail-send-fill",
+            "color": "neo-red"
+        },
+        {
+            "platform": "LinkedIn",
+            "url": "https://www.linkedin.com/in/i-putu-dhiandika-aditya-permana-/",
+            "icon": "ri-linkedin-fill",
+            "color": "neo-blue"
+        },
+        {
+            "platform": "GitHub",
+            "url": "https://github.com/Dhiandika",
+            "icon": "ri-github-fill",
+            "color": "neo-green"
+        },
+        {
+            "platform": "Instagram",
+            "url": "https://instagram.com/npemburu6",
+            "icon": "ri-instagram-fill",
+            "color": "neo-pink"
+        },
+        {
+            "platform": "Twitter / X",
+            "url": "https://x.com/npemburu_5",
+            "icon": "ri-twitter-x-fill",
+            "color": "black"
+        },
+        {
+            "platform": "YouTube",
+            "url": "https://www.youtube.com/@kuzupost",
+            "icon": "ri-youtube-fill",
+            "color": "neo-red"
+        },
+        {
+            "platform": "Spotify",
+            "url": "https://open.spotify.com/user/npemburu",
+            "icon": "ri-spotify-fill",
+            "color": "neo-green"
+        },
+        {
+            "platform": "Discord",
+            "url": "https://discord.gg/F8arxBuRdC",
+            "icon": "ri-discord-fill",
+            "color": "neo-purple"
+        }
+    ]
+}

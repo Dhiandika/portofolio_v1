@@ -1,0 +1,41 @@
+{
+    "services": [
+        {
+            "id": "web_dev",
+            "name": "Web Development",
+            "price": 500,
+            "category": "Core"
+        },
+        {
+            "id": "ui_design",
+            "name": "UI/UX Design",
+            "price": 300,
+            "category": "Core"
+        },
+        {
+            "id": "cms",
+            "name": "CMS Integration",
+            "price": 200,
+            "category": "Add-on"
+        },
+        {
+            "id": "seo",
+            "name": "SEO Optimization",
+            "price": 150,
+            "category": "Add-on"
+        },
+        {
+            "id": "ecommerce",
+            "name": "E-Commerce",
+            "price": 400,
+            "category": "Add-on"
+        },
+        {
+            "id": "analytics",
+            "name": "Analytics Setup",
+            "price": 100,
+            "category": "Add-on"
+        }
+    ],
+    "currencySymbol": "$"
+}

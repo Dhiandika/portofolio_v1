@@ -8,8 +8,11 @@ import InteractiveGrid from '../components/InteractiveGrid.astro';
 import Spotify from '../components/Spotify.astro';
 import Navigation from '../components/Navigation.astro';
 import JsonLd from '../components/JsonLd.astro';
-import CommandPalette from '../components/CommandPalette.astro';
+import CommandPalette from '../components/CommandPalette.tsx';
 import RandomDecorations from '../components/RandomDecorations.astro';
+import Soundscapes from '../components/Soundscapes.astro';
+import GlitchEffects from '../components/GlitchEffects.astro';
+import ContextCursor from '../components/ContextCursor.astro';
 
 interface Props {
 	title?: string;
@@ -19,6 +22,9 @@ interface Props {
 
 const siteConfig = await getEntry('site', 'config');
 const { data } = siteConfig || { data: {} as any };
+import { getCollection } from 'astro:content';
+const projects = await getCollection('projects');
+const posts = await getCollection('blog');
 
 const { 
     pageTitle = 'Arham | Full Stack Brutalist', 
@@ -33,7 +39,10 @@ const {
 const { lang = 'en' } = Astro.props;
 const title = Astro.props.title || (lang === 'id' ? pageTitle_id || pageTitle : pageTitle);
 const description = lang === 'id' ? metaDescription_id || metaDescription : metaDescription;
-const image = Astro.props.image || '/og-default.jpg'; // Ensure this file exists or use a placeholder
+
+// Default to dynamic API route for OG image, passing title and description
+const defaultOgUrl = `/api/og?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(description)}&type=PORTFOLIO`;
+const image = Astro.props.image || defaultOgUrl;
 ---
 
 <!doctype html>
@@ -88,37 +97,39 @@ const image = Astro.props.image || '/og-default.jpg'; // Ensure this file exists
         <!-- Custom Cursor (CSS Based now) -->
         <div class="fixed top-0 left-0 h-2 bg-neo-green z-[60] border-b-2 border-black" id="progressBar" style="width: 0%"></div>
 
-        <!-- UI Components -->
+        <!-- Overlays (Fixed Position, must be outside transformation context) -->
+        <Soundscapes />
+        <GlitchEffects />
+        <ContextCursor />
         <Loader lang={lang} />
-        <Navigation lang={lang} />
-        <CommandPalette lang={lang} />
-        <ThemeSettings lang={lang} />
-        <Spotify />
+        <CommandPalette client:idle lang={lang} projects={projects} posts={posts} />
 
-		<slot />
+        <!-- Main Content Wrapper (Target for Glitch Effect) -->
+        <div id="main-content" class="relative z-10">
+            <Navigation lang={lang} />
+            <ThemeSettings lang={lang} />
+            <Spotify />
+            <slot />
+        </div>
 
         <script>
             import '../scripts/main.js';
 
-            // Konami Code Logic
-            const konamiCode = [
-                'ArrowUp', 'ArrowUp', 
-                'ArrowDown', 'ArrowDown', 
-                'ArrowLeft', 'ArrowRight', 
-                'ArrowLeft', 'ArrowRight', 
-                'b', 'a'
-            ];
-            let konamiIndex = 0;
+            // Matrix Easter Egg Logic
+            let keySequence: string[] = [];
+            const secretCode = 'matrix';
 
             document.addEventListener('keydown', (e) => {
-                if (e.key === konamiCode[konamiIndex]) {
-                    konamiIndex++;
-                    if (konamiIndex === konamiCode.length) {
-                        activateHackerMode();
-                        konamiIndex = 0;
-                    }
-                } else {
-                    konamiIndex = 0;
+                keySequence.push(e.key.toLowerCase());
+                
+                // Keep sequence length same as code length
+                if (keySequence.length > secretCode.length) {
+                    keySequence.shift();
+                }
+
+                if (keySequence.join('') === secretCode) {
+                    activateHackerMode();
+                    keySequence = [];
                 }
             });
 

@@ -8,7 +8,9 @@ import Experience from "../../components/Experience.astro";
 import CodingStats from "../../components/CodingStats.astro";
 import Projects from "../../components/Projects.astro";
 import BlogShowcase from "../../components/BlogShowcase.astro";
-import Reports from "../../components/Reports.astro";
+import CompanyLogos from "../../components/CompanyLogos.astro";
+
+import Testimonials from "../../components/Testimonials.astro";
 import Contact from "../../components/Contact.astro";
 import Footer from "../../components/Footer.astro";
 
@@ -28,7 +30,7 @@ const pageTitle =
 		: siteConfig.data.pageTitle;
 ---
 
-<Layout title={pageTitle || "ARHAM | Full Stack Brutalist"} lang={lang}>
+<Layout title={pageTitle || "Dhiandika | Full Stack Brutalist"} lang={lang}>
 	<Hero lang={lang} />
 	<Marquee lang={lang} />
 	<About lang={lang} />
@@ -37,7 +39,8 @@ const pageTitle =
 	<CodingStats lang={lang} />
 	<Projects lang={lang} />
 	<BlogShowcase lang={lang} />
-	<Reports lang={lang} />
+	<Testimonials lang={lang} />
+	<CompanyLogos />
 	<Contact lang={lang} />
 	<Footer lang={lang} />
 </Layout>

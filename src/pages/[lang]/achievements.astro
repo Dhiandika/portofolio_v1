@@ -71,14 +71,14 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                             <p class="font-mono text-sm text-gray-600 mb-4">{cert.data.issuer} • {cert.data.date}</p>
                             <p class="text-sm border-t-2 border-black pt-4 mt-auto line-clamp-3 mb-6">{desc}</p>
                             
-                            <button class="w-full bg-neo-black text-white border-2 border-black py-3 font-bold uppercase hover:bg-neo-blue transition-colors flex items-center justify-center gap-2 mt-auto" onclick={`document.getElementById('modal-${cert.id}').showModal()`}>
+                            <button class="w-full bg-neo-black text-white border-2 border-black py-3 font-bold uppercase hover:bg-neo-blue transition-colors flex items-center justify-center gap-2 mt-auto" onclick={`document.getElementById('modal-${cert.id}').classList.remove('hidden'); document.getElementById('modal-${cert.id}').classList.add('flex'); document.body.style.overflow = 'hidden';`}>
                                 <i class="ri-eye-line"></i> View Detail
                             </button>
                         </div>
 
-                        {/* Modal */}
-                        <dialog id={`modal-${cert.id}`} class="p-0 border-4 border-black shadow-[10px_10px_0_0_#000] backdrop:bg-black/80 max-w-4xl w-[90vw] m-auto z-50">
-                            <div class="bg-white p-0 overflow-hidden flex flex-col md:flex-row max-h-[85vh] overflow-y-auto relative">
+                        {/* Modal Overlay Instead of Native Dialog */}
+                        <div id={`modal-${cert.id}`} class="fixed inset-0 p-4 md:p-8 bg-black/90 z-[99000] hidden items-center justify-center animate-fade-in" onclick={`if(event.target === this) { this.classList.remove('flex'); this.classList.add('hidden'); document.body.style.overflow = ''; }`}>
+                            <div class="bg-white p-0 overflow-hidden flex flex-col md:flex-row max-h-[90vh] w-full max-w-4xl relative border-4 border-black shadow-[10px_10px_0_0_#000]">
                                 <!-- Watermark/Background decoration -->
                                 <div class="absolute inset-0 opacity-5 pointer-events-none flex items-center justify-center overflow-hidden">
                                      <i class="ri-award-fill text-[400px]"></i>
@@ -95,14 +95,12 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                         </div>
                                     )}
                                 </div>
-                                <div class="md:w-1/2 p-8 flex flex-col relative z-10">
+                                <div class="md:w-1/2 p-8 flex flex-col relative z-10 bg-white md:overflow-y-auto">
                                     <div class="flex justify-between items-start mb-6">
                                         <span class="bg-neo-yellow border-2 border-black px-3 py-1 font-black uppercase text-xs tracking-widest">{cert.data.category}</span>
-                                        <form method="dialog">
-                                            <button class="bg-red-500 text-white border-2 border-black w-10 h-10 flex items-center justify-center hover:bg-black transition-colors shadow-hard hover:shadow-none">
-                                                <i class="ri-close-line text-xl"></i>
-                                            </button>
-                                        </form>
+                                        <button class="bg-red-500 text-white border-2 border-black w-10 h-10 flex items-center justify-center hover:bg-black transition-colors shadow-hard-sm hover:translate-x-1 hover:translate-y-1 hover:shadow-none" onclick={`document.getElementById('modal-${cert.id}').classList.remove('flex'); document.getElementById('modal-${cert.id}').classList.add('hidden'); document.body.style.overflow = '';`}>
+                                            <i class="ri-close-line text-xl"></i>
+                                        </button>
                                     </div>
                                     
                                     <div class="border-b-4 border-black pb-4 mb-6">
@@ -144,7 +142,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                     )}
                                 </div>
                             </div>
-                        </dialog>
+                        </div>
                     </article>
                     );
                 })}
@@ -217,17 +215,5 @@ const t = ui[lang as keyof typeof ui] || ui.en;
             }
         };
 
-        // Close modal when clicking outside
-        const dialogs = document.querySelectorAll('dialog');
-        dialogs.forEach(dialog => {
-            dialog.addEventListener('click', (event) => {
-                const rect = dialog.getBoundingClientRect();
-                const isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height &&
-                  rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
-                if (!isInDialog) {
-                    dialog.close();
-                }
-            });
-        });
     </script>
 </Layout>

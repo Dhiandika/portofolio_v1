@@ -173,19 +173,23 @@ const t = ui[lang] || ui.en;
 
                                         <button
                                             class="w-full bg-neo-black text-white border-2 border-black py-3 font-bold uppercase hover:bg-neo-blue transition-colors flex items-center justify-center gap-2 mt-auto shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
-                                            onclick={`document.getElementById('${uniqueId}').showModal()`}
+                                            onclick={`document.getElementById('${uniqueId}').classList.remove('hidden'); document.getElementById('${uniqueId}').classList.add('flex'); document.body.style.overflow = 'hidden';`}
                                         >
                                             <i class="ri-eye-line" /> {t.view}
                                         </button>
                                     </div>
                                 </article>
 
-                                {/* Modal (Matching Home) */}
-                                <dialog
+                                {/* Modal Overlay Instead of Native Dialog */}
+                                <div
                                     id={uniqueId}
-                                    class="p-0 bg-transparent backdrop:bg-black/90 max-w-7xl w-[95vw] h-[90vh] m-auto z-[100] open:animate-fade-in"
+                                    class="fixed inset-0 p-4 md:p-8 bg-black/90 z-[99000] hidden items-center justify-center animate-fade-in"
+                                    onclick={`if(event.target === this) { this.classList.remove('flex'); this.classList.add('hidden'); document.body.style.overflow = ''; }`}
                                 >
-                                    <div class="bg-neo-white border-4 border-black shadow-[15px_15px_0_0_#fff] flex flex-col md:flex-row h-full overflow-hidden">
+                                    <div
+                                        class="bg-neo-white border-4 border-black shadow-[15px_15px_0_0_#fff] flex flex-col md:flex-row w-full max-w-7xl h-[90vh] overflow-hidden"
+                                        onclick="event.stopPropagation()"
+                                    >
                                         {/* Left: Gallery Carousel (No Scroll) */}
                                         <div class="md:w-2/3 bg-black border-r-4 border-black relative flex flex-col group/gallery">
                                             {/* Main Image */}
@@ -272,11 +276,12 @@ const t = ui[lang] || ui.en;
                                                         PROJECT LOG_2024
                                                     </p>
                                                 </div>
-                                                <form method="dialog">
-                                                    <button class="bg-red-500 text-white w-10 h-10 border-2 border-black hover:bg-black hover:text-red-500 transition-colors shadow-hard-sm">
-                                                        <i class="ri-close-line text-xl" />
-                                                    </button>
-                                                </form>
+                                                <button
+                                                    class="bg-red-500 text-white w-10 h-10 border-2 border-black hover:bg-black hover:text-red-500 transition-colors shadow-hard-sm"
+                                                    onclick={`document.getElementById('${uniqueId}').classList.remove('flex'); document.getElementById('${uniqueId}').classList.add('hidden'); document.body.style.overflow = '';`}
+                                                >
+                                                    <i class="ri-close-line text-xl" />
+                                                </button>
                                             </div>
 
                                             {/* Scrollable Content */}
@@ -325,7 +330,7 @@ const t = ui[lang] || ui.en;
                                             </div>
                                         </div>
                                     </div>
-                                </dialog>
+                                </div>
                             </>
                         );
                     })
@@ -449,22 +454,6 @@ const t = ui[lang] || ui.en;
                 btn.classList.remove("bg-white");
 
                 filter();
-            });
-        });
-
-        // Close modal when clicking outside
-        const dialogs = document.querySelectorAll("dialog");
-        dialogs.forEach((dialog) => {
-            dialog.addEventListener("click", (event) => {
-                const rect = dialog.getBoundingClientRect();
-                const isInDialog =
-                    rect.top <= event.clientY &&
-                    event.clientY <= rect.top + rect.height &&
-                    rect.left <= event.clientX &&
-                    event.clientX <= rect.left + rect.width;
-                if (!isInDialog) {
-                    dialog.close();
-                }
             });
         });
     </script>

@@ -1,0 +1,150 @@
+---
+
+---
+
+<script>
+    let clickCount = 0;
+    let clickTimer: ReturnType<typeof setTimeout>;
+
+    document.addEventListener("click", () => {
+        clickCount++;
+
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => {
+            clickCount = 0;
+        }, 800);
+
+        if (clickCount >= 5) {
+            triggerGlitch();
+            clickCount = 0;
+        }
+    });
+
+    function triggerGlitch() {
+        const mainContent = document.getElementById("main-content");
+        if (mainContent) {
+            mainContent.classList.add("glitch-active");
+            document.body.classList.add("glitch-overlay-active"); // For global overlays if needed
+        }
+
+        // Optional: Play sound if you have one, or just visual
+        // const audio = new Audio('/glitch.mp3');
+        // audio.play().catch(() => {});
+
+        setTimeout(() => {
+            if (mainContent) mainContent.classList.remove("glitch-active");
+            document.body.classList.remove("glitch-overlay-active");
+        }, 2000);
+    }
+</script>
+
+<style is:global>
+    /* Transform just the content wrapper */
+    #main-content.glitch-active {
+        animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both
+            infinite;
+    }
+
+    /* Screen-wide overlays on body */
+    body.glitch-overlay-active::before,
+    body.glitch-overlay-active::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--neo-white);
+        z-index: 9990; /* Below cursor (10000) but above content */
+        opacity: 0.5;
+        mix-blend-mode: hard-light;
+        pointer-events: none;
+    }
+
+    body.glitch-overlay-active::before {
+        animation: glitch-anim-1 0.4s infinite linear alternate-reverse;
+        clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%);
+        background: red;
+    }
+
+    body.glitch-overlay-active::after {
+        animation: glitch-anim-2 0.4s infinite linear alternate-reverse;
+        clip-path: polygon(0 80%, 100% 80%, 100% 100%, 0 100%);
+        background: blue;
+    }
+
+    @keyframes glitch-skew {
+        0% {
+            transform: skew(0deg);
+        }
+        20% {
+            transform: skew(-2deg);
+        }
+        40% {
+            transform: skew(2deg);
+        }
+        60% {
+            transform: skew(-1deg);
+        }
+        80% {
+            transform: skew(1deg);
+        }
+        100% {
+            transform: skew(0deg);
+        }
+    }
+
+    @keyframes glitch-anim-1 {
+        0% {
+            clip-path: inset(20% 0 80% 0);
+            transform: translate(-4px, 1px);
+        }
+        20% {
+            clip-path: inset(60% 0 10% 0);
+            transform: translate(4px, -1px);
+        }
+        40% {
+            clip-path: inset(40% 0 50% 0);
+            transform: translate(-4px, 2px);
+        }
+        60% {
+            clip-path: inset(80% 0 5% 0);
+            transform: translate(4px, -2px);
+        }
+        80% {
+            clip-path: inset(10% 0 70% 0);
+            transform: translate(-2px, 1px);
+        }
+        100% {
+            clip-path: inset(30% 0 20% 0);
+            transform: translate(2px, -1px);
+        }
+    }
+
+    @keyframes glitch-anim-2 {
+        0% {
+            clip-path: inset(10% 0 60% 0);
+            transform: translate(4px, -1px);
+        }
+        20% {
+            clip-path: inset(80% 0 5% 0);
+            transform: translate(-4px, 1px);
+        }
+        40% {
+            clip-path: inset(30% 0 20% 0);
+            transform: translate(4px, -2px);
+        }
+        60% {
+            clip-path: inset(10% 0 80% 0);
+            transform: translate(-4px, 2px);
+        }
+        80% {
+            clip-path: inset(50% 0 30% 0);
+            transform: translate(2px, -1px);
+        }
+        100% {
+            clip-path: inset(70% 0 10% 0);
+            transform: translate(-2px, 1px);
+        }
+    }
+</style>

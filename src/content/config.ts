@@ -1,3 +1,18 @@
+/**
+ * ============================================================================
+ * ⚠️ WARNING: DO NOT MODIFY THIS FILE LIGHTLY ⚠️
+ * ============================================================================
+ * 
+ * This file (src/content/config.ts) defines Astro's Content Collections schema.
+ * It MUST perfectly match the schema defined in `keystatic.config.ts`.
+ * 
+ * If you change the schema here, you MUST also update `keystatic.config.ts` 
+ * and all affected markdown/JSON content files, otherwise Astro will throw 
+ * Zod validation errors and fail to build.
+ * 
+ * ============================================================================
+ */
+
 import { defineCollection, z } from 'astro:content';
 
 const projects = defineCollection({
@@ -147,6 +162,29 @@ const site = defineCollection({
         // About
         profileImage: z.string().optional(),
         bio_id_about: z.string().optional(),
+        // Availability
+        status: z.enum(['available', 'busy', 'offline']).optional(),
+        message: z.string().optional(),
+        message_id: z.string().optional(),
+        socials: z.array(z.object({
+            platform: z.string(),
+            url: z.string().url(),
+            icon: z.string(),
+            color: z.string().optional(),
+        })).optional(),
+
+        // Uses / System Specs
+        hardware: z.array(z.object({
+            name: z.string(),
+            detail: z.string(),
+            category: z.string(),
+        })).optional(),
+        software: z.array(z.object({
+            name: z.string(),
+            detail: z.string(),
+            category: z.string(),
+        })).optional(),
+        wallpaper: z.string().optional(),
     }),
 });
 
@@ -175,4 +213,76 @@ const snippets = defineCollection({
     }),
 });
 
-export const collections = { projects, experience, career, education, skills, reviews, site, blog, certificates, snippets };
+const now = defineCollection({
+    type: 'data',
+    schema: z.object({
+        status: z.string(),
+        status_id: z.string().optional(),
+        location: z.string(),
+        learning: z.string(),
+        reading: z.string(),
+        listening: z.string(),
+        working: z.string(),
+    }),
+});
+
+const radar = defineCollection({
+    type: 'data',
+    schema: z.object({
+        categories: z.array(z.object({
+            label: z.string(),
+            value: z.number().min(0).max(100),
+            fullMark: z.number().default(100),
+        })),
+    }),
+});
+
+const companies = defineCollection({
+    type: 'data',
+    schema: z.object({
+        name: z.string(),
+        logo: z.string(),
+        link: z.string().url().optional(),
+    }),
+});
+
+const assets = defineCollection({
+    type: 'data',
+    schema: z.object({
+        title: z.string(),
+        type: z.enum(['Document', 'Archive', 'Image', 'Other']),
+        file: z.string(),
+        description: z.string().optional(),
+        wallpaper: z.string().optional(),
+    }),
+});
+
+const estimator = defineCollection({
+    type: 'data',
+    schema: z.object({
+        services: z.array(z.object({
+            id: z.string(),
+            name: z.string(),
+            price: z.number(),
+            category: z.string(),
+        })),
+        currencySymbol: z.string().optional(),
+    }),
+});
+
+export const collections = {
+    projects,
+    experience,
+    career,
+    education,
+    skills,
+    reviews,
+    site,
+    blog,
+    certificates,
+    now,
+    radar,
+    companies,
+    assets,
+    estimator,
+};

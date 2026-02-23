@@ -1,3 +1,18 @@
+/**
+ * ============================================================================
+ * ⚠️ WARNING: STABLE BUILD CONFIGURATION - DO NOT MODIFY LIGHTLY ⚠️
+ * ============================================================================
+ * 
+ * This file controls the entire Astro build process, Vite settings, and Vercel deployment.
+ * Current setup is perfectly tuned for this specific Neo-Brutalist architecture, 
+ * React/Astro coexistence, and Keystatic CMS integration.
+ * 
+ * Changing settings here (especially Vite dedupe, output mode, or adapters) 
+ * can cause deployment failures, UI hydration issues, or CMS blank screens.
+ * 
+ * ============================================================================
+ */
+
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
@@ -14,29 +29,14 @@ export default defineConfig({
   site: 'https://arham-exe.vercel.app',
   vite: {
     plugins: [tailwindcss()],
-    optimizeDeps: {
-      // ⚠️ CRITICAL KEYSTATIC CONFIGURATION - DO NOT MODIFY ⚠️
-      // Keystatic MUST be included in optimization to prevent "syntax error" and "white screen" issues.
-      // Removing these from `include` will break the admin UI.
-      include: [
-        '@keystatic/core',
-        '@keystatic/astro',
-        'lodash/debounce',
-        'direction',
-        'yjs',
-        'slate',
-        'slate-react',
-        'superstruct',
-        'is-hotkey'
-      ]
-    },
+
     resolve: {
       dedupe: ['react', 'react-dom']
     }
   },
 
   integrations: [react(), sitemap(), mdx()],
-  output: 'static',
+  output: 'server',
   adapter: vercel(),
   server: {
     // ⚠️ CRITICAL: Binds to 0.0.0.0 to fix 127.0.0.1 vs localhost issues

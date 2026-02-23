@@ -81,7 +81,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                             {/* Card Trigger */}
                             <article
                                 class="group relative cursor-pointer h-[450px]"
-                                onclick={`document.getElementById('${uniqueId}').showModal()`}
+                                onclick={`document.getElementById('${uniqueId}').classList.remove('hidden'); document.getElementById('${uniqueId}').classList.add('flex'); document.body.style.overflow = 'hidden';`}
                             >
                                 <div class="bg-neo-black border-4 border-[#333] h-full flex flex-col p-8 relative overflow-hidden transition-all duration-300 group-hover:border-white group-hover:shadow-[10px_10px_0_0_#fff] group-hover:-translate-y-2 group-hover:-translate-x-2">
                                     {/* Background Image */}
@@ -114,7 +114,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                                     .slice(0, 3)
                                                     .map((tech) => (
                                                         <span class="bg-black border border-white text-white text-[10px] font-bold px-2 py-1 uppercase">
-                                                            {tech}
+                                                            {tech.name || tech}
                                                         </span>
                                                     ))}
                                             </div>
@@ -123,12 +123,16 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                 </div>
                             </article>
 
-                            {/* Modal */}
-                            <dialog
+                            {/* Modal Overlay */}
+                            <div
                                 id={uniqueId}
-                                class="p-0 bg-transparent backdrop:bg-black/90 max-w-7xl w-[95vw] h-[90vh] m-auto z-[100] open:animate-fade-in"
+                                class="fixed inset-0 bg-black/90 z-[99000] hidden items-center justify-center animate-fade-in"
+                                onclick={`if(event.target === this) { this.classList.remove('flex'); this.classList.add('hidden'); document.body.style.overflow = ''; }`}
                             >
-                                <div class="bg-neo-white border-4 border-black shadow-[15px_15px_0_0_#fff] flex flex-col md:flex-row h-full overflow-hidden">
+                                <div
+                                    class="bg-neo-white border-4 border-black shadow-[15px_15px_0_0_#fff] flex flex-col md:flex-row w-[95vw] max-w-7xl h-[90vh] overflow-hidden"
+                                    onclick="event.stopPropagation()"
+                                >
                                     {/* Left: Gallery Carousel (No Scroll) */}
                                     <div class="md:w-2/3 bg-black border-r-4 border-black relative flex flex-col group/gallery">
                                         {/* Main Image */}
@@ -139,7 +143,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                                         id={`${uniqueId}-main-img`}
                                                         src={galleryImages[0]}
                                                         alt={title}
-                                                        class="w-full h-full object-contain"
+                                                        class="w-full h-full object-contain transition-opacity duration-150"
                                                     />
                                                     {/* Navigation Buttons */}
                                                     {galleryImages.length >
@@ -147,13 +151,13 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                                         <>
                                                             <button
                                                                 class="absolute left-4 top-1/2 -translate-y-1/2 bg-black text-white p-3 border-2 border-white hover:bg-neo-yellow hover:text-black transition-colors z-20"
-                                                                onclick={`prevImage('${uniqueId}', ${JSON.stringify(galleryImages)})`}
+                                                                onclick={`prevImage('${uniqueId}', ${JSON.stringify(galleryImages).replace(/"/g, "&quot;")})`}
                                                             >
                                                                 <i class="ri-arrow-left-line text-2xl" />
                                                             </button>
                                                             <button
                                                                 class="absolute right-4 top-1/2 -translate-y-1/2 bg-black text-white p-3 border-2 border-white hover:bg-neo-yellow hover:text-black transition-colors z-20"
-                                                                onclick={`nextImage('${uniqueId}', ${JSON.stringify(galleryImages)})`}
+                                                                onclick={`nextImage('${uniqueId}', ${JSON.stringify(galleryImages).replace(/"/g, "&quot;")})`}
                                                             >
                                                                 <i class="ri-arrow-right-line text-2xl" />
                                                             </button>
@@ -208,11 +212,12 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                                     PROJECT LOG_2024
                                                 </p>
                                             </div>
-                                            <form method="dialog">
-                                                <button class="bg-red-500 text-white w-10 h-10 border-2 border-black hover:bg-black hover:text-red-500 transition-colors shadow-hard-sm">
-                                                    <i class="ri-close-line text-xl" />
-                                                </button>
-                                            </form>
+                                            <button
+                                                class="bg-red-500 text-white w-10 h-10 border-2 border-black hover:bg-black hover:text-red-500 transition-colors shadow-hard-sm"
+                                                onclick={`document.getElementById('${uniqueId}').classList.remove('flex'); document.getElementById('${uniqueId}').classList.add('hidden'); document.body.style.overflow = '';`}
+                                            >
+                                                <i class="ri-close-line text-xl" />
+                                            </button>
                                         </div>
 
                                         {/* Scrollable Content */}
@@ -235,11 +240,19 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                                 <div class="flex flex-wrap gap-3">
                                                     {techIconsList.map(
                                                         (item) => (
-                                                            <div class="group/tech relative">
+                                                            <div
+                                                                class="group/tech relative"
+                                                                title={
+                                                                    item.name
+                                                                }
+                                                            >
                                                                 <div class="w-10 h-10 bg-white border-2 border-black flex items-center justify-center shadow-hard-sm group-hover/tech:translate-x-[2px] group-hover/tech:translate-y-[2px] group-hover/tech:shadow-none transition-all">
                                                                     <img
                                                                         src={
                                                                             item.icon
+                                                                        }
+                                                                        alt={
+                                                                            item.name
                                                                         }
                                                                         class="w-6 h-6 object-contain"
                                                                     />
@@ -257,7 +270,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                                 <a
                                                     href={project.data.link}
                                                     target="_blank"
-                                                    class="col-span-2 bg-neo-black text-white hover:bg-neo-blue py-3 font-black uppercase text-center border-2 border-black shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-2"
+                                                    class="col-span-2 bg-neo-black text-white hover:bg-neo-blue py-3 font-black uppercase text-center border-2 border-black shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-2 cursor-pointer relative z-50"
                                                 >
                                                     DEPLOYMENT{" "}
                                                     <i class="ri-external-link-line" />
@@ -266,7 +279,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                         </div>
                                     </div>
                                 </div>
-                            </dialog>
+                            </div>
                         </>
                     );
                 })

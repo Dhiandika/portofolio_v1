@@ -1,11 +1,37 @@
+/**
+ * ============================================================================
+ * ⚠️ WARNING: DO NOT MODIFY THIS FILE LIGHTLY ⚠️
+ * ============================================================================
+ * 
+ * This file (keystatic.config.ts) defines the ENTIRE schema for your CMS.
+ * It strictly dictates how your content is structured in the `src/content/` folder.
+ * 
+ * Changing fields, renaming collections, or altering types here WILL BREAK existing content 
+ * and cause the website to fail during the build process if the Astro content collections 
+ * (`src/content/config.ts`) do not match perfectly.
+ * 
+ * If you must make changes:
+ * 1. Think twice before proceeding.
+ * 2. Ensure you also update `src/content/config.ts` to match the exact schema changes.
+ * 3. Update all affected `.md`, `.mdx`, and `.json` files in `src/content/` to match the new schema.
+ * 4. Update the Astro components that consume this data.
+ * 
+ * ============================================================================
+ */
+
 import { config, fields, collection, singleton } from '@keystatic/core';
 // @ts-ignore
 // import siteConfig from './src/content/site/config.json';
 
 export default config({
-    storage: {
-        kind: 'local',
-    },
+    storage: import.meta.env?.MODE === 'production'
+        ? {
+            kind: 'github',
+            repo: 'Dhiandika/portofolio_v1',
+        }
+        : {
+            kind: 'local',
+        },
     singletons: {
         site: singleton({
             label: 'Site Settings (Identity, SEO, Contact)',
@@ -13,7 +39,7 @@ export default config({
             format: { data: 'json' },
             schema: {
                 // Identity & SEO
-                pageTitle: fields.text({ label: 'Page Title', description: 'The title shown in the browser tab (e.g., "ARHAM | Full Stack Brutalist")' }),
+                pageTitle: fields.text({ label: 'Page Title', description: 'The title shown in the browser tab (e.g., "Dhiandika | Full Stack Brutalist")' }),
                 pageTitle_id: fields.text({ label: 'Page Title (ID)', description: 'Indonesian translation.' }),
                 metaDescription: fields.text({ label: 'Meta Description', multiline: true, description: 'Used for SEO and social sharing previews.' }),
                 metaDescription_id: fields.text({ label: 'Meta Description (ID)', multiline: true, description: 'Indonesian translation.' }),
@@ -85,14 +111,169 @@ export default config({
                 profileImage: fields.image({ label: 'Profile Image', directory: 'public/images', publicPath: '/images/', description: 'Image shown on the homepage card.' }),
             }
         }),
+        now: singleton({
+            label: 'Now / System Status',
+            path: 'src/content/now/data',
+            format: { data: 'json' },
+            schema: {
+                working: fields.text({ label: 'Working On', description: 'What are you building currently?' }),
+                learning: fields.text({ label: 'Learning', description: 'What are you studying?' }),
+                reading: fields.text({ label: 'Reading', description: 'Current book or article.' }),
+                listening: fields.text({ label: 'Listening', description: 'Current jam.' }),
+                location: fields.text({ label: 'Location', description: 'Current physical location.' }),
+            }
+        }),
+        availability: singleton({
+            label: 'Availability Status',
+            path: 'src/content/site/availability',
+            format: { data: 'json' },
+            schema: {
+                status: fields.select({
+                    label: 'Current Status',
+                    options: [
+                        { label: 'Available for Work', value: 'available' },
+                        { label: 'Busy / Limited', value: 'busy' },
+                        { label: 'Offline / Vacation', value: 'offline' },
+                    ],
+                    defaultValue: 'available'
+                }),
+                message: fields.text({ label: 'Status Message', description: 'Short text shown next to the dot (e.g., "Open for freelance").' }),
+                message_id: fields.text({ label: 'Status Message (ID)', description: 'Indonesian translation.' }),
+                socials: fields.array(
+                    fields.object({
+                        platform: fields.text({ label: 'Platform Name' }),
+                        url: fields.url({ label: 'Profile URL' }),
+                        icon: fields.text({ label: 'RemixIcon Class', description: 'e.g. ri-github-fill' }),
+                        color: fields.select({
+                            label: 'Brand Color',
+                            options: [
+                                { label: 'Green', value: 'neo-green' },
+                                { label: 'Blue', value: 'neo-blue' },
+                                { label: 'Pink', value: 'neo-pink' },
+                                { label: 'Purple', value: 'neo-purple' },
+                                { label: 'Orange', value: 'neo-orange' },
+                                { label: 'White', value: 'white' },
+                            ],
+                            defaultValue: 'white'
+                        }),
+                    }),
+                    {
+                        label: 'Social Links (Contact Widget)',
+                        itemLabel: props => props.fields.platform.value
+                    }
+                ),
+            }
+        }),
+        radar: singleton({
+            label: 'Tech Radar Chart',
+            path: 'src/content/radar/data',
+            format: { data: 'json' },
+            schema: {
+                categories: fields.array(
+                    fields.object({
+                        label: fields.text({ label: 'Label (e.g. Frontend)' }),
+                        value: fields.integer({ label: 'Value (0-100)', validation: { min: 0, max: 100 } }),
+                        fullMark: fields.integer({ label: 'Full Mark', defaultValue: 100, validation: { isRequired: true } }),
+                    }),
+                    {
+                        label: 'Radar Axes',
+                        itemLabel: props => `${props.fields.label.value}: ${props.fields.value.value}%`
+                    }
+                ),
+                details: fields.text({
+                    label: 'Analysis Details',
+                    multiline: true,
+                    description: 'Content for the "Details" tab in the Skill Analysis widget.'
+                })
+            }
+        }),
+        uses: singleton({
+            label: 'System Specs (/uses)',
+            path: 'src/content/site/uses',
+            format: { data: 'json' },
+            schema: {
+                hardware: fields.array(
+                    fields.object({
+                        name: fields.text({ label: 'Item Name' }),
+                        detail: fields.text({ label: 'Detail / Specs' }),
+                        category: fields.select({
+                            label: 'Category',
+                            options: [
+                                { label: 'Workstation', value: 'Workstation' },
+                                { label: 'Peripherals', value: 'Peripherals' },
+                                { label: 'Audio', value: 'Audio' },
+                                { label: 'Mobile', value: 'Mobile' },
+                            ],
+                            defaultValue: 'Workstation'
+                        }),
+                    }),
+                    {
+                        label: 'Hardware List',
+                        itemLabel: props => `${props.fields.name.value} (${props.fields.category.value})`
+                    }
+                ),
+                software: fields.array(
+                    fields.object({
+                        name: fields.text({ label: 'Software Name' }),
+                        detail: fields.text({ label: 'Usage / Detail' }),
+                        category: fields.select({
+                            label: 'Category',
+                            options: [
+                                { label: 'Editor', value: 'Editor' },
+                                { label: 'Terminal', value: 'Terminal' },
+                                { label: 'Design', value: 'Design' },
+                                { label: 'Productivity', value: 'Productivity' },
+                            ],
+                            defaultValue: 'Editor'
+                        }),
+                    }),
+                    {
+                        label: 'Software List',
+                        itemLabel: props => `${props.fields.name.value} (${props.fields.category.value})`
+                    }
+                ),
+                wallpaper: fields.image({
+                    label: 'Desk Setup / Wallpaper',
+                    directory: 'public/images/uses',
+                    publicPath: '/images/uses/',
+                })
+            }
+        }),
+        estimator: singleton({
+            label: 'Project Estimator',
+            path: 'src/content/site/estimator',
+            format: { data: 'json' },
+            schema: {
+                services: fields.array(
+                    fields.object({
+                        id: fields.text({ label: 'ID (Unique)' }),
+                        name: fields.text({ label: 'Service Name' }),
+                        price: fields.number({ label: 'Price ($)' }),
+                        category: fields.select({
+                            label: 'Category',
+                            options: [
+                                { label: 'Core', value: 'Core' },
+                                { label: 'Add-on', value: 'Add-on' },
+                            ],
+                            defaultValue: 'Core'
+                        }),
+                    }),
+                    {
+                        label: 'Services List',
+                        itemLabel: props => `${props.fields.name.value} ($${props.fields.price.value})`
+                    }
+                ),
+                currencySymbol: fields.text({ label: 'Currency Symbol', defaultValue: '$' }),
+            }
+        }),
     },
     ui: {
-        brand: { name: 'ARHAM.exe' },
+        brand: { name: 'Npemburu.exe' },
         navigation: {
-            'Site Settings': ['site'],
-            'Page Content': ['hero', 'whoami', 'about'],
+            'Site Settings': ['site', 'radar', 'uses', 'estimator'],
+            'Page Content': ['hero', 'whoami', 'about', 'now'],
             'Blog': ['blog'],
-            'Collections': ['skills', 'projects', 'career', 'experience', 'education', 'certificates', 'reviews'],
+            'Collections': ['projects', 'career', 'experience', 'education', 'certificates', 'reviews', 'companies', 'assets'],
         },
     },
     collections: {
@@ -347,6 +528,49 @@ export default config({
                 link: fields.url({ label: 'Credential URL' }),
                 description: fields.text({ label: 'Description', multiline: true }),
                 description_id: fields.text({ label: 'Description (ID)', multiline: true, description: 'Indonesian translation.' }),
+            }
+        }),
+        companies: collection({
+            label: 'Company Logos',
+            slugField: 'name',
+            path: 'src/content/companies/*',
+            format: { data: 'json' },
+            schema: {
+                name: fields.slug({ name: { label: 'Company Name' } }),
+                logo: fields.image({
+                    label: 'Company Logo',
+                    directory: 'public/images/companies',
+                    publicPath: '/images/companies/',
+                    validation: { isRequired: true }
+                }),
+                link: fields.url({ label: 'Website URL' }),
+            }
+        }),
+        assets: collection({
+            label: 'Assets (Download Center)',
+            slugField: 'title',
+            path: 'src/content/assets/*',
+            format: { data: 'json' },
+            schema: {
+                title: fields.slug({ name: { label: 'Asset Title' } }),
+                type: fields.select({
+                    label: 'Type',
+                    options: [
+                        { label: 'CV / Resume', value: 'Document' },
+                        { label: 'Press Kit', value: 'Archive' },
+                        { label: 'Logo', value: 'Image' },
+                        { label: 'Other', value: 'Other' },
+                    ],
+                    defaultValue: 'Document'
+                }),
+                file: fields.file({
+                    label: 'File',
+                    directory: 'public/assets',
+                    publicPath: '/assets/',
+                    validation: { isRequired: true }
+                }),
+                description: fields.text({ label: 'Description' }),
+                fileSize: fields.text({ label: 'Size Label', description: 'e.g. "2.5 MB" or "PDF"' }),
             }
         })
     },
