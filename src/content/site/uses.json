@@ -1,47 +1,47 @@
 {
-    "hardware": [
-        {
-            "name": "MacBook Pro M3 Max",
-            "detail": "16-inch, 64GB RAM, 2TB SSD",
-            "category": "Workstation"
-        },
-        {
-            "name": "Keychron Q1 Pro",
-            "detail": "Banana Switches, Custom Keycaps",
-            "category": "Peripherals"
-        },
-        {
-            "name": "Sony WH-1000XM5",
-            "detail": "Noise Cancelling Headphones",
-            "category": "Audio"
-        },
-        {
-            "name": "iPhone 15 Pro",
-            "detail": "Blue Titanium, 256GB",
-            "category": "Mobile"
-        }
-    ],
-    "software": [
-        {
-            "name": "VS Code",
-            "detail": "My daily driver for everything code.",
-            "category": "Editor"
-        },
-        {
-            "name": "Warp",
-            "detail": "The terminal for the 21st century.",
-            "category": "Terminal"
-        },
-        {
-            "name": "Figma",
-            "detail": "For all design and prototyping needs.",
-            "category": "Design"
-        },
-        {
-            "name": "Notion",
-            "detail": "Second brain for documentation.",
-            "category": "Productivity"
-        }
-    ],
-    "wallpaper": "/images/uses/wallpaper.jpg"
+  "hardware": [
+    {
+      "name": "ASUS Vivobook Pro 15 OLED (K3500, 11th Gen Intel)",
+      "detail": "16GB 3200 MHz DDR4, 1TB SSD",
+      "category": "Workstation"
+    },
+    {
+      "name": "Rexus DAIVA D68SF ",
+      "detail": "Keyboard 68 key; Dedicated Arrow Key",
+      "category": "Peripherals"
+    },
+    {
+      "name": "CCA Polaris In Ear Monitor",
+      "detail": "Dual Cavity Dynamic Driver Wired Earphone",
+      "category": "Audio"
+    },
+    {
+      "name": "Vivo V29",
+      "detail": "Noble Black, 12 GB + 512 GB",
+      "category": "Mobile"
+    }
+  ],
+  "software": [
+    {
+      "name": "VS Code",
+      "detail": "My daily driver for everything code.",
+      "category": "Editor"
+    },
+    {
+      "name": "Warp",
+      "detail": "The terminal for the 21st century.",
+      "category": "Terminal"
+    },
+    {
+      "name": "Figma",
+      "detail": "For all design and prototyping needs.",
+      "category": "Design"
+    },
+    {
+      "name": "Notion",
+      "detail": "Second brain for documentation.",
+      "category": "Productivity"
+    }
+  ],
+  "wallpaper": "/images/uses/wallpaper.jpg"
 }
