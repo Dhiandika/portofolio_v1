@@ -155,13 +155,12 @@ const displayBio = lang === "id" ? bio_id || bio : bio;
             >
                 VIEW DETAILS
             </a>
-            <a
-                href={resume}
-                download
+            <button
+                data-trigger="cv-modal"
                 class="bg-neo-white text-black border-2 border-black px-6 py-3 text-base md:text-lg font-bold shadow-hard hover:bg-neo-pink hover:text-black hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-hover flex items-center justify-center gap-2 w-full sm:w-auto"
             >
                 <i class="ri-download-line"></i> DOWNLOAD CV
-            </a>
+            </button>
         </div>
         <br />
     </div>

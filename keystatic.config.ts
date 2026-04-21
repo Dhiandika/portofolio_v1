@@ -53,7 +53,8 @@ export default config({
                 // Contact & Info
                 email: fields.text({ label: 'Email Address', description: 'Displayed in the Contact section.' }),
                 location: fields.text({ label: 'Location', description: 'Shown in the About section (e.g., "WORLDWIDE").' }),
-                resume: fields.file({ label: 'Resume / CV File', directory: 'public', publicPath: '/', description: 'The file linked to the "DOWNLOAD CV" button.' }),
+                resume: fields.file({ label: 'Resume / CV File (EN)', directory: 'public', publicPath: '/', description: 'The file linked to the "DOWNLOAD CV" button for English.' }),
+                resume_id: fields.file({ label: 'Resume / CV File (ID)', directory: 'public', publicPath: '/', description: 'The file linked to the "DOWNLOAD CV" button for Indonesian.' }),
                 signature: fields.image({ label: 'Signature Image', directory: 'public/images', publicPath: '/images/', description: 'Signature to display at the end of bio.' }),
 
                 // Socials

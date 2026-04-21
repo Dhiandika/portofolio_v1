@@ -136,14 +136,21 @@ const displayBio = lang === "id" ? bio_id || bio : bio;
                     </div>
                 </div>
 
-                <div>
+                <div class="flex flex-wrap gap-4">
                     <a
                         href={`/${lang}/about`}
-                        class="inline-block bg-white text-black font-black px-6 py-3 border-4 border-black shadow-hard hover:bg-neo-yellow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-hover uppercase"
+                        class="inline-flex items-center justify-center bg-white text-black font-black px-6 py-3 border-4 border-black shadow-hard hover:bg-neo-yellow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-hover uppercase"
                     >
                         {lang === "id" ? "Tentang Saya" : "About Me"}
                         <i class="ri-arrow-right-line ml-2"></i>
                     </a>
+                    
+                    <button
+                        data-trigger="cv-modal"
+                        class="inline-flex items-center gap-2 bg-neo-white text-black border-4 border-black px-6 py-3 font-black shadow-hard hover:bg-neo-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-hover uppercase"
+                    >
+                        <i class="ri-download-line text-xl"></i> DOWNLOAD CV
+                    </button>
                 </div>
             </div>
         </div>

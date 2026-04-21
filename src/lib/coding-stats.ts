@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 const CACHE_FILE = path.resolve('./stats-cache.json');
-const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
+const CACHE_DURATION = 4 * 60 * 60 * 1000; // 4 hours in ms
 
 interface StatsData {
     wakatime: any;

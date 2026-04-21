@@ -1,220 +1,47 @@
 {
   "wakatime": {
-    "id": "dc4b7636-628d-4ec5-843b-bf10629f46b7",
+    "id": "abc77e1d-80d4-4fdb-9551-66e836a1130f",
     "user_id": "f64538f6-eaa9-4ce2-a021-ff11cf565d88",
     "range": "last_7_days",
-    "start": "2026-02-10T16:00:00Z",
-    "end": "2026-02-17T15:59:59Z",
+    "start": "2026-04-13T16:00:00Z",
+    "end": "2026-04-20T15:59:59Z",
     "timeout": 15,
     "writes_only": false,
     "timezone": "Asia/Makassar",
     "ai_additions": 0,
     "ai_deletions": 0,
-    "human_additions": 43,
-    "human_deletions": 35,
-    "holidays": 0,
+    "human_additions": 0,
+    "human_deletions": 0,
+    "ai_input_tokens": 0,
+    "ai_output_tokens": 0,
+    "ai_prompt_length": 0,
+    "holidays": 7,
     "status": "ok",
-    "created_at": "2026-02-17T19:24:38Z",
-    "modified_at": "2026-02-17T19:24:38Z",
-    "best_day": {
-      "date": "2026-02-17",
-      "total_seconds": 6344.876,
-      "text": "1 hr 45 mins"
-    },
-    "days_minus_holidays": 7,
-    "projects": [
-      {
-        "total_seconds": 6344.876,
-        "name": "portofolio_v1",
-        "ai_additions": 0,
-        "ai_deletions": 0,
-        "human_additions": 43,
-        "human_deletions": 35,
-        "percent": 100,
-        "digital": "1:45",
-        "decimal": "1.75",
-        "text": "1 hr 45 mins",
-        "hours": 1,
-        "minutes": 45
-      }
-    ],
-    "human_readable_total_including_other_language": "1 hr 45 mins",
-    "editors": [
-      {
-        "total_seconds": 6344.876,
-        "name": "Antigravity",
-        "percent": 100,
-        "digital": "1:45",
-        "decimal": "1.75",
-        "text": "1 hr 45 mins",
-        "hours": 1,
-        "minutes": 45
-      }
-    ],
-    "human_readable_daily_average": "15 mins",
-    "is_up_to_date": true,
-    "daily_average_including_other_language": 906,
-    "operating_systems": [
-      {
-        "total_seconds": 6344.876,
-        "name": "Windows",
-        "percent": 100,
-        "digital": "1:45",
-        "decimal": "1.75",
-        "text": "1 hr 45 mins",
-        "hours": 1,
-        "minutes": 45
-      }
-    ],
-    "categories": [
-      {
-        "name": "Coding",
-        "total_seconds": 6344.876,
-        "percent": 100,
-        "digital": "1:45",
-        "decimal": "1.75",
-        "text": "1 hr 45 mins",
-        "hours": 1,
-        "minutes": 45
-      }
-    ],
-    "is_up_to_date_pending_future": false,
+    "created_at": "2026-04-17T19:55:53Z",
+    "modified_at": "2026-04-20T19:19:21Z",
+    "human_readable_daily_average_including_other_language": "0 secs",
+    "total_seconds": 0,
+    "editors": [],
+    "best_day": null,
     "is_already_updating": false,
-    "human_readable_total": "1 hr 45 mins",
-    "days_including_holidays": 7,
-    "machines": [
-      {
-        "total_seconds": 6344.876,
-        "name": "ZERO",
-        "machine_name_id": "07f915dd-0cf8-40de-a5d5-22908c6d8c9e",
-        "percent": 100,
-        "digital": "1:45",
-        "decimal": "1.75",
-        "text": "1 hr 45 mins",
-        "hours": 1,
-        "minutes": 45
-      }
-    ],
-    "daily_average": 906,
-    "human_readable_daily_average_including_other_language": "15 mins",
-    "languages": [
-      {
-        "name": "Astro",
-        "total_seconds": 4705.769,
-        "percent": 74.17,
-        "digital": "1:18",
-        "decimal": "1.30",
-        "text": "1 hr 18 mins",
-        "hours": 1,
-        "minutes": 18
-      },
-      {
-        "name": "TypeScript",
-        "total_seconds": 1046.229,
-        "percent": 16.49,
-        "digital": "0:17",
-        "decimal": "0.28",
-        "text": "17 mins",
-        "hours": 0,
-        "minutes": 17
-      },
-      {
-        "name": "JavaScript",
-        "total_seconds": 592.878,
-        "percent": 9.34,
-        "digital": "0:09",
-        "decimal": "0.15",
-        "text": "9 mins",
-        "hours": 0,
-        "minutes": 9
-      }
-    ],
-    "dependencies": [
-      {
-        "total_seconds": 1639.107,
-        "name": "react",
-        "percent": 24.48,
-        "digital": "0:27",
-        "decimal": "0.45",
-        "text": "27 mins",
-        "hours": 0,
-        "minutes": 27
-      },
-      {
-        "total_seconds": 1046.229,
-        "name": "ui",
-        "percent": 15.62,
-        "digital": "0:17",
-        "decimal": "0.28",
-        "text": "17 mins",
-        "hours": 0,
-        "minutes": 17
-      },
-      {
-        "total_seconds": 1046.229,
-        "name": "keystatic.config",
-        "percent": 15.62,
-        "digital": "0:17",
-        "decimal": "0.28",
-        "text": "17 mins",
-        "hours": 0,
-        "minutes": 17
-      },
-      {
-        "total_seconds": 592.878,
-        "name": "vercel",
-        "percent": 8.85,
-        "digital": "0:09",
-        "decimal": "0.15",
-        "text": "9 mins",
-        "hours": 0,
-        "minutes": 9
-      },
-      {
-        "total_seconds": 592.878,
-        "name": "vite",
-        "percent": 8.85,
-        "digital": "0:09",
-        "decimal": "0.15",
-        "text": "9 mins",
-        "hours": 0,
-        "minutes": 9
-      },
-      {
-        "total_seconds": 592.878,
-        "name": "config",
-        "percent": 8.85,
-        "digital": "0:09",
-        "decimal": "0.15",
-        "text": "9 mins",
-        "hours": 0,
-        "minutes": 9
-      },
-      {
-        "total_seconds": 592.878,
-        "name": "astro",
-        "percent": 8.85,
-        "digital": "0:09",
-        "decimal": "0.15",
-        "text": "9 mins",
-        "hours": 0,
-        "minutes": 9
-      },
-      {
-        "total_seconds": 592.878,
-        "name": "sitemap",
-        "percent": 8.85,
-        "digital": "0:09",
-        "decimal": "0.15",
-        "text": "9 mins",
-        "hours": 0,
-        "minutes": 9
-      }
-    ],
-    "total_seconds": 6344.876,
-    "percent_calculated": 100,
+    "human_readable_total_including_other_language": "0 secs",
+    "daily_average": 0,
+    "human_readable_daily_average": "0 secs",
+    "human_readable_total": "0 secs",
     "is_stuck": false,
-    "total_seconds_including_other_language": 6344.876,
+    "machines": [],
+    "operating_systems": [],
+    "dependencies": [],
+    "total_seconds_including_other_language": 0,
+    "days_minus_holidays": 0,
+    "is_up_to_date_pending_future": false,
+    "daily_average_including_other_language": 0,
+    "is_up_to_date": true,
+    "languages": [],
+    "projects": [],
+    "categories": [],
+    "percent_calculated": 100,
+    "days_including_holidays": 7,
     "is_cached": true,
     "username": null,
     "is_including_today": false,
@@ -256,6 +83,16 @@
     "streak": 1,
     "maxStreak": 1,
     "isPremium": false,
+    "details": {
+      "bio": "",
+      "keyboard": "",
+      "showActivityOnPublicProfile": false,
+      "socialProfiles": {
+        "github": "Dhiandika",
+        "twitter": "",
+        "website": ""
+      }
+    },
     "allTimeLbs": {
       "time": {
         "15": {},
@@ -264,5 +101,5 @@
     },
     "uid": "ZdL3r4RjLbM4ypJd0qFs7OsGglf2"
   },
-  "lastUpdated": 1771394664769
+  "lastUpdated": 1776781183174
 }

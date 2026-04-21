@@ -140,6 +140,7 @@ const site = defineCollection({
         email: z.string().optional(),
         location: z.string().optional(),
         resume: z.string().optional(),
+        resume_id: z.string().optional(),
         signature: z.string().optional(),
         github: z.string().url().optional(),
         leetcode: z.string().url().optional(),
