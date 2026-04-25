@@ -1,28 +1,29 @@
 {
-    "categories": [
-        {
-            "label": "Frontend",
-            "value": 90
-        },
-        {
-            "label": "Backend",
-            "value": 85
-        },
-        {
-            "label": "DevOps",
-            "value": 70
-        },
-        {
-            "label": "UI/UX",
-            "value": 80
-        },
-        {
-            "label": "Mobile",
-            "value": 60
-        },
-        {
-            "label": "Data",
-            "value": 75
-        }
-    ]
+  "categories": [
+    {
+      "label": "Frontend",
+      "value": 80
+    },
+    {
+      "label": "Backend",
+      "value": 85
+    },
+    {
+      "label": "DevOps",
+      "value": 70
+    },
+    {
+      "label": "UI/UX",
+      "value": 80
+    },
+    {
+      "label": "Machine Learning",
+      "value": 80,
+      "fullMark": 0
+    },
+    {
+      "label": "Data",
+      "value": 75
+    }
+  ]
 }

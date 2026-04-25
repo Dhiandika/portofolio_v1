@@ -56,6 +56,7 @@
     /* cursor: none; - Disabled for safety/fallback */
     background-color: var(--neo-white);
     color: var(--neo-black);
+    font-size: 14px !important; /* Scale down ~12.5% globally */
   }
 
   /* Only hide cursor if custom cursor is active (via JS class) */
@@ -84,6 +85,20 @@
 @layer utilities {
   .shadow-hard {
     box-shadow: 4px 4px 0 0 #000;
+  }
+  .neo-hover {
+    transition: all 0.2s ease-in-out;
+  }
+  .neo-hover:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0 0 #000;
+  }
+  .neo-hover-white {
+    transition: all 0.2s ease-in-out;
+  }
+  .neo-hover-white:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0 0 #fff;
   }
   .text-stroke {
     -webkit-text-stroke: 1px #000;

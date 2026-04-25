@@ -1,0 +1,474 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, getEntry } from "astro:content";
+import SocialEmbed from "../../components/SocialEmbed.astro";
+
+export async function getStaticPaths() {
+	return [{ params: { lang: "en" } }, { params: { lang: "id" } }];
+}
+
+const { lang } = Astro.params;
+const siteConfig = await getEntry("site", "config");
+const pageTitle = lang === "id" ? siteConfig?.data?.pageTitle_id || siteConfig?.data?.pageTitle : siteConfig?.data?.pageTitle;
+
+const socialBrands = await getCollection("socialBrands");
+
+const brandDisplayName = (id: string) => id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ');
+
+const ui = {
+    en: { title: "Social Creation", subtitle: "Managing digital presence across the multiverse.", open: "Open", brands: "Brands", platforms: "Platforms", managed: "managed", noEmbed: "No embed code added.", viewProfile: "View Profile", select: "Select a brand to view content" },
+    id: { title: "Kreasi Sosial", subtitle: "Mengelola kehadiran digital di berbagai platform.", open: "Buka", brands: "Brand", platforms: "Platform", managed: "dikelola", noEmbed: "Belum ada embed code.", viewProfile: "Lihat Profil", select: "Pilih brand untuk melihat konten" },
+};
+const t = ui[lang as keyof typeof ui] || ui.en;
+
+const hasData = socialBrands && socialBrands.length > 0;
+
+const accentColors = [
+    { bg: 'bg-neo-yellow', text: 'text-black', border: 'border-neo-yellow', glow: '#FBFF48' },
+    { bg: 'bg-neo-pink',   text: 'text-black', border: 'border-neo-pink',   glow: '#FF2D78' },
+    { bg: 'bg-neo-blue',   text: 'text-white', border: 'border-neo-blue',   glow: '#3B82F6' },
+    { bg: 'bg-neo-green',  text: 'text-black', border: 'border-neo-green',  glow: '#33FF57' },
+    { bg: 'bg-neo-purple', text: 'text-white', border: 'border-neo-purple', glow: '#A855F7' },
+];
+---
+
+<Layout title={`${t.title} | ${pageTitle || 'Portfolio'}`} lang={lang}>
+    <main class="min-h-screen pt-28 pb-24 bg-neo-white relative overflow-hidden">
+        <!-- Grid Pattern -->
+        <div class="absolute inset-0 opacity-[0.04] pointer-events-none" style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+        <div class="max-w-[1400px] mx-auto px-4 relative z-10">
+
+            <!-- ======== HEADER ======== -->
+            <div class="mb-10 text-center" data-aos="fade-down">
+                <h1 class="text-5xl md:text-8xl font-black uppercase tracking-tighter text-neo-black drop-shadow-[4px_4px_0_rgba(251,255,72,1)]">
+                    {t.title}
+                </h1>
+                <p class="text-base md:text-lg font-mono mt-4 font-bold bg-black text-white inline-block px-4 py-2 border-2 border-neo-yellow rotate-1 shadow-hard">
+                    {t.subtitle}
+                </p>
+            </div>
+
+            {!hasData ? (
+                <div class="w-full p-12 border-4 border-dashed border-black bg-white flex flex-col items-center justify-center text-black font-mono shadow-hard text-center" data-aos="fade-up">
+                    <i class="ri-ghost-line text-6xl mb-4 text-neo-red animate-bounce"></i>
+                    <p class="font-bold text-xl mb-2">NO_CREATION_DATA_FOUND</p>
+                    <p class="text-sm">Please add data in Keystatic › Social Brands</p>
+                </div>
+            ) : (
+                <div class="flex flex-col xl:flex-row gap-0 items-start creation-container">
+
+                    <!-- ======== MOBILE: DROPDOWN ACCORDION ======== -->
+                    <div class="xl:hidden w-full mb-4" data-aos="fade-down">
+                        <div class="bg-[#111] border-4 border-black shadow-[6px_6px_0_0_#FBFF48]">
+                            <button
+                                id="mobileMenuToggle"
+                                class="w-full flex items-center justify-between px-5 py-4 text-white font-black tracking-wider border-b-2 border-white/10"
+                            >
+                                <span class="flex items-center gap-3">
+                                    <!-- Mobile active brand avatar -->
+                                    <div id="mobileAvatarCircle" class={`w-8 h-8 rounded-full overflow-hidden border-2 border-neo-yellow flex items-center justify-center font-black text-sm ${accentColors[0].bg} ${accentColors[0].text}`}>
+                                        {socialBrands[0].data.avatar
+                                            ? <img src={socialBrands[0].data.avatar} alt="" class="w-full h-full object-cover" />
+                                            : brandDisplayName(socialBrands[0].id).charAt(0)
+                                        }
+                                    </div>
+                                    <div class="text-left">
+                                        <p id="mobileSelectedBrand" class="text-neo-yellow font-black text-sm leading-none">{brandDisplayName(socialBrands[0].id)}</p>
+                                        <p class="text-gray-500 font-mono text-[10px]">@{socialBrands[0].id}</p>
+                                    </div>
+                                </span>
+                                <i id="mobileChevron" class="ri-arrow-down-s-line text-2xl text-neo-yellow transition-transform duration-300"></i>
+                            </button>
+
+                            <!-- Mobile Brand List -->
+                            <div id="mobileMenu" class="hidden border-t-2 border-white/10">
+                                {socialBrands.map((brand, index) => {
+                                    const color = accentColors[index % accentColors.length];
+                                    const initial = brandDisplayName(brand.id).charAt(0);
+                                    return (
+                                        <button
+                                            class={`mobile-brand-btn w-full flex items-center gap-4 px-5 py-3 text-left border-b border-white/5 hover:bg-white/5 transition-colors ${index === 0 ? 'mobile-brand-active bg-white/10' : ''}`}
+                                            data-brand-id={brand.id}
+                                            data-brand-index={index}
+                                            data-initial={initial}
+                                            data-color-bg={color.bg}
+                                            data-color-text={color.text}
+                                        >
+                                            <div class={`w-9 h-9 rounded-full overflow-hidden shrink-0 border-2 border-black ${color.bg} ${color.text} font-black text-sm flex items-center justify-center`}>
+                                                {brand.data.avatar
+                                                    ? <img src={brand.data.avatar} alt={brandDisplayName(brand.id)} class="w-full h-full object-cover" />
+                                                    : initial
+                                                }
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-white font-black text-sm uppercase truncate">{brandDisplayName(brand.id)}</p>
+                                                <p class="text-gray-400 font-mono text-[10px] truncate">@{brand.id}</p>
+                                            </div>
+                                            <div class={`w-1.5 h-1.5 rounded-full shrink-0 ${color.bg} ${index === 0 ? 'opacity-100' : 'opacity-0'} mobile-dot`}></div>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ======== DESKTOP: SIDEBAR (Reference Style) ======== -->
+                    <aside class="hidden xl:flex w-64 shrink-0 flex-col" data-aos="fade-right">
+                        <div class="bg-[#0e0e0e] border-4 border-black shadow-[8px_8px_0_0_#FBFF48] sticky top-28 flex flex-col overflow-hidden">
+
+                            <!-- === PROFILE HEADER (active brand) === -->
+                            <div class="relative px-5 pt-6 pb-4 border-b-4 border-neo-yellow flex-shrink-0">
+                                <!-- Status badge -->
+                                <div class="absolute top-4 left-4 flex items-center gap-1.5 bg-neo-green/20 border border-neo-green px-2.5 py-1 rounded-full">
+                                    <div class="w-1.5 h-1.5 bg-neo-green rounded-full animate-pulse"></div>
+                                    <span class="font-mono text-neo-green text-[9px] font-bold uppercase tracking-wider">Active</span>
+                                </div>
+
+                                <!-- Avatar circle -->
+                                <div class="flex justify-center mt-6 mb-3">
+                                    <div id="sidebarAvatarWrap" class="relative">
+                                        <div
+                                            id="sidebarAvatar"
+                                            class={`w-20 h-20 rounded-full border-4 border-neo-yellow overflow-hidden flex items-center justify-center font-black text-3xl ${accentColors[0].bg} ${accentColors[0].text} shadow-[0_0_0_3px_#0e0e0e,0_0_0_6px_#FBFF48]`}
+                                        >
+                                            {socialBrands[0].data.avatar
+                                                ? <img src={socialBrands[0].data.avatar} alt="" class="w-full h-full object-cover" />
+                                                : brandDisplayName(socialBrands[0].id).charAt(0)
+                                            }
+                                        </div>
+                                        <!-- Verified badge style -->
+                                        <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-neo-yellow border-2 border-black rounded-full flex items-center justify-center">
+                                            <i class="ri-star-fill text-black text-[10px]"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Brand name + handle -->
+                                <div class="text-center">
+                                    <h2 id="sidebarBrandName" class="text-white font-black text-base uppercase tracking-tight leading-tight">
+                                        {brandDisplayName(socialBrands[0].id)}
+                                    </h2>
+                                    <p id="sidebarBrandHandle" class="text-gray-500 font-mono text-xs mt-0.5">@{socialBrands[0].id}</p>
+                                    <p id="sidebarBrandPlatforms" class="text-gray-600 font-mono text-[10px] mt-1">
+                                        {socialBrands[0].data.platforms.map(p => p.platformType).join(' · ')}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- === BRAND NAV LIST === -->
+                            <nav class="py-3 px-3 space-y-0.5 flex-1 overflow-y-auto">
+                                {socialBrands.map((brand, index) => {
+                                    const color = accentColors[index % accentColors.length];
+                                    const initial = brandDisplayName(brand.id).charAt(0);
+                                    const isFirst = index === 0;
+                                    return (
+                                        <button
+                                            class={`brand-tab-btn group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-200 ${isFirst ? 'bg-white/10 brand-active' : 'hover:bg-white/5'}`}
+                                            data-brand-id={brand.id}
+                                            data-brand-index={index}
+                                            data-initial={initial}
+                                            data-color-bg={color.bg}
+                                            data-color-text={color.text}
+                                            data-platforms={brand.data.platforms.map(p => p.platformType).join(' · ')}
+                                            data-avatar={brand.data.avatar || ''}
+                                        >
+                                            <!-- Small avatar circle -->
+                                            <div class={`w-8 h-8 rounded-full overflow-hidden shrink-0 border-2 border-black flex items-center justify-center font-black text-sm ${color.bg} ${color.text} brand-avatar-sm`}>
+                                                {brand.data.avatar
+                                                    ? <img src={brand.data.avatar} alt={brandDisplayName(brand.id)} class="w-full h-full object-cover" />
+                                                    : initial
+                                                }
+                                            </div>
+
+                                            <!-- Label -->
+                                            <div class="min-w-0 flex-1 text-left">
+                                                <p class={`font-black text-sm leading-none truncate transition-colors ${isFirst ? 'text-neo-yellow' : 'text-gray-300 group-hover:text-white'} brand-label`}>
+                                                    {brandDisplayName(brand.id)}
+                                                </p>
+                                                <p class="font-mono text-[10px] text-gray-600 mt-0.5 truncate">@{brand.id}</p>
+                                            </div>
+
+                                            <!-- Active indicator bar (left side) -->
+                                            <div class={`w-1 h-4 rounded-full shrink-0 ${color.bg} brand-dot ${isFirst ? 'opacity-100' : 'opacity-0 group-hover:opacity-30'} transition-opacity`}></div>
+                                        </button>
+                                    );
+                                })}
+                            </nav>
+
+                            <!-- Sidebar Footer -->
+                            <div class="border-t-2 border-white/10 px-4 py-3 flex-shrink-0">
+                                <p class="font-mono text-gray-600 text-[10px] uppercase tracking-wider text-center">
+                                    {socialBrands.length} brand{socialBrands.length !== 1 ? 's' : ''} {t.managed}
+                                </p>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- ======== CONTENT AREA ======== -->
+                    <div class="flex-1 min-w-0 xl:border-l-4 xl:border-black" data-aos="fade-left">
+                        {socialBrands.map((brand, brandIndex) => (
+                            <div
+                                id={`brand-content-${brand.id}`}
+                                class={`brand-content ${brandIndex === 0 ? 'block' : 'hidden'}`}
+                            >
+                                <!-- Brand Header Bar -->
+                                <div class="bg-[#0e0e0e] border-b-4 border-black px-6 py-4 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class={`w-8 h-8 ${accentColors[brandIndex % accentColors.length].bg} ${accentColors[brandIndex % accentColors.length].text} font-black text-sm flex items-center justify-center border-2 border-black`}>
+                                            {brandDisplayName(brand.id).charAt(0)}
+                                        </div>
+                                        <div>
+                                            <p class="text-white font-black text-sm uppercase tracking-wide">{brandDisplayName(brand.id)}</p>
+                                            <p class="text-gray-500 font-mono text-[10px]">{brand.data.platforms.length} platform{brand.data.platforms.length !== 1 ? 's' : ''}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <div class="w-2.5 h-2.5 rounded-full bg-neo-red border border-white/20"></div>
+                                        <div class="w-2.5 h-2.5 rounded-full bg-neo-yellow border border-white/20"></div>
+                                        <div class="w-2.5 h-2.5 rounded-full bg-neo-green border border-white/20 animate-pulse"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Platform Tabs -->
+                                <div class="flex flex-wrap gap-0 border-b-4 border-black bg-[#1a1a1a] px-4 pt-3">
+                                    {brand.data.platforms.map((platform, platformIndex) => (
+                                        <button
+                                            class={`platform-tab-btn px-5 py-2.5 font-bold font-mono text-sm border-t-4 border-x-4 border-b-0 transition-colors -mb-px relative ${platformIndex === 0 ? 'bg-neo-white text-black border-neo-yellow' : 'bg-transparent text-gray-400 border-transparent hover:text-white hover:border-white/20'}`}
+                                            data-brand-id={brand.id}
+                                            data-platform-id={`${brand.id}-${platform.platformType}`}
+                                        >
+                                            <i class={`ri-${platform.platformType.toLowerCase()}-fill mr-1.5`}></i>
+                                            {platform.platformType}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <!-- Platform Contents -->
+                                <div class="bg-neo-white border-x-4 border-b-4 border-black shadow-[8px_8px_0_0_#000]">
+                                    {brand.data.platforms.map((platform, platformIndex) => (
+                                        <div
+                                            id={`platform-content-${brand.id}-${platform.platformType}`}
+                                            class={`platform-content ${platformIndex === 0 ? 'block' : 'hidden'}`}
+                                        >
+                                            <!-- Embed Section -->
+                                            <div class="relative border-b-4 border-black bg-[#f7f7f7] flex justify-center items-center min-h-[200px] overflow-hidden">
+                                                <!-- Badge -->
+                                                <div class="absolute top-3 left-3 z-20 flex items-center gap-2">
+                                                    <span class="bg-black text-neo-yellow font-black font-mono text-[10px] px-2 py-1 border-2 border-neo-yellow uppercase">
+                                                        <i class={`ri-${platform.platformType.toLowerCase()}-fill mr-1`}></i>
+                                                        {platform.platformType}
+                                                    </span>
+                                                </div>
+
+                                                <div class="w-full max-w-[820px] mx-auto embed-container p-6 pt-10">
+                                                    {platform.profileEmbedHtml ? (
+                                                        <div set:html={platform.profileEmbedHtml} class="w-full flex justify-center overflow-hidden" />
+                                                    ) : (
+                                                        <div class="text-center font-mono py-16 w-full border-4 border-dashed border-gray-300 bg-white">
+                                                            <i class={`ri-${platform.platformType.toLowerCase()}-fill text-7xl text-gray-200 mb-4 block`}></i>
+                                                            <p class="font-bold text-gray-400 text-sm mb-4">{t.noEmbed}</p>
+                                                            {platform.profileUrl && (
+                                                                <a href={platform.profileUrl} target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-black text-neo-yellow font-black uppercase text-xs border-2 border-black hover:-translate-y-1 transition-transform shadow-hard">
+                                                                    <i class="ri-external-link-line"></i> {t.viewProfile}
+                                                                </a>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <!-- Videos Section -->
+                                            {platform.videos && platform.videos.length > 0 && (
+                                                <div class="p-6 md:p-8">
+                                                    <div class="mb-6 flex justify-between items-center border-b-4 border-black pb-3">
+                                                        <h3 class="font-black text-xl uppercase text-black">Showcase Videos</h3>
+                                                        <span class="font-mono font-bold text-xs bg-black text-white px-3 py-1 border-2 border-black">
+                                                            {platform.videos.length} VIDEO{platform.videos.length !== 1 ? 'S' : ''}
+                                                        </span>
+                                                    </div>
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                                        {platform.videos.map((videoUrl, vi) => (
+                                                            <div data-aos="fade-up" data-aos-delay={String(vi * 80)}>
+                                                                <SocialEmbed url={videoUrl} />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+
+                            </div>
+                        ))}
+                    </div>
+
+                </div>
+            )}
+        </div>
+    </main>
+</Layout>
+
+<style is:global>
+    .embed-container > * { max-width: 100% !important; margin: 0 auto !important; }
+    .embed-container iframe { border-radius: 0 !important; }
+</style>
+
+<style>
+    /* Brand active state */
+    .brand-tab-btn.brand-active { border-color: #FBFF48 !important; background-color: rgba(251,255,72,0.08) !important; }
+    .brand-tab-btn.brand-active p:first-child { color: #FBFF48 !important; }
+    .brand-tab-btn.brand-active .brand-dot { opacity: 1 !important; }
+
+    /* Mobile active */
+    .mobile-brand-btn.mobile-brand-active { background-color: rgba(255,255,255,0.1); }
+    .mobile-brand-btn.mobile-brand-active .mobile-dot { opacity: 1 !important; }
+
+    /* Content animation */
+    .brand-content.animate-in { animation: slideIn 0.25s ease-out forwards; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Platform tab active */
+    .platform-tab-btn.tab-active { background-color: #f0f0f0 !important; color: #000 !important; border-color: #FBFF48 !important; }
+</style>
+
+<script>
+    document.addEventListener('astro:page-load', () => {
+
+        // ===== MOBILE MENU TOGGLE =====
+        const mobileToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileChevron = document.getElementById('mobileChevron');
+        const mobileSelectedBrand = document.getElementById('mobileSelectedBrand');
+
+        mobileToggle?.addEventListener('click', () => {
+            const isOpen = !mobileMenu?.classList.contains('hidden');
+            if (isOpen) {
+                mobileMenu?.classList.add('hidden');
+                mobileChevron?.classList.remove('rotate-180');
+            } else {
+                mobileMenu?.classList.remove('hidden');
+                mobileChevron?.classList.add('rotate-180');
+            }
+        });
+
+        // ===== SHARED BRAND SWITCH =====
+        function switchBrand(brandId: string) {
+            const brandContents = document.querySelectorAll<HTMLElement>('.brand-content');
+            brandContents.forEach(content => {
+                if (content.id === `brand-content-${brandId}`) {
+                    content.classList.remove('hidden');
+                    content.classList.add('block', 'animate-in');
+                    // Activate first platform tab
+                    const firstPlatformBtn = content.querySelector<HTMLElement>('.platform-tab-btn');
+                    firstPlatformBtn?.click();
+                } else {
+                    content.classList.remove('block', 'animate-in');
+                    content.classList.add('hidden');
+                }
+            });
+        }
+
+        // ===== DESKTOP SIDEBAR =====
+        const brandBtns = document.querySelectorAll<HTMLElement>('.brand-tab-btn');
+        brandBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-brand-id')!;
+                // Update sidebar active state
+                brandBtns.forEach(b => {
+                    b.classList.remove('brand-active', 'bg-white/10');
+                    b.querySelector('.brand-dot')?.classList.replace('opacity-100', 'opacity-0');
+                    const lbl = b.querySelector('.brand-label');
+                    if (lbl) { lbl.classList.remove('text-neo-yellow'); lbl.classList.add('text-gray-300'); }
+                });
+                btn.classList.add('brand-active', 'bg-white/10');
+                btn.querySelector('.brand-dot')?.classList.replace('opacity-0', 'opacity-100');
+                const activeLbl = btn.querySelector('.brand-label');
+                if (activeLbl) { activeLbl.classList.add('text-neo-yellow'); activeLbl.classList.remove('text-gray-300'); }
+
+                // Update sidebar profile header
+                const avatar    = btn.getAttribute('data-avatar') || '';
+                const initial   = btn.getAttribute('data-initial') || '?';
+                const colorBg   = btn.getAttribute('data-color-bg') || 'bg-neo-yellow';
+                const colorTxt  = btn.getAttribute('data-color-text') || 'text-black';
+                const platforms = btn.getAttribute('data-platforms') || '';
+                const sidebarAv = document.getElementById('sidebarAvatar');
+                const sidebarNm = document.getElementById('sidebarBrandName');
+                const sidebarHd = document.getElementById('sidebarBrandHandle');
+                const sidebarPl = document.getElementById('sidebarBrandPlatforms');
+
+                if (sidebarAv) {
+                    sidebarAv.className = sidebarAv.className
+                        .replace(/bg-\S+/g,'').replace(/text-\S+/g,'').trim();
+                    sidebarAv.classList.add(colorBg, colorTxt,
+                        'w-20','h-20','rounded-full','border-4','border-neo-yellow',
+                        'overflow-hidden','flex','items-center','justify-center',
+                        'font-black','text-3xl','shadow-[0_0_0_3px_#0e0e0e,0_0_0_6px_#FBFF48]');
+                    sidebarAv.innerHTML = avatar
+                        ? `<img src="${avatar}" alt="" class="w-full h-full object-cover" />`
+                        : initial;
+                }
+                if (sidebarNm) sidebarNm.textContent = activeLbl?.textContent || targetId;
+                if (sidebarHd) sidebarHd.textContent = `@${targetId}`;
+                if (sidebarPl) sidebarPl.textContent = platforms;
+
+                switchBrand(targetId);
+            });
+        });
+
+        // ===== MOBILE BRAND BUTTONS =====
+        const mobileBrandBtns = document.querySelectorAll<HTMLElement>('.mobile-brand-btn');
+        mobileBrandBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-brand-id')!;
+                const brandName = btn.querySelector('p')?.textContent || targetId;
+
+                // Update mobile active
+                mobileBrandBtns.forEach(b => {
+                    b.classList.remove('mobile-brand-active');
+                    b.querySelector('.mobile-dot')?.classList.replace('opacity-100', 'opacity-0');
+                });
+                btn.classList.add('mobile-brand-active');
+                btn.querySelector('.mobile-dot')?.classList.replace('opacity-0', 'opacity-100');
+
+                // Update selected label
+                if (mobileSelectedBrand) mobileSelectedBrand.textContent = brandName;
+
+                // Close menu
+                mobileMenu?.classList.add('hidden');
+                mobileChevron?.classList.remove('rotate-180');
+
+                switchBrand(targetId);
+            });
+        });
+
+        // ===== PLATFORM TABS =====
+        const platformBtns = document.querySelectorAll<HTMLElement>('.platform-tab-btn');
+        platformBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const brandId = btn.getAttribute('data-brand-id')!;
+                const platformId = btn.getAttribute('data-platform-id')!;
+                const parent = document.getElementById(`brand-content-${brandId}`);
+                if (!parent) return;
+
+                // Update tab styles
+                parent.querySelectorAll<HTMLElement>('.platform-tab-btn').forEach(b => {
+                    b.classList.remove('tab-active', 'bg-neo-white', 'text-black', 'border-neo-yellow');
+                    b.classList.add('bg-transparent', 'text-gray-400', 'border-transparent');
+                });
+                btn.classList.add('tab-active', 'bg-neo-white', 'text-black', 'border-neo-yellow');
+                btn.classList.remove('bg-transparent', 'text-gray-400', 'border-transparent');
+
+                // Show platform content
+                parent.querySelectorAll<HTMLElement>('.platform-content').forEach(c => {
+                    c.id === `platform-content-${platformId}`
+                        ? (c.classList.remove('hidden'), c.classList.add('block'))
+                        : (c.classList.remove('block'), c.classList.add('hidden'));
+                });
+
+                window.dispatchEvent(new Event('resize'));
+            });
+        });
+    });
+</script>

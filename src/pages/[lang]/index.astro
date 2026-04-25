@@ -2,13 +2,11 @@
 import Layout from "../../layouts/Layout.astro";
 import Hero from "../../components/Hero.astro";
 import Marquee from "../../components/Marquee.astro";
-import About from "../../components/About.astro";
-import Skills from "../../components/Skills.astro";
+import TechStack from "../../components/TechStack.astro";
 import Experience from "../../components/Experience.astro";
 import CodingStats from "../../components/CodingStats.astro";
 import Projects from "../../components/Projects.astro";
-import BlogShowcase from "../../components/BlogShowcase.astro";
-import CompanyLogos from "../../components/CompanyLogos.astro";
+
 
 import Testimonials from "../../components/Testimonials.astro";
 import Contact from "../../components/Contact.astro";
@@ -26,21 +24,22 @@ const { lang } = Astro.params;
 const siteConfig = await getEntry("site", "config");
 const pageTitle =
 	lang === "id"
-		? siteConfig.data.pageTitle_id || siteConfig.data.pageTitle
-		: siteConfig.data.pageTitle;
+		? siteConfig?.data?.pageTitle_id || siteConfig?.data?.pageTitle
+		: siteConfig?.data?.pageTitle;
+
+const showTestimonials = siteConfig?.data?.showTestimonials === true;
 ---
 
-<Layout title={pageTitle || "Dhiandika | Full Stack Brutalist"} lang={lang}>
+<Layout title={pageTitle || "Dhiandika Aditya| Full Stack "} lang={lang}>
 	<Hero lang={lang} />
 	<Marquee lang={lang} />
-	<About lang={lang} />
-	<Skills lang={lang} />
+	<TechStack lang={lang} />
 	<Experience lang={lang} />
 	<CodingStats lang={lang} />
 	<Projects lang={lang} />
-	<BlogShowcase lang={lang} />
-	<Testimonials lang={lang} />
-	<CompanyLogos />
+	{/* Achievements now inside Portfolio Showcase tab */}
+	{/* BlogShowcase removed — blog tab now inside Projects section */}
+	{showTestimonials && <Testimonials lang={lang} />}
 	<Contact lang={lang} />
 	<Footer lang={lang} />
 </Layout>

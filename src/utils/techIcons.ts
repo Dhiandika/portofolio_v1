@@ -42,7 +42,9 @@ export const techIcons: Record<string, string> = {
     "Linux": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg",
     "Ubuntu": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ubuntu/ubuntu-plain.svg",
     "Windows": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/windows8/windows8-original.svg",
-    "Apple": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg"
+    "Apple": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg",
+    "Jupyter": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jupyter/jupyter-plain.svg",
+    "Jupyter Notebook": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jupyter/jupyter-plain.svg"
 };
 
 export const getTechIcon = (tech: string): string => {

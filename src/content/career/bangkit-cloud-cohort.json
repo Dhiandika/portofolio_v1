@@ -1,0 +1,38 @@
+{
+  "role": "Cloud Computing Cohort",
+  "role_id": "Cloud Computing Cohort",
+  "company": "Bangkit Academy",
+  "link": "https://www.dicoding.com/programs/bangkit",
+  "date": "Juli 2023 - Jan 2024",
+  "location": "Daring",
+  "type": "Remote",
+  "logo": "/images/logos/bangkit-cloud-cohort/logo.jpg",
+  "tasks": [
+    "Acted as the Cloud Computing Lead for the \"Parental Peace\" capstone project, orchestrating the backend architecture.",
+    "Designed and deployed robust REST APIs to seamlessly bridge mobile client requests with backend processing.",
+    "Managed and configured cloud infrastructure on Google Cloud Platform (GCP), utilizing services like Cloud Run for scalable deployment."
+  ],
+  "tasks_id": [
+    "Bertanggung jawab sebagai Cloud Computing Lead untuk capstone project \"Parental Peace\", merancang dan mengelola arsitektur backend secara menyeluruh.",
+    "Mengembangkan dan melakukan deployment REST API untuk menjembatani permintaan dari aplikasi klien dengan sistem pemrosesan data.",
+    "Mengelola infrastruktur cloud di Google Cloud Platform (GCP), memanfaatkan layanan seperti Cloud Run untuk deployment yang dinamis dan terukur."
+  ],
+  "skills_learned": [
+    "Advanced cloud architecture principles, focusing on scalability, security, and resource optimization.",
+    "Server-side containerization techniques (e.g., Docker) and continuous integration/continuous deployment (CI/CD) pipelines.",
+    "Effective cross-functional collaboration and leadership within a dynamic, multi-disciplinary tech team (Cloud, ML, and Mobile)."
+  ],
+  "skills_learned_id": [
+    "Prinsip-prinsip lanjutan arsitektur cloud, dengan fokus pada skalabilitas, keamanan, dan efisiensi biaya.",
+    "Teknik containerization (seperti Docker) dan penerapan jalur integrasi/pengiriman berkelanjutan (CI/CD) untuk kelancaran deployment.",
+    "Kepemimpinan dan kolaborasi tim lintas disiplin (Cloud, Machine Learning, dan Mobile) dalam lingkungan pengembangan yang cepat."
+  ],
+  "impact": [
+    "Successfully delivered a highly available and reliable backend system that supported the core functionalities of the capstone application.",
+    "Reduced server response times and ensured secure data transactions, resulting in a smooth and stable end-user experience."
+  ],
+  "impact_id": [
+    "Berhasil membangun infrastruktur backend dengan ketersediaan tinggi (high availability) yang menopang seluruh fitur utama aplikasi capstone.",
+    "Memastikan stabilitas server dan kelancaran transaksi data, yang berkontribusi langsung pada pengalaman pengguna aplikasi yang optimal dan tanpa hambatan."
+  ]
+}

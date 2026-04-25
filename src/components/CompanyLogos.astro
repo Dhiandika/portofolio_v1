@@ -29,7 +29,9 @@ const displayCompanies = Array(repeatCount).fill(companies).flat();
                         src={company.data.logo}
                         alt={company.data.name}
                         class="h-12 w-auto object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+                        onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling?.classList.remove('hidden');"
                     />
+                    <span class="hidden text-white font-mono text-xl font-bold uppercase">{company.data.name}</span>
                 </a>
             ))
         }

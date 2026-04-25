@@ -1,212 +1,233 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-import { getCollection } from "astro:content";
-import ClapButton from "../../../components/ClapButton.astro";
-import { getEntry } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
+import { getTechIcon } from "../../../utils/techIcons";
+
+export const prerender = true;
 
 export async function getStaticPaths() {
     const projects = await getCollection("projects");
-    const paths: {
-        params: { lang: string; slug: string };
-        props: { project: any };
-    }[] = [];
-
+    const paths: { params: { lang: string; slug: string }; props: { project: any } }[] = [];
     projects.forEach((project) => {
-        paths.push({
-            params: { lang: "en", slug: project.id },
-            props: { project },
-        });
-        paths.push({
-            params: { lang: "id", slug: project.id },
-            props: { project },
-        });
+        paths.push({ params: { lang: "en", slug: project.id }, props: { project } });
+        paths.push({ params: { lang: "id", slug: project.id }, props: { project } });
     });
-
     return paths;
 }
 
 const { lang } = Astro.params;
 const { project } = Astro.props;
 const siteConfig = await getEntry("site", "config");
-const { data: siteData } = siteConfig || { data: { brandName: "ARHAM" } };
+const brandName = siteConfig?.data?.brandName || "Dhiandika";
 
-const ui = {
-    en: {
-        back: "BACK TO PROJECTS",
-        demo: "LIVE DEMO",
-        source: "SOURCE CODE",
-        stack: "TECH STACK",
-    },
-    id: {
-        back: "KEMBALI KE PROYEK",
-        demo: "DEMO LANGSUNG",
-        source: "KODE SUMBER",
-        stack: "TEKNOLOGI",
-    },
+const title = lang === "id" ? project.data.title_id || project.data.title : project.data.title;
+const description = lang === "id" ? project.data.description_id || project.data.description : project.data.description;
+const content = lang === "id" ? project.data.content_id || project.data.content : project.data.content;
+const keyFeatures: string[] = (lang === "id" ? project.data.keyFeatures_id || project.data.keyFeatures : project.data.keyFeatures) || [];
+
+const galleryImages: string[] = (project.data.gallery?.filter((g: string | null) => g !== null) as string[] ?? []).length
+    ? (project.data.gallery!.filter((g: string | null) => g !== null) as string[])
+    : project.data.image ? [project.data.image] : [];
+const techIconsList = (project.data.techStack as string[]).map((tech) => ({ name: tech, icon: getTechIcon(tech) }));
+
+const categoryIcons: Record<string, string> = {
+    "Web":    "ri-global-line",
+    "Mobile": "ri-smartphone-line",
+    "UI/UX":  "ri-pen-nib-line",
+    "Other":  "ri-code-s-slash-line",
 };
-
-const t = ui[lang as keyof typeof ui] || ui.en;
-
-const title =
-    lang === "id"
-        ? project.data.title_id || project.data.title
-        : project.data.title;
-const description =
-    lang === "id"
-        ? project.data.description_id || project.data.description
-        : project.data.description;
-// Handle content which is a string in 'data' collection
-const content =
-    lang === "id"
-        ? project.data.content_id || project.data.content
-        : project.data.content;
+const category = project.data.category || "Web";
+const catIcon = categoryIcons[category] || "ri-code-s-slash-line";
 ---
 
-<Layout
-    title={`${title} | ${siteData.brandName}`}
-    lang={lang}
-    image={project.data.image}
->
-    <main
-        class="min-h-screen pt-32 pb-20 px-4 md:px-8 bg-neo-white bg-neo-texture"
-    >
-        <div class="max-w-6xl mx-auto">
-            {/* Navigation */}
-            <a
-                href={`/${lang}/projects`}
-                class="inline-flex items-center gap-2 font-mono font-bold hover:-translate-x-1 transition-transform mb-8 bg-white border-2 border-neo-black px-4 py-2 shadow-hard hover:shadow-none text-sm uppercase tracking-wider"
-            >
-                <i class="ri-arrow-left-line"></i>
-                {t.back}
+<Layout title={`${title} | ${brandName}`} lang={lang} image={project.data.image}>
+<main class="min-h-screen text-neo-black pt-24 lg:pl-14 pb-24 font-sans border-t-8 border-black">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+
+        <!-- Breadcrumb / Back -->
+        <nav class="flex items-center gap-3 text-neo-black/60 text-xs font-black uppercase tracking-widest py-6 mb-4">
+            <a href={`/${lang}`} class="flex items-center gap-2 hover:text-black transition-colors border-2 border-black/20 px-4 py-2 hover:bg-black hover:text-white">
+                <i class="ri-arrow-left-line"></i> Back
             </a>
+            <span class="text-neo-black/40">Projects</span>
+            <i class="ri-arrow-right-s-line text-neo-black/40"></i>
+            <span class="text-black truncate max-w-[200px] bg-neo-yellow px-2 py-1 border-2 border-black shadow-[4px_4px_0_0_#000]">{title}</span>
+        </nav>
 
-            <article>
-                {/* Header */}
-                <header
-                    class="mb-12 border-4 border-neo-black bg-white p-6 md:p-12 shadow-hard relative overflow-hidden"
-                >
-                    <div
-                        class="absolute top-0 right-0 bg-neo-yellow px-4 py-2 font-black border-l-4 border-b-4 border-neo-black uppercase"
-                    >
-                        CASE STUDY
-                    </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start mt-4">
 
-                    <h1
-                        class="text-4xl md:text-6xl font-black uppercase mb-6 leading-tight max-w-4xl"
-                    >
+            <!-- ══════ LEFT: Info ══════ -->
+            <div class="lg:col-span-5 flex flex-col gap-6">
+                <!-- Title -->
+                <div>
+                    <span class="inline-flex items-center gap-1.5 border-2 border-black bg-neo-yellow px-3 py-1 text-[11px] font-black uppercase tracking-widest text-black mb-4 shadow-[4px_4px_0_0_#000]">
+                        <i class={catIcon}></i> {category}
+                    </span>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-none text-neo-black uppercase tracking-tighter mb-4">
                         {title}
                     </h1>
-
-                    <p
-                        class="text-xl md:text-2xl font-mono text-gray-700 leading-relaxed border-l-4 border-neo-blue pl-6 bg-gray-50 py-2"
-                    >
+                    <div class="h-2 w-24 bg-neo-green border-2 border-black shadow-[4px_4px_0_0_#000] mb-6"></div>
+                    <!-- Description -->
+                    <p class="text-neo-black/80 font-mono text-sm leading-relaxed mb-4">
                         {description}
                     </p>
-                </header>
-
-                {/* Main Content Grid */}
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    {/* Left Column: Gallery & Content */}
-                    <div class="lg:col-span-2 space-y-12">
-                        {/* Featured Image */}
-                        {
-                            project.data.image && (
-                                <div class="border-4 border-neo-black shadow-hard overflow-hidden group">
-                                    <img
-                                        src={project.data.image}
-                                        alt={title}
-                                        class="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                                    />
-                                </div>
-                            )
-                        }
-
-                        {/* Gallery Grid */}
-                        {
-                            project.data.gallery &&
-                                project.data.gallery.length > 0 && (
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {project.data.gallery.map(
-                                            (img: string) => (
-                                                <div class="border-2 border-neo-black shadow-sm hover:shadow-hard transition-shadow overflow-hidden">
-                                                    <img
-                                                        src={img}
-                                                        alt="Gallery"
-                                                        class="w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
-                                                    />
-                                                </div>
-                                            ),
-                                        )}
-                                    </div>
-                                )
-                        }
-
-                        {/* Text Content */}
-                        {
-                            content && (
-                                <div class="prose prose-lg prose-p:font-mono prose-headings:font-black prose-headings:uppercase border-4 border-neo-black p-8 bg-white shadow-hard relative">
-                                    <p class="whitespace-pre-line leading-relaxed">
-                                        {content}
-                                    </p>
-                                    <div class="absolute -bottom-8 -right-8">
-                                        <ClapButton />
-                                    </div>
-                                </div>
-                            )
-                        }
-                    </div>
-
-                    {/* Right Column: Sidebar Info */}
-                    <aside class="space-y-8">
-                        {/* Tech Stack */}
-                        <div
-                            class="bg-white border-4 border-neo-black p-6 shadow-hard"
-                        >
-                            <h3
-                                class="font-black text-xl uppercase mb-4 border-b-2 border-neo-black pb-2 flex items-center gap-2"
-                            >
-                                <i class="ri-code-box-fill"></i>
-                                {t.stack}
-                            </h3>
-                            <div class="flex flex-wrap gap-2">
-                                {
-                                    project.data.techStack.map(
-                                        (tech: string) => (
-                                            <span class="px-3 py-1 bg-neo-black text-neo-green font-mono font-bold text-sm">
-                                                {tech}
-                                            </span>
-                                        ),
-                                    )
-                                }
-                            </div>
+                    {content && (
+                        <div class="border-l-4 border-neo-yellow pl-5 mb-8">
+                            <p class="text-neo-black/70 font-mono text-sm leading-relaxed whitespace-pre-line">{content}</p>
                         </div>
-
-                        {/* Actions */}
-                        <div
-                            class="bg-neo-yellow border-4 border-neo-black p-6 shadow-hard flex flex-col gap-4"
-                        >
-                            <a
-                                href={project.data.link}
-                                target="_blank"
-                                class="bg-white text-black border-2 border-black px-4 py-3 font-bold text-center hover:bg-black hover:text-white transition-colors shadow-[4px_4px_0_0_#000] hover:shadow-none flex items-center justify-center gap-2"
-                            >
-                                <i class="ri-external-link-line"></i>
-                                {t.demo}
-                            </a>
-                            {
-                                /* Assuming GitHub link might be available or generic */
-                            }
-                            <button
-                                class="bg-neo-white text-gray-400 border-2 border-gray-400 px-4 py-3 font-bold text-center cursor-not-allowed flex items-center justify-center gap-2 opacity-50"
-                                disabled
-                            >
-                                <i class="ri-github-fill"></i>
-                                {t.source} (Private)
-                            </button>
-                        </div>
-                    </aside>
+                    )}
                 </div>
-            </article>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-4 mt-2">
+                    {project.data.link && (
+                        <a
+                            href={project.data.link}
+                            target="_blank"
+                            class="flex items-center gap-2 px-6 py-4 border-4 border-black bg-neo-blue text-white text-sm font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-[6px_6px_0_0_#000] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
+                        >
+                            <i class="ri-external-link-line"></i> Live Demo
+                        </a>
+                    )}
+                    {project.data.githubLink ? (
+                        <a
+                            href={project.data.githubLink}
+                            target="_blank"
+                            class="flex items-center gap-2 px-6 py-4 border-4 border-black bg-white text-black text-sm font-black uppercase tracking-widest hover:bg-neo-yellow hover:text-black transition-all shadow-[6px_6px_0_0_#000] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
+                        >
+                            <i class="ri-github-fill"></i> Github
+                        </a>
+                    ) : (
+                        <span class="flex items-center gap-2 px-6 py-4 border-4 border-black/20 bg-black/5 text-neo-black/30 text-sm font-black uppercase tracking-widest cursor-not-allowed">
+                            <i class="ri-github-fill"></i> Private Repo
+                        </span>
+                    )}
+                </div>
+
+                <!-- Technologies Used -->
+                <div class="mt-8">
+                    <h3 class="flex items-center gap-2 text-neo-black font-black uppercase tracking-widest text-sm mb-4">
+                        <i class="ri-code-s-slash-line text-neo-blue"></i> Technologies Used
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        {techIconsList.map((item) => (
+                            <div
+                                class="flex items-center gap-2 bg-white border-2 border-black px-4 py-2 shadow-[4px_4px_0_0_#000] hover:bg-neo-black hover:text-white transition-colors group"
+                                title={item.name}
+                            >
+                                <img
+                                    src={item.icon}
+                                    alt={item.name}
+                                    class="w-4 h-4 object-contain grayscale group-hover:grayscale-0"
+                                    onerror="this.onerror=null;this.style.display='none';"
+                                />
+                                <span class="text-xs font-black uppercase">{item.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════ RIGHT: Gallery + Key Features ══════ -->
+            <div class="lg:col-span-7 flex flex-col gap-8">
+                <!-- Main Image -->
+                {galleryImages.length > 0 && (
+                    <div class="relative border-4 border-black bg-white shadow-[10px_10px_0_0_#000] group">
+                        <img
+                            id="main-gallery-img"
+                            src={galleryImages[0]}
+                            alt={title}
+                            class="w-full h-auto object-cover transition-opacity duration-300"
+                            onerror="this.onerror=null;this.style.opacity='0';"
+                        />
+                        {galleryImages.length > 1 && (
+                            <>
+                                <button
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-black flex items-center justify-center border-4 border-black hover:bg-neo-yellow hover:text-black transition-all z-10 shadow-[4px_4px_0_0_#000] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
+                                    onclick="galleryPrev()"
+                                ><i class="ri-arrow-left-s-line text-2xl font-black"></i></button>
+                                <button
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-black flex items-center justify-center border-4 border-black hover:bg-neo-yellow hover:text-black transition-all z-10 shadow-[4px_4px_0_0_#000] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
+                                    onclick="galleryNext()"
+                                ><i class="ri-arrow-right-s-line text-2xl font-black"></i></button>
+                                <div class="absolute bottom-4 right-4 bg-white text-black text-[10px] font-black uppercase px-3 py-1 border-2 border-black shadow-[4px_4px_0_0_#000]">
+                                    <span id="gallery-counter">1</span> / {galleryImages.length}
+                                </div>
+                            </>
+                        )}
+                    </div>
+                )}
+
+                <!-- Thumbnail strip -->
+                {galleryImages.length > 1 && (
+                    <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                        {galleryImages.map((img, i) => (
+                            <button
+                                id={`thumb-${i}`}
+                                class={`flex-shrink-0 w-24 h-16 transition-all border-4 hover:-translate-y-1 shadow-[4px_4px_0_0_#000] ${i === 0 ? "border-neo-yellow bg-neo-yellow" : "border-black bg-white opacity-60 hover:opacity-100"}`}
+                                onclick={`setGalleryImage('${img}', ${i}, ${galleryImages.length})`}
+                            >
+                                <img src={img} class="w-full h-full object-cover" onerror="this.onerror=null;this.style.opacity='0';" />
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+                <!-- Key Features -->
+                {keyFeatures && keyFeatures.length > 0 && (
+                    <div class="border-4 border-black bg-white p-6 md:p-8 shadow-[10px_10px_0_0_#3BFF7E]">
+                        <h3 class="flex items-center gap-3 font-black text-xl uppercase mb-6 text-neo-black">
+                            <i class="ri-star-fill text-neo-yellow border border-black shadow-[2px_2px_0_0_#000]"></i> Key Features
+                        </h3>
+                        <ul class="space-y-4">
+                            {keyFeatures.map((feat: any) => (
+                                <li class="flex items-start gap-4 text-sm text-neo-black/80 font-mono leading-relaxed">
+                                    <span class="w-2 h-2 bg-neo-yellow mt-1.5 border border-black flex-shrink-0"></span>
+                                    {feat}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
         </div>
-    </main>
+    </div>
+</main>
+
+<script is:inline define:vars={{ galleryImages }}>
+    let currentIndex = 0;
+    const _images = galleryImages || [];
+
+    function setGalleryImage(src, index, total) {
+        if (!_images.length) return;
+        currentIndex = index;
+        const img = document.getElementById('main-gallery-img');
+        const counter = document.getElementById('gallery-counter');
+        if (img) {
+            img.style.opacity = '0.5';
+            setTimeout(() => { img.src = src; img.style.opacity = '1'; }, 150);
+        }
+        if (counter) counter.textContent = index + 1;
+        document.querySelectorAll('[id^="thumb-"]').forEach((b, i) => {
+            if (i === index) {
+                b.classList.add('border-neo-yellow', 'bg-neo-yellow');
+                b.classList.remove('border-black', 'bg-white', 'opacity-60');
+            } else {
+                b.classList.remove('border-neo-yellow', 'bg-neo-yellow');
+                b.classList.add('border-black', 'bg-white', 'opacity-60');
+            }
+        });
+    }
+    window.setGalleryImage = setGalleryImage;
+    window.galleryNext = () => {
+        if (!_images.length) return;
+        const next = (currentIndex + 1) % _images.length;
+        setGalleryImage(_images[next], next, _images.length);
+    };
+    window.galleryPrev = () => {
+        if (!_images.length) return;
+        const prev = (currentIndex - 1 + _images.length) % _images.length;
+        setGalleryImage(_images[prev], prev, _images.length);
+    };
+</script>
 </Layout>

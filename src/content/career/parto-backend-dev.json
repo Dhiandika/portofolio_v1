@@ -6,7 +6,7 @@
     "date": "Jul 2025 - Sep 2025",
     "location": "Jambi, Indonesia",
     "type": "Hybrid",
-    "logo": "/images/logos/parto.png",
+
     "tasks": [
         "Developed and maintained backend services using Golang for Parto.id's internal attendance application.",
         "Implemented efficient data handling and secure API integrations to support daily attendance workflows.",

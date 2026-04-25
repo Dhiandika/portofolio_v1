@@ -1,154 +1,299 @@
 ---
 import { getEntry } from "astro:content";
-const siteConfig = await getEntry("site", "config");
-const { brandName } = siteConfig.data;
+const siteConfig  = await getEntry("site", "config");
+const aboutConfig = await getEntry("site", "whoami");
 
+const brandName    = siteConfig?.data?.brandName  || "Dhiandika Aditya";
+const profilePhoto = aboutConfig?.data?.profileImage || siteConfig?.data?.profilePhoto || "";
+const github       = siteConfig?.data?.github || "";
+const handle       = github.split("/").filter(Boolean).pop() || "dhiandika";
 const { lang = "en" } = Astro.props;
+
+const initials = brandName.split(" ").map((w: string) => w[0]).join("").slice(0,2).toUpperCase();
+
+const navItems = [
+    { href: `/${lang}`,              icon: "ri-home-4-fill",     label: "Home"      },
+    { href: `/${lang}/about`,        icon: "ri-user-3-fill",     label: "About"     },
+    { href: `/${lang}/projects`,     icon: "ri-briefcase-fill",  label: "Projects"  },
+    { href: `/${lang}/achievements`, icon: "ri-trophy-fill",     label: "Awards"    },
+    { href: `/${lang}/creation`,     icon: "ri-sparkling-fill",  label: "Creation"  },
+    { href: `/${lang}/blog`,         icon: "ri-article-fill",    label: "Blog"      },
+    { href: `/${lang}/dashboard`,    icon: "ri-dashboard-fill",  label: "Dashboard" },
+];
 ---
 
-<nav class="fixed top-0 w-full z-[100] px-4 py-4 pointer-events-none">
-    <div
-        class="max-w-7xl mx-auto flex justify-between items-center pointer-events-auto"
-    >
-        <!-- Brand Hover Menu (Click Trigger for Stability) -->
-        <div class="relative group">
-            <button
-                id="brandMenuBtn"
-                class="block bg-neo-white border-2 border-black px-4 py-2 text-2xl font-black shadow-hard hover:bg-neo-yellow transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] cursor-pointer flex items-center gap-2"
-            >
-                <i class="ri-command-fill"></i>
-                {brandName || "Npemburu.exe"}
-                <i
-                    class="ri-arrow-down-s-fill text-sm transition-transform"
-                    id="brandArrow"></i>
-            </button>
-
-            <!-- Dropdown (Hidden initially, toggled by click) -->
-            <div
-                id="brandDropdown"
-                class="absolute top-full left-0 mt-2 w-64 bg-neo-black border-2 border-black shadow-[8px_8px_0_0_#fff] hidden z-50"
-            >
-                <div class="p-2 flex flex-col gap-1">
-                    <a
-                        href={`/${lang}`}
-                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-yellow hover:text-black font-mono font-bold transition-colors border-b border-gray-800"
-                    >
-                        <i class="ri-home-4-fill"></i> HOME
-                    </a>
-                    <a
-                        href={`/${lang}/about`}
-                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-blue hover:text-white font-mono font-bold transition-colors border-b border-gray-800"
-                    >
-                        <i class="ri-user-3-fill"></i> ABOUT
-                    </a>
-                    <a
-                        href={`/${lang}/projects`}
-                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-pink hover:text-white font-mono font-bold transition-colors border-b border-gray-800"
-                    >
-                        <i class="ri-briefcase-fill"></i> PROJECTS
-                    </a>
-                    <a
-                        href={`/${lang}/achievements`}
-                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-green hover:text-black font-mono font-bold transition-colors border-b border-gray-800"
-                    >
-                        <i class="ri-trophy-fill"></i> ACHIEVEMENTS
-                    </a>
-                    <a
-                        href={`/${lang}/dashboard`}
-                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-purple hover:text-white font-mono font-bold transition-colors border-b border-gray-800"
-                    >
-                        <i class="ri-dashboard-fill"></i> DASHBOARD
-                    </a>
-
-                    <a
-                        href={`/${lang}/blog`}
-                        class="flex items-center gap-3 px-4 py-3 text-white hover:bg-neo-orange hover:text-black font-mono font-bold transition-colors border-b border-gray-800"
-                    >
-                        <i class="ri-article-fill"></i> BLOG
-                    </a>
-                </div>
-            </div>
+<!-- =============================================
+     TOP NAVBAR — right pills (preserved)
+     ============================================= -->
+<nav class="fixed top-0 left-12 right-0 z-[150] px-4 md:px-10 lg:px-16 py-3 pointer-events-none">
+    <div class="flex justify-end pointer-events-auto">
+        <div class="hidden md:flex gap-2 bg-white border-2 border-black p-1.5 shadow-hard">
+            <a href={`/${lang}#about`}        class="px-3 py-1 font-mono font-bold text-xs border-2 border-transparent hover:border-black hover:bg-black hover:text-white hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[3px_3px_0_rgba(255,204,0,1)] transition-all">/ABOUT</a>
+            <a href={`/${lang}#tech-stack`}   class="px-3 py-1 font-mono font-bold text-xs border-2 border-transparent hover:border-black hover:bg-neo-red hover:text-white hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[3px_3px_0_rgba(255,204,0,1)] transition-all">/TECH</a>
+            <a href={`/${lang}#experience`}   class="px-3 py-1 font-mono font-bold text-xs border-2 border-transparent hover:border-black hover:bg-neo-blue hover:text-white hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[3px_3px_0_rgba(255,204,0,1)] transition-all">/LOGS</a>
+            <a href={`/${lang}#works`}        class="px-3 py-1 font-mono font-bold text-xs border-2 border-transparent hover:border-black hover:bg-black hover:text-white hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[3px_3px_0_rgba(255,204,0,1)] transition-all">/WORKS</a>
+            <a href={`/${lang}#achievements`} class="px-3 py-1 font-mono font-bold text-xs border-2 border-transparent hover:border-black hover:bg-neo-green hover:text-black hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[3px_3px_0_rgba(0,0,0,1)] transition-all">/AWARDS</a>
+            <a href={`/${lang}#blog`}         class="px-3 py-1 font-mono font-bold text-xs border-2 border-transparent hover:border-black hover:bg-neo-purple hover:text-white hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[3px_3px_0_rgba(0,0,0,1)] transition-all">/BLOG</a>
+            <a href={`/${lang}#contact`}      class="px-3 py-1.5 font-mono font-bold text-xs bg-neo-yellow border-2 border-black shadow-[3px_3px_0_rgba(0,0,0,1)] hover:bg-neo-pink hover:-translate-y-0.5 hover:-translate-x-0.5 transition-all">HIRE ME</a>
         </div>
-
-        <div
-            class="hidden md:flex gap-4 bg-white border-2 border-black p-2 shadow-hard"
-        >
-            <a
-                href={`/${lang}#about`}
-                class="px-3 py-1 font-mono font-bold text-sm hover:bg-black hover:text-white transition-colors cursor-hover"
-                >/ABOUT</a
-            >
-            <a
-                href={`/${lang}#experience`}
-                class="px-3 py-1 font-mono font-bold text-sm hover:bg-black hover:text-white transition-colors cursor-hover"
-                >/LOGS</a
-            >
-            <a
-                href={`/${lang}#works`}
-                class="px-3 py-1 font-mono font-bold text-sm hover:bg-black hover:text-white transition-colors cursor-hover"
-                >/WORKS</a
-            >
-            <a
-                href={`/${lang}#testimonials`}
-                class="px-3 py-1 font-mono font-bold text-sm hover:bg-neo-green hover:text-black transition-colors cursor-hover"
-                >/REVIEWS</a
-            >
-            <a
-                href={`/${lang}#blog`}
-                class="px-3 py-1 font-mono font-bold text-sm hover:bg-neo-purple hover:text-white transition-colors cursor-hover"
-                >/BLOG</a
-            >
-            <a
-                href={`/${lang}#contact`}
-                class="px-3 py-1 font-mono font-bold text-sm bg-neo-yellow border border-black hover:bg-neo-pink transition-colors cursor-hover"
-                >HIRE ME</a
-            >
-        </div>
+        <button id="mobileNavToggle" class="flex md:hidden items-center gap-2 bg-black border-2 border-neo-yellow px-3 py-2 shadow-[3px_3px_0_0_#FBFF48]">
+            <i class="ri-menu-3-fill text-neo-yellow"></i>
+        </button>
     </div>
 </nav>
 
+<!-- =============================================
+     FIXED LEFT SIDEBAR — Reference Layout
+     Collapsed: 48px | Expanded: 220px (hover)
+     =============================================
+     COLLAPSED STRUCTURE:
+       [padding top]
+       [avatar circle]
+       [divider]
+       [nav icons]
+
+     EXPANDED STRUCTURE:
+       [Hire me badge]
+       [Cover banner + avatar overlapping]
+       [Name + handle]
+       [divider]
+       [nav icon+label]
+     ============================================= -->
+<aside
+    id="sideNav"
+    class="fixed left-0 top-0 h-screen z-[200] hidden lg:flex flex-col bg-neo-white border-r-4 border-black overflow-hidden select-none"
+    style="width:48px; box-shadow:4px 0 0 0 var(--accent,#FBFF48); transition:width 280ms cubic-bezier(.4,0,.2,1);"
+>
+    <!-- ══════════════════════════════════
+         COLLAPSED TOP: Avatar + divider
+         EXPANDED TOP: Full profile card
+         ══════════════════════════════════ -->
+
+    <!-- [EXPANDED ONLY] Cover banner — "Hire me." badge is INSIDE this -->
+    <div id="exp-cover"
+        class="flex-shrink-0 overflow-hidden relative"
+        style="opacity:0; height:0; transition:opacity 180ms 60ms, height 220ms;"
+    >
+        <!-- Dark gradient banner -->
+        <div class="h-20 w-full bg-gradient-to-br from-black via-gray-800 to-gray-900 relative">
+            <!-- Grid texture -->
+            <div class="absolute inset-0 opacity-20" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:16px 16px;"></div>
+            <!-- ✅ Hire me badge — absolute top-left INSIDE banner -->
+            <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 bg-neo-green/20 border border-neo-green px-2 py-0.5 rounded-full z-10">
+                <div class="w-1.5 h-1.5 bg-neo-green rounded-full animate-pulse shrink-0"></div>
+                <span class="font-mono text-neo-green text-[9px] font-bold uppercase tracking-wide whitespace-nowrap">Hire me.</span>
+            </div>
+        </div>
+        <!-- Avatar overlapping bottom of cover (larger: w-16 h-16) -->
+        <div class="flex justify-center pb-2" style="margin-top:-32px; position:relative; z-index:2;">
+            <div class="w-16 h-16 rounded-full overflow-hidden border-[3px] border-white flex items-center justify-center bg-neo-yellow text-black font-black" style="box-shadow:0 2px 0 0 #000; font-size:1.3rem;">
+                {profilePhoto
+                    ? <img src={profilePhoto} alt={brandName} class="w-full h-full object-cover" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                    : null
+                }
+                <span class={profilePhoto ? "hidden font-black" : "font-black"}>{initials}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- [COLLAPSED] Small avatar at top with top spacing -->
+    <div id="col-avatar" class="flex-shrink-0 flex justify-center" style="padding-top:20px; padding-bottom:8px; transition:opacity 180ms;">
+        <div class="w-11 h-11 rounded-full overflow-hidden border-[3px] border-neo-yellow flex items-center justify-center bg-neo-yellow text-black font-black shrink-0" style="font-size:0.85rem;">
+            {profilePhoto
+                ? <img src={profilePhoto} alt={brandName} class="w-full h-full object-cover" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                : null
+            }
+            <span class={profilePhoto ? "hidden font-black" : "font-black"}>{initials}</span>
+        </div>
+    </div>
+
+    <!-- [EXPANDED ONLY] Name + handle -->
+    <div id="exp-name"
+        class="flex-shrink-0 text-center overflow-hidden px-3"
+        style="opacity:0; height:0; transition:opacity 180ms 80ms, height 220ms;"
+    >
+        <div class="pt-1 pb-2">
+            <p class="text-black font-black text-xs uppercase tracking-tight whitespace-nowrap leading-tight">
+                {brandName}
+                <span class="text-neo-blue text-[10px] ml-0.5">✓</span>
+            </p>
+            <p class="text-gray-500 font-mono text-[10px] mt-0.5 whitespace-nowrap">@{handle}</p>
+        </div>
+    </div>
+
+    <!-- Divider — always visible -->
+    <div class="flex-shrink-0 mx-3 border-t-2 border-black/20 my-1"></div>
+
+    <!-- ══════════════════════════════════
+         NAV ITEMS
+         ══════════════════════════════════ -->
+    <nav class="flex-1 overflow-hidden py-1">
+        {navItems.map(item => (
+            <a
+                href={item.href}
+                class="nav-item relative flex items-center overflow-hidden font-mono font-black text-black/60 transition-all duration-150"
+                style="height:40px; padding-left:12px; white-space:nowrap;"
+            >
+                <!-- Active/hover: rounded pill bg (reference style) -->
+                <div class="nav-bg absolute inset-y-[3px] inset-x-[4px] rounded-lg bg-neo-yellow border-2 border-black opacity-0 transition-opacity duration-150"></div>
+
+                <i class={`${item.icon} text-base relative z-10 flex-shrink-0`} style="min-width:24px;"></i>
+                <span
+                    class="nav-lbl relative z-10 text-[11px] font-black uppercase tracking-wide overflow-hidden"
+                    style="opacity:0; max-width:0; margin-left:0; white-space:nowrap; transition:opacity 140ms 50ms, max-width 210ms, margin-left 180ms;"
+                >{item.label}</span>
+            </a>
+        ))}
+    </nav>
+
+    <!-- Bottom accent bar -->
+    <div id="sideBottomBar" class="h-[5px] w-full border-t-2 border-black flex-shrink-0" style="background:var(--accent,#FBFF48);"></div>
+</aside>
+
+<!-- =============================================
+     MOBILE DRAWER
+     ============================================= -->
+<div id="mobileNavDrawer" class="fixed inset-0 z-[300] hidden lg:hidden">
+    <div id="mobileBackdrop" class="absolute inset-0 bg-black/80"></div>
+    <div id="mobileDrawerPanel" class="absolute left-0 top-0 h-full w-56 bg-neo-white border-r-4 border-black flex flex-col" style="box-shadow:4px 0 0 0 var(--accent,#FBFF48);">
+        <!-- Cover + avatar -->
+        <div class="relative flex-shrink-0">
+            <div class="h-20 w-full bg-gradient-to-br from-black via-gray-800 to-gray-900 relative overflow-hidden">
+                <div class="absolute inset-0 opacity-20" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:16px 16px;"></div>
+                <!-- Hire me badge -->
+                <div class="absolute top-3 left-3 flex items-center gap-1.5 bg-neo-green/20 border border-neo-green px-2.5 py-1 rounded-full">
+                    <div class="w-1.5 h-1.5 bg-neo-green rounded-full animate-pulse shrink-0"></div>
+                    <span class="font-mono text-neo-green text-[9px] font-bold uppercase">Hire me.</span>
+                </div>
+            </div>
+            <div class="flex justify-center" style="margin-top:-24px; position:relative; z-index:2;">
+                <div class="w-12 h-12 rounded-full overflow-hidden border-4 border-neo-white flex items-center justify-center bg-neo-yellow text-black font-black text-base">
+                    {profilePhoto ? <img src={profilePhoto} alt={brandName} class="w-full h-full object-cover" /> : initials}
+                </div>
+            </div>
+        </div>
+        <!-- Name + handle -->
+        <div class="text-center px-4 pt-1 pb-3 border-b-2 border-black/15 flex-shrink-0">
+            <p class="text-black font-black text-xs uppercase">{brandName}</p>
+            <p class="text-gray-500 font-mono text-[10px] mt-0.5">@{handle}</p>
+        </div>
+        <!-- Nav -->
+        <nav class="flex-1 overflow-y-auto py-1">
+            {navItems.map(item => (
+                <a href={item.href} class="mobile-nav-link flex items-center gap-3 px-4 py-3 font-mono font-black text-xs uppercase text-black/70 hover:bg-neo-yellow hover:text-black transition-colors rounded-lg mx-2 my-0.5">
+                    <i class={`${item.icon} text-sm shrink-0`}></i>
+                    {item.label}
+                </a>
+            ))}
+        </nav>
+        <div class="h-[5px] bg-neo-yellow border-t-2 border-black flex-shrink-0"></div>
+    </div>
+</div>
+
+<style>
+    /* Active = yellow rounded pill */
+    .nav-item.is-active .nav-bg  { opacity: 1 !important; }
+    .nav-item.is-active          { color: #000 !important; }
+    /* Hover */
+    .nav-item:hover:not(.is-active) .nav-bg { opacity: 0.6; }
+    .nav-item:hover:not(.is-active)         { color: #000 !important; }
+    /* Mobile */
+    .mobile-nav-link.is-active   { background:#FBFF48; color:#000; }
+</style>
+
 <script>
     document.addEventListener("astro:page-load", () => {
-        const brandMenuBtn = document.getElementById("brandMenuBtn");
-        const brandDropdown = document.getElementById("brandDropdown");
-        const brandArrow = document.getElementById("brandArrow");
+        /* ══════════════════════════════════════════
+           RANDOM ACCENT COLOR — Neo-Brutalist palette
+           Picks new color every page load / navigation
+           ══════════════════════════════════════════ */
+        const ACCENTS = [
+            "#FBFF48", // yellow  (default)
+            "#FF2D78", // hot pink
+            "#3BFF7E", // neo green
+            "#3B82F6", // electric blue
+            "#F97316", // orange
+            "#A855F7", // violet
+            "#00E5FF", // cyan
+            "#FF6B35", // red-orange
+            "#BFFF00", // lime
+        ];
+        const accent = ACCENTS[Math.floor(Math.random() * ACCENTS.length)];
 
-        if (brandMenuBtn && brandDropdown && brandArrow) {
-            // Remove any existing event listeners to avoid duplicates (optional but good practice)
-            // But since this runs on new page load, simple attachment is usually fine.
+        // Apply as CSS variable (used by var(--accent) inline styles)
+        document.documentElement.style.setProperty("--accent", accent);
 
-            // Toggle menu on click
-            brandMenuBtn.onclick = (e) => {
-                e.stopPropagation();
-                const isHidden = brandDropdown.classList.contains("hidden");
-                if (isHidden) {
-                    brandDropdown.classList.remove("hidden");
-                    brandArrow.classList.add("rotate-180");
-                } else {
-                    brandDropdown.classList.add("hidden");
-                    brandArrow.classList.remove("rotate-180");
-                }
-            };
+        // Sidebar box-shadow
+        const sideNavEl = document.getElementById("sideNav");
+        if (sideNavEl) sideNavEl.style.boxShadow = `4px 0 0 0 ${accent}`;
 
-            // Close on click outside
-            document.onclick = (e) => {
-                if (
-                    !brandMenuBtn.contains(e.target) &&
-                    !brandDropdown.contains(e.target)
-                ) {
-                    brandDropdown.classList.add("hidden");
-                    brandArrow.classList.remove("rotate-180");
-                }
-            };
+        // Mobile drawer box-shadow
+        const mobilePanel = document.getElementById("mobileDrawerPanel");
+        if (mobilePanel) mobilePanel.style.boxShadow = `4px 0 0 0 ${accent}`;
 
-            // Close when a link inside is clicked
-            const links = brandDropdown.querySelectorAll("a");
-            links.forEach((link) => {
-                link.addEventListener("click", () => {
-                    brandDropdown.classList.add("hidden");
-                    brandArrow.classList.remove("rotate-180");
-                });
-            });
+        // Bottom bar
+        const bottomBar = document.getElementById("sideBottomBar");
+        if (bottomBar) bottomBar.style.background = accent;
+
+        // Collapsed avatar border
+        const avatarEl = document.querySelector("#col-avatar > div") as HTMLElement | null;
+        if (avatarEl) avatarEl.style.borderColor = accent;
+
+        // Nav active pill color (via CSS var in all nav-bg elements)
+        document.querySelectorAll<HTMLElement>(".nav-bg").forEach(el => {
+            el.style.background = accent;
+        });
+
+        // Scroll progress bar
+        const progressBar = document.getElementById("progressBar");
+        if (progressBar) progressBar.style.background = accent;
+
+        const sideNav    = document.getElementById("sideNav");
+        const expCover   = document.getElementById("exp-cover");
+        const colAvatar  = document.getElementById("col-avatar");
+        const expName    = document.getElementById("exp-name");
+        const navLabels  = document.querySelectorAll<HTMLElement>(".nav-lbl");
+
+        /* ── Mark active ── */
+        const path = window.location.pathname;
+        document.querySelectorAll<HTMLAnchorElement>(".nav-item, .mobile-nav-link").forEach(a => {
+            const href  = a.getAttribute("href") || "";
+            const parts = href.split("/").filter(Boolean);
+            const match = parts.length <= 1 ? path === href : path.startsWith(href);
+            if (match) a.classList.add("is-active");
+        });
+
+        /* ── Expand ── */
+        function expand() {
+            if (!sideNav) return;
+            sideNav.style.width = "200px";
+            if (expCover)  { expCover.style.height  = "128px"; expCover.style.opacity  = "1"; }
+            if (expName)   { expName.style.height   = "52px";  expName.style.opacity   = "1"; }
+            if (colAvatar) { colAvatar.style.opacity = "0"; colAvatar.style.height = "0"; colAvatar.style.overflow = "hidden"; }
+            navLabels.forEach(el => { el.style.opacity="1"; el.style.maxWidth="140px"; el.style.marginLeft="8px"; });
         }
+
+        /* ── Collapse ── */
+        function collapse() {
+            if (!sideNav) return;
+            sideNav.style.width = "48px";
+            if (expCover)  { expCover.style.height  = "0"; expCover.style.opacity  = "0"; }
+            if (expName)   { expName.style.height   = "0"; expName.style.opacity   = "0"; }
+            if (colAvatar) { colAvatar.style.opacity = "1"; colAvatar.style.height = ""; colAvatar.style.overflow = ""; }
+            navLabels.forEach(el => { el.style.opacity="0"; el.style.maxWidth="0"; el.style.marginLeft="0"; });
+        }
+
+        sideNav?.addEventListener("mouseenter", expand);
+        sideNav?.addEventListener("mouseleave", collapse);
+
+        /* ── Mobile drawer ── */
+        const mobileToggle   = document.getElementById("mobileNavToggle");
+        const mobileDrawer   = document.getElementById("mobileNavDrawer");
+        const mobileBackdrop = document.getElementById("mobileBackdrop");
+        const close = () => { mobileDrawer?.classList.add("hidden"); document.body.style.overflow=""; };
+        mobileToggle?.addEventListener("click", () => { mobileDrawer?.classList.remove("hidden"); document.body.style.overflow="hidden"; });
+        mobileBackdrop?.addEventListener("click", close);
+        document.querySelectorAll(".mobile-nav-link").forEach(l => l.addEventListener("click", close));
+        document.addEventListener("keydown", e => { if(e.key==="Escape") close(); });
     });
 </script>

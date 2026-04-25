@@ -14,6 +14,7 @@ import Soundscapes from '../components/Soundscapes.astro';
 import GlitchEffects from '../components/GlitchEffects.astro';
 import ContextCursor from '../components/ContextCursor.astro';
 import CVDownloadModal from '../components/CVDownloadModal.astro';
+import AOSInit from '../components/AOSInit.astro';
 
 interface Props {
 	title?: string;
@@ -41,7 +42,6 @@ const { lang = 'en' } = Astro.props;
 const title = Astro.props.title || (lang === 'id' ? pageTitle_id || pageTitle : pageTitle);
 const description = lang === 'id' ? metaDescription_id || metaDescription : metaDescription;
 
-// Default to dynamic API route for OG image, passing title and description
 const defaultOgUrl = `/api/og?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(description)}&type=PORTFOLIO`;
 const image = Astro.props.image || defaultOgUrl;
 ---
@@ -56,7 +56,6 @@ const image = Astro.props.image || defaultOgUrl;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 
-        <!-- Legacy Meta Tags -->
         <!-- Meta Tags -->
         <meta name="keywords" content={metaKeywords}>
         <meta name="author" content={data.brandName || "Arham"}>
@@ -80,7 +79,6 @@ const image = Astro.props.image || defaultOgUrl;
         <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
         
         {gtmId && (
-            <!-- GTM Script Placeholder if needed -->
             <script define:vars={{ gtmId }}>
                 console.log('GTM Loaded:', gtmId);
             </script>
@@ -95,10 +93,10 @@ const image = Astro.props.image || defaultOgUrl;
         <!-- Random Decorative Elements -->
         <RandomDecorations />
 
-        <!-- Custom Cursor (CSS Based now) -->
-        <div class="fixed top-0 left-0 h-2 bg-neo-green z-[60] border-b-2 border-black" id="progressBar" style="width: 0%"></div>
+        <!-- Progress Bar -->
+        <div class="fixed top-0 left-0 lg:left-12 h-2 bg-neo-green z-[60] border-b-2 border-black" id="progressBar" style="width: 0%"></div>
 
-        <!-- Overlays (Fixed Position, must be outside transformation context) -->
+        <!-- Overlays -->
         <Soundscapes />
         <GlitchEffects />
         <ContextCursor />
@@ -106,8 +104,8 @@ const image = Astro.props.image || defaultOgUrl;
         <CommandPalette client:idle lang={lang} projects={projects} posts={posts} />
         <CVDownloadModal lang={lang} />
 
-        <!-- Main Content Wrapper (Target for Glitch Effect) -->
-        <div id="main-content" class="relative z-10">
+        <!-- Main Content Wrapper -->
+        <div id="main-content" class="relative z-10 lg:pl-12">
             <Navigation lang={lang} />
             <ThemeSettings lang={lang} />
             <Spotify />
@@ -123,12 +121,9 @@ const image = Astro.props.image || defaultOgUrl;
 
             document.addEventListener('keydown', (e) => {
                 keySequence.push(e.key.toLowerCase());
-                
-                // Keep sequence length same as code length
                 if (keySequence.length > secretCode.length) {
                     keySequence.shift();
                 }
-
                 if (keySequence.join('') === secretCode) {
                     activateHackerMode();
                     keySequence = [];
@@ -142,11 +137,8 @@ const image = Astro.props.image || defaultOgUrl;
                     const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-system-failure-2999.mp3'); 
                     audio.volume = 0.5;
                     audio.play().catch(e => console.log('Audio autoplay blocked'));
-                    
-                    // Switch Theme
                     document.documentElement.setAttribute('data-theme', 'cyber');
                     localStorage.setItem('theme', 'cyber');
-
                     setTimeout(() => {
                         overlay.classList.add('hidden');
                         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -160,5 +152,8 @@ const image = Astro.props.image || defaultOgUrl;
             <h1 class="text-4xl md:text-8xl font-black mb-4 animate-pulse">SYSTEM BREACH</h1>
             <p class="text-xl md:text-2xl">> ACCESS GRANTED: CYBERPUNK MODE ACTIVATED</p>
         </div>
+
+        <!-- AOS (Animate on Scroll) via npm -->
+        <AOSInit />
 	</body>
 </html>

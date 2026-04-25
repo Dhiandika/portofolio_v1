@@ -1,0 +1,27 @@
+---
+// AOSInit.astro - Loads AOS via npm import, compatible with Astro View Transitions
+---
+<script>
+    import AOS from 'aos';
+    import 'aos/dist/aos.css';
+
+    const aosConfig = {
+        duration: 600,
+        easing: 'ease-out-cubic',
+        once: false,   // false = animasi balik saat scroll up
+        mirror: true,  // true = animasi reverse saat element ke luar viewport dari bawah
+        offset: 60,
+    };
+
+    // Init on first load
+    AOS.init(aosConfig);
+
+    // Re-init on every Astro page navigation (View Transitions)
+    document.addEventListener('astro:page-load', () => {
+        AOS.refresh();
+    });
+
+    document.addEventListener('astro:after-swap', () => {
+        AOS.init(aosConfig);
+    });
+</script>

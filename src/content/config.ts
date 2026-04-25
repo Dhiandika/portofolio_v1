@@ -19,15 +19,19 @@ const projects = defineCollection({
     type: 'data',
     schema: z.object({
         title: z.string(),
-        title_id: z.string().optional(),
+        title_id: z.string().optional().nullable(),
         description: z.string(),
-        description_id: z.string().optional(),
-        image: z.string().optional(),
-        link: z.string().url(),
+        description_id: z.string().optional().nullable(),
+        image: z.string().nullable().optional(),
+        link: z.string().url().or(z.literal('')).nullable().optional(),
+        githubLink: z.string().url().or(z.literal('')).nullable().optional(),
+        category: z.string().optional(),
         techStack: z.array(z.string()),
-        gallery: z.array(z.string()).max(5).optional(),
-        content: z.string().optional(),
-        content_id: z.string().optional(),
+        gallery: z.array(z.string().nullable()).max(5).optional(),
+        content: z.string().optional().nullable(),
+        content_id: z.string().optional().nullable(),
+        keyFeatures: z.array(z.string()).optional(),
+        keyFeatures_id: z.array(z.string()).optional(),
     }),
 });
 
@@ -37,7 +41,7 @@ const experience = defineCollection({
         role: z.string(),
         role_id: z.string().optional(),
         company: z.string(),
-        link: z.string().url().optional(),
+        link: z.string().url().or(z.literal('')).optional(),
         date: z.string(),
         category: z.enum(['Career', 'Log']).default('Log'),
         type: z.enum(['Remote', 'Hybrid', 'Onsite']).optional(),
@@ -53,7 +57,7 @@ const career = defineCollection({
         role: z.string(),
         role_id: z.string().optional(),
         company: z.string(),
-        link: z.string().url().optional(),
+        link: z.string().url().or(z.literal('')).optional(),
         date: z.string(),
         location: z.string().optional(),
         type: z.enum(['Remote', 'Hybrid', 'Onsite']).optional(),
@@ -74,7 +78,7 @@ const education = defineCollection({
     type: 'data',
     schema: z.object({
         institution: z.string(),
-        link: z.string().url().optional(),
+        link: z.string().url().or(z.literal('')).optional(),
         degree: z.string(),
         degree_id: z.string().optional(),
         date: z.string(),
@@ -83,15 +87,6 @@ const education = defineCollection({
         logo: z.string().optional(),
         description: z.string().optional(),
         description_id: z.string().optional(),
-    }),
-});
-
-const skills = defineCollection({
-    type: 'data',
-    schema: z.object({
-        name: z.string(),
-        category: z.enum(['Library', 'Framework', 'Language', 'Backend', 'Styling', 'Data', 'Core', 'Version', 'Query', 'Ops', '3D']),
-        color: z.enum(['neo-green', 'neo-yellow', 'neo-blue', 'neo-pink', 'neo-purple', 'neo-orange', 'white']).optional(),
     }),
 });
 
@@ -104,7 +99,7 @@ const certificates = defineCollection({
         date: z.string(),
         category: z.enum(['Course', 'Bootcamp', 'Event', 'Competition']),
         image: z.string().optional(),
-        link: z.string().url().optional(),
+        link: z.string().url().or(z.literal('')).optional(),
         credentialId: z.string().optional(),
         skills_verified: z.array(z.string()).optional(),
         description: z.string().optional(),
@@ -142,13 +137,14 @@ const site = defineCollection({
         resume: z.string().optional(),
         resume_id: z.string().optional(),
         signature: z.string().optional(),
-        github: z.string().url().optional(),
-        leetcode: z.string().url().optional(),
-        instagram: z.string().url().optional(),
-        linkedin: z.string().url().optional(),
+        github: z.string().url().or(z.literal('')).optional(),
+        leetcode: z.string().url().or(z.literal('')).optional(),
+        instagram: z.string().url().or(z.literal('')).optional(),
+        linkedin: z.string().url().or(z.literal('')).optional(),
         gtmId: z.string().optional(),
         domainUrl: z.string().optional(),
         mediumUsername: z.string().optional(),
+        showTestimonials: z.boolean().optional(),
 
         // Hero
         title: z.string().optional(),
@@ -157,6 +153,13 @@ const site = defineCollection({
         bio_id: z.string().optional(),
         techStack: z.array(z.object({
             name: z.string(),
+            icon: z.string().optional(),
+        })).optional(),
+
+        // TechStack (Full List)
+        skills: z.array(z.object({
+            name: z.string(),
+            category: z.string().optional(),
             icon: z.string().optional(),
         })).optional(),
 
@@ -200,7 +203,7 @@ const blog = defineCollection({
         excerpt_id: z.string().optional(),
         subtitle: z.string().optional(),
         topics: z.array(z.string()).optional(),
-        canonicalUrl: z.string().url().optional(),
+        canonicalUrl: z.string().url().or(z.literal('')).optional(),
     }),
 });
 
@@ -235,6 +238,7 @@ const radar = defineCollection({
             value: z.number().min(0).max(100),
             fullMark: z.number().default(100),
         })),
+        details: z.string().optional(),
     }),
 });
 
@@ -243,7 +247,7 @@ const companies = defineCollection({
     schema: z.object({
         name: z.string(),
         logo: z.string(),
-        link: z.string().url().optional(),
+        link: z.string().url().or(z.literal('')).optional(),
     }),
 });
 
@@ -254,7 +258,7 @@ const assets = defineCollection({
         type: z.enum(['Document', 'Archive', 'Image', 'Other']),
         file: z.string(),
         description: z.string().optional(),
-        wallpaper: z.string().optional(),
+        fileSize: z.string().optional(),
     }),
 });
 
@@ -271,12 +275,26 @@ const estimator = defineCollection({
     }),
 });
 
+const socialBrands = defineCollection({
+    type: 'data',
+    schema: z.object({
+        platforms: z.array(z.object({
+            platformType: z.enum(['TikTok', 'Instagram', 'Facebook']),
+            username: z.string(),
+            profileName: z.string(),
+            avatar: z.string().optional(),
+            profileUrl: z.string().url(),
+            profileEmbedHtml: z.string().optional().nullable(),
+            videos: z.array(z.string().url()),
+        })),
+    }),
+});
+
 export const collections = {
     projects,
     experience,
     career,
     education,
-    skills,
     reviews,
     site,
     blog,
@@ -286,4 +304,6 @@ export const collections = {
     companies,
     assets,
     estimator,
+    snippets,
+    socialBrands,
 };

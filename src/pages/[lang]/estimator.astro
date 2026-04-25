@@ -30,7 +30,7 @@ const text = t[lang as keyof typeof t] || t.en;
 
 <Layout title={`ESTIMATOR | ${siteConfig.data.brandName}`} lang={lang}>
     <main class="pt-32 pb-24 px-4 max-w-6xl mx-auto min-h-screen">
-        <header class="mb-16 text-center">
+        <header data-aos="fade-up" class="mb-16 text-center">
             <h1
                 class="text-4xl md:text-6xl font-black uppercase mb-4 tracking-tighter"
             >
@@ -43,7 +43,7 @@ const text = t[lang as keyof typeof t] || t.en;
             </p>
         </header>
 
-        <section>
+        <section data-aos="fade-up" data-aos-delay="100">
             <Estimator client:load services={services} currencySymbol={currencySymbol} />
         </section>
 

@@ -34,12 +34,12 @@ const indonesianText = lang === "id" ? "Bahasa Indonesia (ID)" : "Indonesian (ID
             
             <!-- Body -->
             <div class="p-6 bg-dot-grid flex flex-col gap-4">
-                <a href={resume} download class="group flex items-center justify-between bg-neo-yellow text-black border-4 border-black px-4 py-3 md:py-4 font-bold shadow-hard hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-hover w-full text-sm md:text-base">
+                <a href={resume} download data-astro-prefetch="false" rel="noopener noreferrer" class="group flex items-center justify-between bg-neo-yellow text-black border-4 border-black px-4 py-3 md:py-4 font-bold shadow-hard hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-hover w-full text-sm md:text-base">
                     <span>{englishText}</span>
                     <i class="ri-download-line text-xl group-hover:scale-110 transition-transform"></i>
                 </a>
                 
-                <a href={resume_id} download class="group flex items-center justify-between bg-neo-white text-black border-4 border-black px-4 py-3 md:py-4 font-bold shadow-hard hover:bg-neo-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-hover w-full text-sm md:text-base">
+                <a href={resume_id} download data-astro-prefetch="false" rel="noopener noreferrer" class="group flex items-center justify-between bg-neo-white text-black border-4 border-black px-4 py-3 md:py-4 font-bold shadow-hard hover:bg-neo-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all cursor-hover w-full text-sm md:text-base">
                     <span>{indonesianText}</span>
                     <i class="ri-download-line text-xl group-hover:scale-110 transition-transform"></i>
                 </a>

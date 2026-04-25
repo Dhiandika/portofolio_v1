@@ -6,7 +6,7 @@
     "date": "Oct 2024 - Dec 2024",
     "location": "Depok, Indonesia",
     "type": "Remote",
-    "logo": "/images/logos/amanah.png",
+
     "tasks": [
         "Developed responsive mobile user interfaces using Flutter framework.",
         "Integrated REST APIs for data synchronization and user authentication.",

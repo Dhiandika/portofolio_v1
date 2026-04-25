@@ -3,45 +3,233 @@
     "id": "abc77e1d-80d4-4fdb-9551-66e836a1130f",
     "user_id": "f64538f6-eaa9-4ce2-a021-ff11cf565d88",
     "range": "last_7_days",
-    "start": "2026-04-13T16:00:00Z",
-    "end": "2026-04-20T15:59:59Z",
+    "start": "2026-04-17T16:00:00Z",
+    "end": "2026-04-24T15:59:59Z",
     "timeout": 15,
     "writes_only": false,
     "timezone": "Asia/Makassar",
     "ai_additions": 0,
     "ai_deletions": 0,
-    "human_additions": 0,
-    "human_deletions": 0,
+    "human_additions": 173,
+    "human_deletions": 201,
     "ai_input_tokens": 0,
     "ai_output_tokens": 0,
     "ai_prompt_length": 0,
-    "holidays": 7,
+    "holidays": 4,
     "status": "ok",
     "created_at": "2026-04-17T19:55:53Z",
-    "modified_at": "2026-04-20T19:19:21Z",
-    "human_readable_daily_average_including_other_language": "0 secs",
-    "total_seconds": 0,
-    "editors": [],
-    "best_day": null,
-    "is_already_updating": false,
-    "human_readable_total_including_other_language": "0 secs",
-    "daily_average": 0,
-    "human_readable_daily_average": "0 secs",
-    "human_readable_total": "0 secs",
-    "is_stuck": false,
-    "machines": [],
-    "operating_systems": [],
-    "dependencies": [],
-    "total_seconds_including_other_language": 0,
-    "days_minus_holidays": 0,
-    "is_up_to_date_pending_future": false,
-    "daily_average_including_other_language": 0,
+    "modified_at": "2026-04-24T19:13:48Z",
+    "total_seconds_including_other_language": 13657.162,
     "is_up_to_date": true,
-    "languages": [],
-    "projects": [],
-    "categories": [],
-    "percent_calculated": 100,
+    "days_minus_holidays": 3,
+    "is_already_updating": false,
+    "human_readable_daily_average_including_other_language": "1 hr 15 mins",
     "days_including_holidays": 7,
+    "daily_average_including_other_language": 4552,
+    "human_readable_daily_average": "1 hr 15 mins",
+    "human_readable_total_including_other_language": "3 hrs 47 mins",
+    "editors": [
+      {
+        "total_seconds": 13657.162,
+        "name": "Antigravity",
+        "ai_additions": 0,
+        "ai_deletions": 0,
+        "human_additions": 173,
+        "human_deletions": 201,
+        "ai_input_tokens": 0,
+        "ai_output_tokens": 0,
+        "ai_prompt_length": 0,
+        "ai_prompt_events": 0,
+        "percent": 100,
+        "digital": "3:47",
+        "decimal": "3.78",
+        "text": "3 hrs 47 mins",
+        "hours": 3,
+        "minutes": 47
+      }
+    ],
+    "best_day": {
+      "date": "2026-04-22",
+      "total_seconds": 7921.874,
+      "text": "2 hrs 12 mins"
+    },
+    "is_stuck": false,
+    "percent_calculated": 100,
+    "machines": [
+      {
+        "total_seconds": 13657.162,
+        "name": "ZERO",
+        "machine_name_id": "f2957d09-0aab-4c6a-a2f6-e906862b0671",
+        "percent": 100,
+        "digital": "3:47",
+        "decimal": "3.78",
+        "text": "3 hrs 47 mins",
+        "hours": 3,
+        "minutes": 47
+      }
+    ],
+    "is_up_to_date_pending_future": false,
+    "projects": [
+      {
+        "total_seconds": 13657.162,
+        "name": "portofolio_v1",
+        "ai_additions": 0,
+        "ai_deletions": 0,
+        "human_additions": 173,
+        "human_deletions": 201,
+        "ai_input_tokens": 0,
+        "ai_output_tokens": 0,
+        "ai_prompt_length": 0,
+        "ai_prompt_events": 0,
+        "percent": 100,
+        "digital": "3:47",
+        "decimal": "3.78",
+        "text": "3 hrs 47 mins",
+        "hours": 3,
+        "minutes": 47
+      }
+    ],
+    "operating_systems": [
+      {
+        "total_seconds": 13657.162,
+        "name": "Windows",
+        "percent": 100,
+        "digital": "3:47",
+        "decimal": "3.78",
+        "text": "3 hrs 47 mins",
+        "hours": 3,
+        "minutes": 47
+      }
+    ],
+    "human_readable_total": "3 hrs 47 mins",
+    "categories": [
+      {
+        "name": "Coding",
+        "total_seconds": 13657.162,
+        "percent": 100,
+        "digital": "3:47",
+        "decimal": "3.78",
+        "text": "3 hrs 47 mins",
+        "hours": 3,
+        "minutes": 47
+      }
+    ],
+    "languages": [
+      {
+        "name": "Astro",
+        "total_seconds": 9725.132,
+        "percent": 71.21,
+        "digital": "2:42",
+        "decimal": "2.70",
+        "text": "2 hrs 42 mins",
+        "hours": 2,
+        "minutes": 42
+      },
+      {
+        "name": "JSON",
+        "total_seconds": 2339.507,
+        "percent": 17.13,
+        "digital": "0:38",
+        "decimal": "0.63",
+        "text": "38 mins",
+        "hours": 0,
+        "minutes": 38
+      },
+      {
+        "name": "HTML",
+        "total_seconds": 982.844,
+        "percent": 7.2,
+        "digital": "0:16",
+        "decimal": "0.27",
+        "text": "16 mins",
+        "hours": 0,
+        "minutes": 16
+      },
+      {
+        "name": "TypeScript",
+        "total_seconds": 577.135,
+        "percent": 4.23,
+        "digital": "0:09",
+        "decimal": "0.15",
+        "text": "9 mins",
+        "hours": 0,
+        "minutes": 9
+      },
+      {
+        "name": "JavaScript",
+        "total_seconds": 17.102,
+        "percent": 0.13,
+        "digital": "0:00",
+        "decimal": "0.00",
+        "text": "0 secs",
+        "hours": 0,
+        "minutes": 0
+      },
+      {
+        "name": "TSConfig",
+        "total_seconds": 15.442,
+        "percent": 0.11,
+        "digital": "0:00",
+        "decimal": "0.00",
+        "text": "0 secs",
+        "hours": 0,
+        "minutes": 0
+      }
+    ],
+    "daily_average": 4552,
+    "total_seconds": 13657.162,
+    "dependencies": [
+      {
+        "total_seconds": 636.744,
+        "name": "\"https://www.tiktok.com/embed.js\"",
+        "percent": 57.89,
+        "digital": "0:10",
+        "decimal": "0.17",
+        "text": "10 mins",
+        "hours": 0,
+        "minutes": 10
+      },
+      {
+        "total_seconds": 346.1,
+        "name": "\"//platform.instagram.com/en_US/embeds.js\"",
+        "percent": 31.46,
+        "digital": "0:05",
+        "decimal": "0.08",
+        "text": "5 mins",
+        "hours": 0,
+        "minutes": 5
+      },
+      {
+        "total_seconds": 76.396,
+        "name": "astro:content",
+        "percent": 6.95,
+        "digital": "0:01",
+        "decimal": "0.02",
+        "text": "1 min",
+        "hours": 0,
+        "minutes": 1
+      },
+      {
+        "total_seconds": 20.372,
+        "name": "core",
+        "percent": 1.85,
+        "digital": "0:00",
+        "decimal": "0.00",
+        "text": "0 secs",
+        "hours": 0,
+        "minutes": 0
+      },
+      {
+        "total_seconds": 20.372,
+        "name": "production",
+        "percent": 1.85,
+        "digital": "0:00",
+        "decimal": "0.00",
+        "text": "0 secs",
+        "hours": 0,
+        "minutes": 0
+      }
+    ],
     "is_cached": true,
     "username": null,
     "is_including_today": false,
@@ -101,5 +289,5 @@
     },
     "uid": "ZdL3r4RjLbM4ypJd0qFs7OsGglf2"
   },
-  "lastUpdated": 1776781183174
+  "lastUpdated": 1777110774034
 }

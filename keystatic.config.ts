@@ -58,15 +58,18 @@ export default config({
                 signature: fields.image({ label: 'Signature Image', directory: 'public/images', publicPath: '/images/', description: 'Signature to display at the end of bio.' }),
 
                 // Socials
-                github: fields.url({ label: 'GitHub URL', description: 'Link to your GitHub profile.' }),
-                leetcode: fields.url({ label: 'LeetCode URL', description: 'Link to your LeetCode profile.' }),
-                instagram: fields.url({ label: 'Instagram URL', description: 'Link to your Instagram profile.' }),
-                linkedin: fields.url({ label: 'LinkedIn URL', description: 'Link to your LinkedIn profile.' }),
+                github: fields.url({ label: 'GitHub URL', description: 'Link to your GitHub profile.', validation: { isRequired: false } }),
+                leetcode: fields.url({ label: 'LeetCode URL', description: 'Link to your LeetCode profile.', validation: { isRequired: false } }),
+                instagram: fields.url({ label: 'Instagram URL', description: 'Link to your Instagram profile.', validation: { isRequired: false } }),
+                linkedin: fields.url({ label: 'LinkedIn URL', description: 'Link to your LinkedIn profile.', validation: { isRequired: false } }),
 
                 // Technical
                 gtmId: fields.text({ label: 'GTM ID', description: 'Google Tag Manager ID (e.g., GTM-XXXXXX).' }),
                 domainUrl: fields.text({ label: 'Domain URL', description: 'The full URL of your deployed site.' }),
                 mediumUsername: fields.text({ label: 'Medium Username', description: 'Your Medium handle (without @) to fetch posts.' }),
+
+                // Layout Flags
+                showTestimonials: fields.checkbox({ label: 'Show Testimonials (Client Say) Section', defaultValue: false, description: 'Toggle to show or hide the testimonials section on the homepage.' }),
             }
         }),
         hero: singleton({
@@ -119,6 +122,8 @@ export default config({
             path: 'src/content/now/data',
             format: { data: 'json' },
             schema: {
+                status: fields.text({ label: 'Status', description: 'Current status headline' }),
+                status_id: fields.text({ label: 'Status (ID)', description: 'Indonesian translation' }),
                 working: fields.text({ label: 'Working On', description: 'What are you building currently?' }),
                 learning: fields.text({ label: 'Learning', description: 'What are you studying?' }),
                 reading: fields.text({ label: 'Reading', description: 'Current book or article.' }),
@@ -167,6 +172,34 @@ export default config({
                 ),
             }
         }),
+        techStack: singleton({
+            label: 'Tech Stack List',
+            path: 'src/content/site/techstack',
+            format: { data: 'json' },
+            schema: {
+                skills: fields.array(
+                    fields.object({
+                        name: fields.text({ label: 'Technology Name' }),
+                        category: fields.select({
+                            label: 'Category',
+                            options: [
+                                { label: 'Frontend', value: 'Frontend' },
+                                { label: 'Backend', value: 'Backend' },
+                                { label: 'Database', value: 'Database' },
+                                { label: 'Tools / Cloud', value: 'Tools' },
+                                { label: 'Machine Learning', value: 'Machine Learning' },
+                            ],
+                            defaultValue: 'Frontend'
+                        }),
+                        icon: fields.text({
+                            label: 'Icon Name',
+                            description: 'e.g., Astro, React, Python, Github (Case Sensitive!)'
+                        }),
+                    }),
+                    { label: 'Skills', itemLabel: props => props.fields.name.value }
+                )
+            }
+        }),
         radar: singleton({
             label: 'Tech Radar Chart',
             path: 'src/content/radar/data',
@@ -176,7 +209,7 @@ export default config({
                     fields.object({
                         label: fields.text({ label: 'Label (e.g. Frontend)' }),
                         value: fields.integer({ label: 'Value (0-100)', validation: { min: 0, max: 100 } }),
-                        fullMark: fields.integer({ label: 'Full Mark', defaultValue: 100, validation: { isRequired: true } }),
+                        fullMark: fields.integer({ label: 'Full Mark', defaultValue: 100 }),
                     }),
                     {
                         label: 'Radar Axes',
@@ -271,54 +304,57 @@ export default config({
         }),
     },
     ui: {
-        brand: { name: 'Npemburu.exe' },
+        brand: { name: 'Dhiandika Aditya' },
         navigation: {
-            'Site Settings': ['site', 'radar', 'uses', 'estimator'],
+            'Site Settings': ['site', 'radar', 'techStack', 'uses', 'estimator'],
             'Page Content': ['hero', 'whoami', 'about', 'now'],
             'Blog': ['blog'],
-            'Collections': ['projects', 'career', 'experience', 'education', 'certificates', 'reviews', 'companies', 'assets'],
+            'Collections': ['projects', 'socialBrands', 'career', 'experience', 'education', 'certificates', 'reviews', 'companies', 'assets'],
         },
     },
     collections: {
-        skills: collection({
-            label: 'Skills (Tech Stack)',
+        socialBrands: collection({
+            label: 'Social Brands (Creation)',
             slugField: 'name',
-            path: 'src/content/skills/*',
+            path: 'src/content/socialBrands/*',
             format: { data: 'json' },
             schema: {
-                name: fields.slug({ name: { label: 'Technology Name' } }),
-                category: fields.select({
-                    label: 'Category',
-                    options: [
-                        { label: 'Library', value: 'Library' },
-                        { label: 'Framework', value: 'Framework' },
-                        { label: 'Language', value: 'Language' },
-                        { label: 'Backend', value: 'Backend' },
-                        { label: 'Styling', value: 'Styling' },
-                        { label: 'Data', value: 'Data' },
-                        { label: 'Core', value: 'Core' },
-                        { label: 'Version', value: 'Version' },
-                        { label: 'Query', value: 'Query' },
-                        { label: 'Ops', value: 'Ops' },
-                        { label: '3D', value: '3D' },
-                    ],
-                    defaultValue: 'Language'
-                }),
-                color: fields.select({
-                    label: 'Hover Color',
-                    options: [
-                        { label: 'Green', value: 'neo-green' },
-                        { label: 'Yellow', value: 'neo-yellow' },
-                        { label: 'Blue', value: 'neo-blue' },
-                        { label: 'Pink', value: 'neo-pink' },
-                        { label: 'Purple', value: 'neo-purple' },
-                        { label: 'Orange', value: 'neo-orange' },
-                        { label: 'White', value: 'white' },
-                    ],
-                    defaultValue: 'white'
-                }),
+                name: fields.slug({ name: { label: '⚠️ Brand Name [REQUIRED]', description: 'Nama unik brand ini, e.g. "Holovibe". Wajib diisi, tidak boleh sama dengan brand lain.' } }),
+                platforms: fields.array(
+                    fields.object({
+                        platformType: fields.select({
+                            label: '⚠️ Platform [REQUIRED]',
+                            options: [
+                                { label: 'TikTok', value: 'TikTok' },
+                                { label: 'Instagram', value: 'Instagram' },
+                                { label: 'Facebook', value: 'Facebook' },
+                            ],
+                            defaultValue: 'TikTok'
+                        }),
+                        username: fields.text({ label: '⚠️ Username [REQUIRED]', description: 'Handle akun, e.g. @vtuber_union. Wajib diisi.' }),
+                        profileName: fields.text({ label: '⚠️ Profile Name [REQUIRED]', description: 'Nama tampilan akun. Wajib diisi.' }),
+                        avatar: fields.image({
+                            label: 'Avatar (Opsional)',
+                            description: 'Upload foto profil brand. Jika kosong, akan tampil huruf inisial berwarna.',
+                            directory: 'public/images/creations',
+                            publicPath: '/images/creations/',
+                        }),
+                        profileUrl: fields.url({ label: '⚠️ Profile URL [REQUIRED]', description: 'Link langsung ke profil platform ini. Wajib diisi.' }),
+                        profileEmbedHtml: fields.text({ label: 'Profile Embed HTML (Opsional)', multiline: true, description: 'Paste kode embed profil dari TikTok/Instagram/Facebook di sini. Jika kosong, tampil placeholder.' }),
+                        videos: fields.array(
+                            fields.url({ label: 'Video URL' }),
+                            { label: 'Showcase Videos (Opsional)', description: 'Paste URL video TikTok/Reel/Reels. Bisa kosong untuk Facebook.', itemLabel: props => props.value || 'Video Link' }
+                        )
+                    }),
+                    {
+                        label: '⚠️ Platforms [MIN 1 REQUIRED]',
+                        description: 'Tambahkan minimal 1 platform. Setiap platform wajib memiliki Username, Profile Name, dan Profile URL.',
+                        itemLabel: props => props.fields.platformType.value
+                    }
+                )
             }
         }),
+
         projects: collection({
             label: 'Projects',
             slugField: 'title',
@@ -326,30 +362,42 @@ export default config({
             format: { data: 'json' },
             schema: {
                 title: fields.slug({ name: { label: 'Title' } }),
-                title_id: fields.text({ label: 'Title (ID)', description: 'Indonesian translation.' }),
+                title_id: fields.text({ label: 'Title (ID)', description: 'Indonesian translation.', validation: { isRequired: false } }),
                 description: fields.text({ label: 'Description' }),
-                description_id: fields.text({ label: 'Description (ID)', description: 'Indonesian translation.' }),
+                description_id: fields.text({ label: 'Description (ID)', description: 'Indonesian translation.', validation: { isRequired: false } }),
                 image: fields.image({
                     label: 'Thumbnail',
                     directory: 'public/images/projects',
                     publicPath: '/images/projects/',
                 }),
-                link: fields.url({ label: 'Project Link' }),
+                link: fields.url({ label: 'Live Demo URL', validation: { isRequired: false } }),
+                githubLink: fields.url({ label: 'GitHub Repository URL (optional)', validation: { isRequired: false } }),
+                category: fields.select({
+                    label: 'Category',
+                    options: [
+                        { label: 'Web', value: 'Web' },
+                        { label: 'Mobile', value: 'Mobile' },
+                        { label: 'UI/UX Design', value: 'UI/UX' },
+                        { label: 'Other', value: 'Other' },
+                    ],
+                    defaultValue: 'Web'
+                }),
                 techStack: fields.array(fields.text({ label: 'Tech' }), { label: 'Tech Stack' }),
                 gallery: fields.array(
                     fields.image({
                         label: 'Gallery Image',
                         directory: 'public/images/projects',
                         publicPath: '/images/projects/',
-                        validation: { isRequired: true }
                     }),
                     {
                         label: 'Project Gallery (Max 5)',
                         validation: { length: { max: 5 } }
                     }
                 ),
-                content: fields.text({ label: 'Content', multiline: true }),
-                content_id: fields.text({ label: 'Content (ID)', multiline: true, description: 'Indonesian translation.' }),
+                content: fields.text({ label: 'Content / Full Description', multiline: true, validation: { isRequired: false } }),
+                content_id: fields.text({ label: 'Content (ID)', multiline: true, description: 'Indonesian translation.', validation: { isRequired: false } }),
+                keyFeatures: fields.array(fields.text({ label: 'Feature' }), { label: 'Key Features (EN)' }),
+                keyFeatures_id: fields.array(fields.text({ label: 'Feature (ID)' }), { label: 'Key Features (ID)' }),
             },
         }),
         experience: collection({
@@ -361,7 +409,7 @@ export default config({
                 role: fields.slug({ name: { label: 'Role' } }),
                 role_id: fields.text({ label: 'Role (ID)', description: 'Indonesian translation.' }),
                 company: fields.text({ label: 'Company' }),
-                link: fields.url({ label: 'Company Link' }),
+                link: fields.url({ label: 'Company Link', validation: { isRequired: false } }),
                 date: fields.text({ label: 'Date Range' }),
                 category: fields.select({
                     label: 'Category',
@@ -397,7 +445,7 @@ export default config({
                 role: fields.slug({ name: { label: 'Role' } }),
                 role_id: fields.text({ label: 'Role (ID)', description: 'Indonesian translation.' }),
                 company: fields.text({ label: 'Company' }),
-                link: fields.url({ label: 'Company Link' }),
+                link: fields.url({ label: 'Company Link', validation: { isRequired: false } }),
                 date: fields.text({ label: 'Date Range' }),
                 location: fields.text({ label: 'Location' }),
                 type: fields.select({
@@ -415,14 +463,14 @@ export default config({
                     publicPath: '/images/logos/',
                 }),
                 // Details
-                tasks: fields.array(fields.text({ label: 'Task' }), { label: 'Tasks', itemLabel: props => props.value }),
-                tasks_id: fields.array(fields.text({ label: 'Task (ID)' }), { label: 'Tasks (Indonesian)', itemLabel: props => props.value }),
+                tasks: fields.array(fields.text({ label: 'Task' }), { label: 'Tasks' }),
+                tasks_id: fields.array(fields.text({ label: 'Task (ID)' }), { label: 'Tasks (Indonesian)' }),
 
-                skills_learned: fields.array(fields.text({ label: 'Skill Learned' }), { label: 'What I Learned', itemLabel: props => props.value }),
-                skills_learned_id: fields.array(fields.text({ label: 'Skill Learned (ID)' }), { label: 'What I Learned (Indonesian)', itemLabel: props => props.value }),
+                skills_learned: fields.array(fields.text({ label: 'Skill Learned' }), { label: 'What I Learned' }),
+                skills_learned_id: fields.array(fields.text({ label: 'Skill Learned (ID)' }), { label: 'What I Learned (Indonesian)' }),
 
-                impact: fields.array(fields.text({ label: 'Impact Item' }), { label: 'Impact', itemLabel: props => props.value }),
-                impact_id: fields.array(fields.text({ label: 'Impact Item (ID)' }), { label: 'Impact (Indonesian)', itemLabel: props => props.value }),
+                impact: fields.array(fields.text({ label: 'Impact Item' }), { label: 'Impact' }),
+                impact_id: fields.array(fields.text({ label: 'Impact Item (ID)' }), { label: 'Impact (Indonesian)' }),
 
                 content: fields.text({ label: 'Additional Description', multiline: true }),
                 content_id: fields.text({ label: 'Additional Description (ID)', multiline: true, description: 'Indonesian translation.' }),
@@ -435,7 +483,7 @@ export default config({
             format: { data: 'json' },
             schema: {
                 institution: fields.slug({ name: { label: 'Institution' } }),
-                link: fields.url({ label: 'Institution Link' }),
+                link: fields.url({ label: 'Institution Link', validation: { isRequired: false } }),
                 degree: fields.text({ label: 'Degree' }),
                 degree_id: fields.text({ label: 'Degree (ID)', description: 'Indonesian translation.' }),
                 date: fields.text({ label: 'Date Range' }),
@@ -499,8 +547,8 @@ export default config({
                     options: { image: { directory: 'public/images/blog', publicPath: '/images/blog/' } }
                 }),
                 subtitle: fields.text({ label: 'Subtitle', description: 'Medium-style subtitle (optional).' }),
-                topics: fields.array(fields.text({ label: 'Topic' }), { label: 'Topics (Tags)', itemLabel: props => props.value }),
-                canonicalUrl: fields.url({ label: 'Canonical URL', description: 'Original Medium URL (if cross-posted).' }),
+                topics: fields.array(fields.text({ label: 'Topic' }), { label: 'Topics (Tags)' }),
+                canonicalUrl: fields.url({ label: 'Canonical URL', description: 'Original Medium URL (if cross-posted).', validation: { isRequired: false } }),
             }
         }),
         certificates: collection({
@@ -528,7 +576,7 @@ export default config({
                     directory: 'public/images/certificates',
                     publicPath: '/images/certificates/',
                 }),
-                link: fields.url({ label: 'Credential URL' }),
+                link: fields.url({ label: 'Credential URL', validation: { isRequired: false } }),
                 description: fields.text({ label: 'Description', multiline: true }),
                 description_id: fields.text({ label: 'Description (ID)', multiline: true, description: 'Indonesian translation.' }),
             }
@@ -546,7 +594,7 @@ export default config({
                     publicPath: '/images/companies/',
                     validation: { isRequired: true }
                 }),
-                link: fields.url({ label: 'Website URL' }),
+                link: fields.url({ label: 'Website URL', validation: { isRequired: false } }),
             }
         }),
         assets: collection({

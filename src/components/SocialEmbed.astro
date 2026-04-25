@@ -1,0 +1,77 @@
+---
+interface Props {
+    url: string;
+}
+
+const { url } = Astro.props;
+
+// Basic detection
+const isTikTok = url.includes('tiktok.com');
+const isInstagram = url.includes('instagram.com');
+
+// Extract Video ID for TikTok (simplistic approach, assumes format /video/ID)
+let tiktokVideoId = '';
+if (isTikTok) {
+    const parts = url.split('/video/');
+    if (parts.length > 1) {
+        tiktokVideoId = parts[1].split('?')[0]; // Remove query params if any
+    }
+}
+---
+
+<div class="social-embed-container w-full bg-white border-4 border-black shadow-hard hover:-translate-y-2 hover:shadow-[8px_8px_0_0_#FBFF48] transition-all duration-300 overflow-hidden flex justify-center items-center relative min-h-[300px]">
+    {isTikTok && tiktokVideoId ? (
+        <blockquote class="tiktok-embed w-full m-0" cite={url} data-video-id={tiktokVideoId} style="max-width: 605px;min-width: 325px;" >
+            <section>
+                <a target="_blank" title="TikTok" href={url}>Loading TikTok...</a>
+            </section>
+        </blockquote>
+    ) : isInstagram ? (
+        <blockquote class="instagram-media w-full m-0" data-instgrm-permalink={url} data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+            <div style="padding:16px;">
+                <a href={url} style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">Loading Instagram...</a>
+            </div>
+        </blockquote>
+    ) : (
+        <div class="p-8 text-center font-mono font-bold">
+            <p>Unsupported Embed URL</p>
+            <a href={url} target="_blank" class="text-blue-500 hover:underline text-sm">{url}</a>
+        </div>
+    )}
+</div>
+
+<script>
+    // Load embed scripts if they haven't been loaded yet
+    const loadEmbedScripts = () => {
+        // TikTok
+        if (document.querySelector('.tiktok-embed') && !window.tiktokScriptLoaded) {
+            const script = document.createElement('script');
+            script.src = 'https://www.tiktok.com/embed.js';
+            script.async = true;
+            document.head.appendChild(script);
+            window.tiktokScriptLoaded = true;
+        }
+
+        // Instagram
+        if (document.querySelector('.instagram-media') && !window.instgrmScriptLoaded) {
+            const script = document.createElement('script');
+            script.src = '//www.instagram.com/embed.js';
+            script.async = true;
+            document.head.appendChild(script);
+            window.instgrmScriptLoaded = true;
+        }
+    };
+
+    // Load on initial page load
+    document.addEventListener("DOMContentLoaded", loadEmbedScripts);
+    // Load on Astro page transitions
+    document.addEventListener("astro:page-load", loadEmbedScripts);
+</script>
+
+<style>
+    /* Force neo-brutalist container styles over embeds where possible */
+    .social-embed-container iframe {
+        border: none !important;
+        border-radius: 0 !important;
+    }
+</style>

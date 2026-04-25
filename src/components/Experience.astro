@@ -11,6 +11,7 @@ const experience = await getCollection("experience");
 
 <section id="experience" class="py-24 px-4 max-w-7xl mx-auto">
     <h2
+        data-aos="fade-up"
         class="text-5xl md:text-8xl font-black uppercase mb-12 tracking-tighter text-center"
     >
         Experience<span class="text-neo-red">_Log</span>
@@ -18,12 +19,12 @@ const experience = await getCollection("experience");
 
     <div class="relative border-l-4 border-black ml-4 md:ml-10 space-y-12">
         {
-            experience.map(async (entry, index) => {
+            experience.map((entry, index) => {
                 const colorMap = {
                     "neo-yellow": {
                         bg: "bg-neo-yellow",
                         text: "text-black bg-neo-yellow px-2 inline-block transform -rotate-1",
-                    }, // High contrast: Black on Yellow
+                    },
                     "neo-red": { bg: "bg-neo-red", text: "text-neo-red" },
                     "neo-green": { bg: "bg-neo-green", text: "text-neo-green" },
                     "neo-blue": { bg: "bg-neo-blue", text: "text-neo-blue" },
@@ -49,16 +50,36 @@ const experience = await getCollection("experience");
                         : entry.data.content;
 
                 return (
-                    <div class="reveal relative pl-8 md:pl-16">
+                    <div class="reveal relative pl-8 md:pl-16" data-aos="fade-up" data-aos-delay={String(index * 80)}>
                         <div
                             class={`absolute -left-[14px] top-2 w-6 h-6 ${theme.bg} border-4 border-black`}
                         />
                         <div class="bg-white border-4 border-black p-6 shadow-hard hover:shadow-hard-xl transition-all">
-                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-dashed border-gray-300 pb-4 mb-4">
-                                <h3 class="text-3xl font-black uppercase">
-                                    {role}
-                                </h3>
-                                <span class="font-mono font-bold bg-neo-black text-white px-2 py-1">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-dashed border-gray-300 pb-4 mb-4 gap-4">
+                                <div class="flex items-center gap-4">
+                                    <!-- Company Logo -->
+                                    <div class={`w-14 h-14 shrink-0 border-4 border-black overflow-hidden ${theme.bg} flex items-center justify-center shadow-[4px_4px_0_0_#000]`}>
+                                        {entry.data.logo ? (
+                                            <img
+                                                src={entry.data.logo}
+                                                alt={entry.data.company}
+                                                class="w-full h-full object-contain p-1 bg-white"
+                                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                            />
+                                            <span class="hidden w-full h-full items-center justify-center font-black text-xl text-black" aria-hidden="true">
+                                                {entry.data.company.charAt(0)}
+                                            </span>
+                                        ) : (
+                                            <span class="font-black text-xl text-black">
+                                                {entry.data.company.charAt(0)}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <h3 class="text-2xl md:text-3xl font-black uppercase">
+                                        {role}
+                                    </h3>
+                                </div>
+                                <span class="font-mono font-bold bg-neo-black text-white px-2 py-1 shrink-0">
                                     {entry.data.date}
                                 </span>
                             </div>

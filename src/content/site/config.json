@@ -1,15 +1,15 @@
 {
-  "pageTitle": "Dhiandika Aditya| Full Stack ",
-  "pageTitle_id": "Dhiandika Aditya| Full Stack ",
-  "metaDescription": "Dhiandika Aditya| Professional Full Stack Developer specializing in high-performance  web experiences. Let's build the future with raw aesthetics.",
+  "pageTitle": "Dhiandika Aditya | Full Stack ",
+  "pageTitle_id": "Dhiandika Aditya | Full Stack ",
+  "metaDescription": "Dhiandika Aditya | Professional Full Stack Developer specializing in high-performance  web experiences. Let's build the future with raw aesthetics.",
   "metaDescription_id": "Dhiandika Aditya| Full Stack Profesional yang berspesialisasi dalam membangun pengalaman web  berkinerja tinggi. Mari bangun masa depan dengan estetika mentah.",
   "metaKeywords": "Dhiandika, Full Stack Developer,  Portfolio, Web Development, UI/UX, Javascript, React",
-  "brandName": "Npemburu.exe",
+  "brandName": "Dhiandika Aditya",
   "favicon": "/favicon.png",
   "email": "npemburu6@gmail.com",
   "location": "Bali, Indonesia",
-  "resume": "/assets/En_resume.pdf",
-  "resume_id": "/assets/Ind_resume.pdf",
+  "resume": "/resume.pdf",
+  "resume_id": "/resume_id.pdf",
   "signature": "/images/signature.png",
   "github": "https://github.com/Dhiandika",
   "leetcode": "https://leetcode.com/u/Dhiandika_Aditya/",
@@ -17,5 +17,6 @@
   "linkedin": "https://www.linkedin.com/in/i-putu-dhiandika-aditya-permana-/",
   "gtmId": "GTM-5LS4LG3X",
   "domainUrl": "npemburu.my.id",
-  "mediumUsername": "npemburu6"
+  "mediumUsername": "npemburu6",
+  "showTestimonials": false
 }

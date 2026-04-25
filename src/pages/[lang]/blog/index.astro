@@ -77,7 +77,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 
 <Layout title={`${t.title} | ${siteData.brandName || "ARHAM"}`} lang={lang}>
     <main class="pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
-        <header class="mb-12">
+        <header data-aos="fade-up" class="mb-12">
             <h1
                 class="text-6xl md:text-8xl font-black mb-4 glitch-hover"
                 data-text={t.title}
@@ -129,8 +129,10 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 
         <div id="blogGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
             {
-                allPosts.map((post) => (
+                allPosts.map((post, index) => (
                     <article
+                        data-aos="fade-up"
+                        data-aos-delay={String(index % 3 * 80)}
                         class="blog-card border-4 border-neo-black bg-white shadow-hard hover:shadow-none transition-all group relative overflow-hidden flex flex-col"
                         data-topics={post.topics.join(",")}
                         data-title={post.title.toLowerCase()}

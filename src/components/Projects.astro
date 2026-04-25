@@ -1,356 +1,495 @@
 ---
 import { getCollection } from "astro:content";
+import { getEntry } from "astro:content";
 import { getTechIcon } from "../utils/techIcons";
+import { getMediumPosts } from "../utils/medium";
 
-interface Props {
-    lang?: string;
-}
-
+interface Props { lang?: string; }
 const { lang = "en" } = Astro.props;
-const projects = await getCollection("projects");
 
-const ui = {
-    en: { title: "Selected Works", viewGithub: "VIEW ALL WORKS" },
-    id: { title: "Karya Pilihan", viewGithub: "LIHAT SEMUA KARYA" },
+const projects = await getCollection("projects");
+const certificates = await getCollection("certificates");
+
+// Blog posts
+const siteConfig = await getEntry("site", "config");
+const { data: siteData } = siteConfig || { data: { mediumUsername: "dhiandika" } };
+const localPosts = await getCollection("blog");
+const formattedLocalPosts = localPosts.map((post) => ({
+    title: lang === "id" ? post.data.title_id || post.data.title : post.data.title,
+    date: new Date(post.data.publishedDate),
+    coverImage: post.data.coverImage,
+    excerpt: lang === "id" ? post.data.excerpt_id || post.data.excerpt : post.data.excerpt,
+    link: `/${lang}/blog/${post.slug}`,
+    isExternal: false,
+    topics: post.data.topics || [],
+}));
+const mediumPostsRaw = await getMediumPosts(siteData.mediumUsername || "dhiandika");
+const formattedMediumPosts = mediumPostsRaw.map((post) => ({
+    title: post.title,
+    date: new Date(post.pubDate),
+    coverImage: post.thumbnail,
+    excerpt: post.description,
+    link: post.link,
+    isExternal: true,
+    topics: post.categories || [],
+}));
+const allPosts = [...formattedLocalPosts, ...formattedMediumPosts]
+    .sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+const tabMeta = {
+    projects: {
+        en: { title: "Portfolio Showcase",   subtitle: `${projects.length} selected works — web, mobile & design.` },
+        id: { title: "Portfolio Showcase",   subtitle: `${projects.length} karya pilihan — web, mobile & desain.` },
+    },
+    achievements: {
+        en: { title: "Achievements",          subtitle: `${certificates.length} certifications, awards & milestones.` },
+        id: { title: "Penghargaan",           subtitle: `${certificates.length} sertifikasi, penghargaan & pencapaian.` },
+    },
+    blog: {
+        en: { title: "Latest Transmission",  subtitle: `${allPosts.length} articles from local & Medium.` },
+        id: { title: "Transmisi Terbaru",    subtitle: `${allPosts.length} artikel dari lokal & Medium.` },
+    },
 };
 
+const ui = {
+    en: { tabProjects: "Projects", tabAchievements: "Achievements", tabBlog: "Blog", showMore: "Show More", liveDemo: "Live Demo", details: "Details →", readMore: "Read Post →", viewAll: "View All Projects", viewAllBlog: "View Archive", viewAllAch: "View All" },
+    id: { tabProjects: "Proyek", tabAchievements: "Penghargaan", tabBlog: "Blog", showMore: "Tampilkan Lebih", liveDemo: "Live Demo", details: "Detail →", readMore: "Baca Artikel →", viewAll: "Lihat Semua Proyek", viewAllBlog: "Lihat Arsip", viewAllAch: "Lihat Semua" },
+};
 const t = ui[lang as keyof typeof ui] || ui.en;
+const initMeta = tabMeta.projects[lang as keyof typeof tabMeta.projects] || tabMeta.projects.en;
+
+const INITIAL_SHOW = 9;
 ---
 
-<section id="works" class="py-24 bg-neo-black px-4 relative overflow-hidden">
-    <!-- Grid Pattern -->
-    <div
-        class="absolute inset-0 opacity-20 pointer-events-none"
-        style="background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px); background-size: 40px 40px;"
-    >
-    </div>
-
-    <!-- Decorative Elements -->
-    <div
-        class="absolute top-12 left-12 text-gray-800 pointer-events-none select-none"
-    >
-        <i class="ri-add-line text-6xl rotate-12"></i>
-    </div>
-    <div
-        class="absolute bottom-12 right-12 text-gray-800 pointer-events-none select-none"
-    >
-        <i class="ri-add-line text-6xl -rotate-12"></i>
-    </div>
+<section id="works" class="py-24 md:py-32 bg-neo-black px-4 relative overflow-hidden border-t-8 border-white">
+    <!-- Anchor hooks for navbar hash links — do not remove -->
+    <div id="achievements" style="position:absolute; top:-80px; left:0; height:0; width:0; visibility:hidden;"></div>
+    <div id="blog" style="position:absolute; top:-80px; left:0; height:0; width:0; visibility:hidden;"></div>
+    <!-- Top stripe -->
+    <div class="absolute top-0 left-0 w-full h-3 bg-neo-yellow border-b-4 border-black z-20"></div>
+    <!-- Grid bg -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 40px 40px;"></div>
 
     <div class="max-w-7xl mx-auto relative z-10">
-        <!-- Header -->
-        <h2
-            class="text-6xl md:text-9xl font-black mb-24 text-center uppercase tracking-tighter text-white select-none relative group"
-        >
-            <span
-                class="absolute inset-0 text-gray-800 blur-sm transform translate-x-2 translate-y-2 select-none"
-                aria-hidden="true">SHOWCASE</span
-            >
-            <span class="relative z-10 text-white drop-shadow-[4px_4px_0_#000]"
-                >SHOWCASE</span
-            >
-        </h2>
 
-        <!-- Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-            {
-                projects.slice(0, 3).map((project, index) => {
-                    const num = `0${index + 1}`;
-                    const title =
-                        lang === "id"
-                            ? project.data.title_id || project.data.title
-                            : project.data.title;
-                    const description =
-                        lang === "id"
-                            ? project.data.description_id ||
-                              project.data.description
-                            : project.data.description;
-                    const techIconsList = project.data.techStack.map(
-                        (tech) => ({ name: tech, icon: getTechIcon(tech) }),
-                    );
-                    const galleryImages =
-                        project.data.gallery && project.data.gallery.length > 0
-                            ? project.data.gallery
-                            : project.data.image
-                              ? [project.data.image]
-                              : [];
-                    const uniqueId = `showcase-${index}`;
+        <!-- Header — dynamic per tab -->
+        <div class="text-center mb-10" data-aos="fade-up">
+            <h2 id="section-title" class="text-5xl md:text-7xl font-black uppercase tracking-tighter text-white drop-shadow-[4px_4px_0_#FBFF48] mb-3">
+                {initMeta.title}
+            </h2>
+            <p id="section-subtitle"
+               class="font-mono text-white/50 text-sm max-w-xl mx-auto"
+               data-projects={initMeta.subtitle}
+               data-achievements={tabMeta.achievements[lang as keyof typeof tabMeta.achievements]?.subtitle || tabMeta.achievements.en.subtitle}
+               data-blog={tabMeta.blog[lang as keyof typeof tabMeta.blog]?.subtitle || tabMeta.blog.en.subtitle}
+               data-title-projects={tabMeta.projects[lang as keyof typeof tabMeta.projects]?.title || tabMeta.projects.en.title}
+               data-title-achievements={tabMeta.achievements[lang as keyof typeof tabMeta.achievements]?.title || tabMeta.achievements.en.title}
+               data-title-blog={tabMeta.blog[lang as keyof typeof tabMeta.blog]?.title || tabMeta.blog.en.title}
+            >{initMeta.subtitle}</p>
+        </div>
 
+        <!-- Tab Navigation — 3 tabs -->
+        <div class="flex mb-12 border-4 border-white w-max mx-auto overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+            <button
+                id="tab-projects"
+                class="tab-btn active-tab px-6 py-3 font-black uppercase text-xs tracking-widest transition-all border-r-4 border-white flex items-center gap-2"
+                onclick="switchTab('projects')"
+            >
+                <i class="ri-briefcase-fill"></i> {t.tabProjects}
+            </button>
+            <button
+                id="tab-achievements"
+                class="tab-btn px-6 py-3 font-black uppercase text-xs tracking-widest transition-all border-r-4 border-white flex items-center gap-2"
+                onclick="switchTab('achievements')"
+            >
+                <i class="ri-trophy-fill"></i> {t.tabAchievements}
+            </button>
+            <button
+                id="tab-blog"
+                class="tab-btn px-6 py-3 font-black uppercase text-xs tracking-widest transition-all flex items-center gap-2"
+                onclick="switchTab('blog')"
+            >
+                <i class="ri-article-fill"></i> {t.tabBlog}
+            </button>
+        </div>
+
+        <!-- ═══════════ PROJECTS TAB ═══════════ -->
+        <div id="panel-projects">
+            <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                {projects.map((project, index) => {
+                    const title = lang === "id" ? project.data.title_id || project.data.title : project.data.title;
+                    const description = lang === "id" ? project.data.description_id || project.data.description : project.data.description;
+                    const techIconsList = project.data.techStack.map((tech: any) => ({ name: tech, icon: getTechIcon(tech) }));
+                    const isHidden = index >= INITIAL_SHOW;
+                    const detailHref = `/${lang}/projects/${project.id}`;
+                    const DESC_LIMIT = 90;
+                    const shortDesc = description && description.length > DESC_LIMIT
+                        ? description.slice(0, DESC_LIMIT).trimEnd() + "..."
+                        : description;
+                    const categoryIcons: any = { "Web": "ri-global-line", "Mobile": "ri-smartphone-line", "UI/UX": "ri-pen-nib-line", "Other": "ri-code-s-slash-line" };
+                    const catIcon = categoryIcons[project.data.category || "Web"] || "ri-code-s-slash-line";
+                    // Fallback: use first gallery image if no thumbnail set
+                    const thumbnailSrc = project.data.image
+                        || (project.data.gallery?.find((g: string | null) => g !== null) ?? null);
                     return (
-                        <>
-                            {/* Card Trigger */}
-                            <article
-                                class="group relative cursor-pointer h-[450px]"
-                                onclick={`document.getElementById('${uniqueId}').classList.remove('hidden'); document.getElementById('${uniqueId}').classList.add('flex'); document.body.style.overflow = 'hidden';`}
-                            >
-                                <div class="bg-neo-black border-4 border-[#333] h-full flex flex-col p-8 relative overflow-hidden transition-all duration-300 group-hover:border-white group-hover:shadow-[10px_10px_0_0_#fff] group-hover:-translate-y-2 group-hover:-translate-x-2">
-                                    {/* Background Image */}
-                                    {project.data.image && (
-                                        <div class="absolute inset-0 z-0 opacity-40 group-hover:opacity-60 transition-opacity grayscale group-hover:grayscale-0 duration-500">
-                                            <img
-                                                src={project.data.image}
-                                                alt={title}
-                                                class="w-full h-full object-cover"
-                                            />
-                                            <div class="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-colors" />
-                                        </div>
-                                    )}
-
-                                    {/* Content */}
-                                    <div class="relative z-10 flex flex-col h-full">
-                                        <div class="flex justify-between items-start">
-                                            <span class="text-6xl font-black text-white/20 group-hover:text-white transition-colors select-none">
-                                                {num}
-                                            </span>
-                                            <i class="ri-arrow-right-up-line text-3xl text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                                        </div>
-
-                                        <div class="mt-auto">
-                                            <h3 class="text-3xl font-black text-white uppercase leading-none mb-4 group-hover:text-neo-yellow transition-colors drop-shadow-[2px_2px_0_#000]">
-                                                {title}
-                                            </h3>
-                                            <div class="flex flex-wrap gap-2">
-                                                {project.data.techStack
-                                                    .slice(0, 3)
-                                                    .map((tech) => (
-                                                        <span class="bg-black border border-white text-white text-[10px] font-bold px-2 py-1 uppercase">
-                                                            {tech.name || tech}
-                                                        </span>
-                                                    ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-
-                            {/* Modal Overlay */}
-                            <div
-                                id={uniqueId}
-                                class="fixed inset-0 bg-black/90 z-[99000] hidden items-center justify-center animate-fade-in"
-                                onclick={`if(event.target === this) { this.classList.remove('flex'); this.classList.add('hidden'); document.body.style.overflow = ''; }`}
-                            >
+                        <article
+                            data-aos="fade-up"
+                            data-aos-delay={String((index % 3) * 80)}
+                            class={`project-card group border-4 border-white bg-neo-black shadow-[6px_6px_0_0_#fff] hover:shadow-[10px_10px_0_0_#FBFF48] hover:border-neo-yellow transition-all duration-300 flex flex-col overflow-hidden${isHidden ? " hidden" : ""}`}
+                        >
+                            {/* Thumbnail */}
+                            <div class="relative h-48 overflow-hidden border-b-4 border-white group-hover:border-neo-yellow transition-colors">
+                                {thumbnailSrc ? (
+                                    <img
+                                        src={thumbnailSrc}
+                                        alt={title}
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        onerror="this.onerror=null;this.parentElement.querySelector('.no-img-placeholder').style.display='flex';this.style.display='none';"
+                                    />
+                                ) : null}
                                 <div
-                                    class="bg-neo-white border-4 border-black shadow-[15px_15px_0_0_#fff] flex flex-col md:flex-row w-[95vw] max-w-7xl h-[90vh] overflow-hidden"
-                                    onclick="event.stopPropagation()"
+                                    class={`no-img-placeholder w-full h-full flex-col items-center justify-center bg-gray-900 gap-2${thumbnailSrc ? " hidden" : " flex"}`}
+                                    style="display: flex;"
                                 >
-                                    {/* Left: Gallery Carousel (No Scroll) */}
-                                    <div class="md:w-2/3 bg-black border-r-4 border-black relative flex flex-col group/gallery">
-                                        {/* Main Image */}
-                                        <div class="flex-1 relative overflow-hidden flex items-center justify-center bg-neutral-900">
-                                            {galleryImages.length > 0 ? (
-                                                <>
-                                                    <img
-                                                        id={`${uniqueId}-main-img`}
-                                                        src={galleryImages[0]}
-                                                        alt={title}
-                                                        class="w-full h-full object-contain transition-opacity duration-150"
-                                                    />
-                                                    {/* Navigation Buttons */}
-                                                    {galleryImages.length >
-                                                        1 && (
-                                                        <>
-                                                            <button
-                                                                class="absolute left-4 top-1/2 -translate-y-1/2 bg-black text-white p-3 border-2 border-white hover:bg-neo-yellow hover:text-black transition-colors z-20"
-                                                                onclick={`prevImage('${uniqueId}', ${JSON.stringify(galleryImages).replace(/"/g, "&quot;")})`}
-                                                            >
-                                                                <i class="ri-arrow-left-line text-2xl" />
-                                                            </button>
-                                                            <button
-                                                                class="absolute right-4 top-1/2 -translate-y-1/2 bg-black text-white p-3 border-2 border-white hover:bg-neo-yellow hover:text-black transition-colors z-20"
-                                                                onclick={`nextImage('${uniqueId}', ${JSON.stringify(galleryImages).replace(/"/g, "&quot;")})`}
-                                                            >
-                                                                <i class="ri-arrow-right-line text-2xl" />
-                                                            </button>
-                                                        </>
-                                                    )}
-                                                    <div class="absolute bottom-4 left-4 bg-black/80 px-3 py-1 text-white text-xs font-mono border border-white/20">
-                                                        <span
-                                                            id={`${uniqueId}-counter`}
-                                                        >
-                                                            1
-                                                        </span>{" "}
-                                                        / {galleryImages.length}
-                                                    </div>
-                                                </>
-                                            ) : (
-                                                <div class="text-white/50 flex flex-col items-center">
-                                                    <i class="ri-image-line text-6xl mb-4" />
-                                                    <p class="font-mono">
-                                                        NO SIGNAL
-                                                    </p>
-                                                </div>
-                                            )}
+                                    <span class="text-5xl font-black text-white/20 uppercase">{title.charAt(0)}</span>
+                                    <span class="text-[10px] font-mono text-white/20 uppercase tracking-widest">No Preview</span>
+                                </div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                                {/* Category badge */}
+                                <span class="absolute top-3 left-3 flex items-center gap-1 bg-neo-yellow text-black text-[10px] font-black px-2 py-1 uppercase tracking-widest border-2 border-black">
+                                    <i class={catIcon + " text-xs"}></i> {project.data.category || "Web"}
+                                </span>
+                            </div>
+
+                            {/* Info */}
+                            <div class="flex flex-col flex-1 p-5">
+                                <h3 class="text-base font-black text-white uppercase leading-tight mb-1.5 group-hover:text-neo-yellow transition-colors">
+                                    {title}
+                                </h3>
+                                <p class="font-mono text-white/45 text-[11px] leading-relaxed mb-4 flex-1">
+                                    {shortDesc}
+                                    {description && description.length > DESC_LIMIT && (
+                                        <a href={detailHref} class="text-neo-yellow ml-1 hover:underline font-bold">Read more</a>
+                                    )}
+                                </p>
+
+                                {/* Tech stack icons */}
+                                <div class="flex flex-wrap gap-1.5 mb-4">
+                                    {techIconsList.slice(0, 5).map((item: any) => (
+                                        <div class="w-6 h-6 bg-white/10 border border-white/20 flex items-center justify-center" title={item.name}>
+                                            <img src={item.icon} alt={item.name} class="w-3.5 h-3.5 object-contain" onerror="this.onerror=null;this.style.display='none';" />
                                         </div>
+                                    ))}
+                                    {techIconsList.length > 5 && (
+                                        <span class="w-6 h-6 bg-white/10 border border-white/20 flex items-center justify-center text-white/40 text-[9px] font-black">+{techIconsList.length - 5}</span>
+                                    )}
+                                </div>
 
-                                        {/* Thumbnails (Bottom Bar) */}
-                                        {galleryImages.length > 1 && (
-                                            <div class="h-20 bg-black border-t-2 border-white/20 flex items-center gap-2 px-4 overflow-x-auto">
-                                                {galleryImages.map((img, i) => (
-                                                    <button
-                                                        class={`w-16 h-12 border-2 ${i === 0 ? "border-neo-yellow" : "border-white/20"} hover:border-white transition-colors flex-shrink-0 bg-neutral-800`}
-                                                        onclick={`setImage('${uniqueId}', '${img}', ${i}, ${galleryImages.length})`}
-                                                    >
-                                                        <img
-                                                            src={img}
-                                                            class="w-full h-full object-cover"
-                                                        />
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Right: Details */}
-                                    <div class="md:w-1/3 flex flex-col bg-white h-full relative">
-                                        {/* Header */}
-                                        <div class="p-6 border-b-4 border-black flex justify-between items-start bg-neo-yellow">
-                                            <div>
-                                                <h2 class="text-3xl font-black uppercase leading-none mb-1">
-                                                    {title}
-                                                </h2>
-                                                <p class="font-mono text-xs font-bold">
-                                                    PROJECT LOG_2024
-                                                </p>
-                                            </div>
-                                            <button
-                                                class="bg-red-500 text-white w-10 h-10 border-2 border-black hover:bg-black hover:text-red-500 transition-colors shadow-hard-sm"
-                                                onclick={`document.getElementById('${uniqueId}').classList.remove('flex'); document.getElementById('${uniqueId}').classList.add('hidden'); document.body.style.overflow = '';`}
-                                            >
-                                                <i class="ri-close-line text-xl" />
-                                            </button>
-                                        </div>
-
-                                        {/* Scrollable Content */}
-                                        <div class="flex-1 overflow-y-auto p-8">
-                                            <div class="mb-8">
-                                                <h3 class="font-black text-xl uppercase mb-4 flex items-center gap-2">
-                                                    <i class="ri-file-list-3-line" />{" "}
-                                                    Briefing
-                                                </h3>
-                                                <p class="font-mono text-sm leading-relaxed whitespace-pre-line text-gray-800 border-l-4 border-black pl-4">
-                                                    {description}
-                                                </p>
-                                            </div>
-
-                                            <div class="mb-8">
-                                                <h3 class="font-black text-xl uppercase mb-4 flex items-center gap-2">
-                                                    <i class="ri-cpu-line" />{" "}
-                                                    Arsenal
-                                                </h3>
-                                                <div class="flex flex-wrap gap-3">
-                                                    {techIconsList.map(
-                                                        (item) => (
-                                                            <div
-                                                                class="group/tech relative"
-                                                                title={
-                                                                    item.name
-                                                                }
-                                                            >
-                                                                <div class="w-10 h-10 bg-white border-2 border-black flex items-center justify-center shadow-hard-sm group-hover/tech:translate-x-[2px] group-hover/tech:translate-y-[2px] group-hover/tech:shadow-none transition-all">
-                                                                    <img
-                                                                        src={
-                                                                            item.icon
-                                                                        }
-                                                                        alt={
-                                                                            item.name
-                                                                        }
-                                                                        class="w-6 h-6 object-contain"
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        ),
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Footer Actions */}
-                                        <div class="p-6 border-t-4 border-black bg-gray-50 mt-auto">
-                                            <div class="grid grid-cols-2 gap-4">
-                                                <a
-                                                    href={project.data.link}
-                                                    target="_blank"
-                                                    class="col-span-2 bg-neo-black text-white hover:bg-neo-blue py-3 font-black uppercase text-center border-2 border-black shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center justify-center gap-2 cursor-pointer relative z-50"
-                                                >
-                                                    DEPLOYMENT{" "}
-                                                    <i class="ri-external-link-line" />
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                {/* Actions */}
+                                <div class="flex gap-2 mt-auto border-t-2 border-white/10 pt-3">
+                                    {project.data.githubLink ? (
+                                        <a
+                                            href={project.data.githubLink}
+                                            target="_blank"
+                                            class="flex-1 text-center py-2 font-black text-[11px] uppercase tracking-widest border-2 border-white/50 text-white/70 hover:bg-white hover:text-black transition-all flex items-center justify-center gap-1"
+                                        >
+                                            <i class="ri-github-fill text-sm"></i> GitHub
+                                        </a>
+                                    ) : project.data.link ? (
+                                        <a
+                                            href={project.data.link}
+                                            target="_blank"
+                                            class="flex-1 text-center py-2 font-black text-[11px] uppercase tracking-widest border-2 border-white/50 text-white/70 hover:bg-white hover:text-black transition-all flex items-center justify-center gap-1"
+                                        >
+                                            <i class="ri-external-link-line text-sm"></i> Demo
+                                        </a>
+                                    ) : <span class="flex-1"></span>}
+                                    <a
+                                        href={detailHref}
+                                        class="flex-1 py-2 font-black text-[11px] uppercase tracking-widest bg-neo-yellow text-black border-2 border-neo-yellow hover:bg-transparent hover:text-neo-yellow transition-all text-center flex items-center justify-center gap-1"
+                                    >
+                                        <i class="ri-eye-line"></i> {t.details}
+                                    </a>
                                 </div>
                             </div>
-                        </>
+                        </article>
                     );
-                })
-            }
+                })}
+            </div>
+
+
+
+            <!-- Show More / View All -->
+            <div class="flex flex-row flex-wrap justify-center items-center gap-4">
+                {projects.length > INITIAL_SHOW && (
+                    <button
+                        id="show-more-btn"
+                        class="flex items-center gap-2 px-8 py-3 bg-transparent border-4 border-white text-white font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all"
+                        onclick="showMoreProjects()"
+                    >
+                        <i class="ri-add-line text-sm"></i> {t.showMore} <span id="remaining-count" class="bg-neo-yellow text-black px-2 py-0.5 text-[10px] ml-1">{projects.length - INITIAL_SHOW}</span>
+                    </button>
+                )}
+                <a href={`/${lang}/projects`} class="font-mono text-white/50 text-xs hover:text-white transition-colors underline flex items-center gap-1">
+                    {t.viewAll} ({projects.length}) <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
         </div>
 
-        <div class="flex justify-center items-center gap-4">
-            <span class="h-[4px] w-24 bg-white/20"></span>
-            <a
-                href={`/${lang}/projects`}
-                class="bg-white text-black px-8 py-3 font-black uppercase border-4 border-transparent hover:border-white hover:bg-transparent hover:text-white transition-all tracking-widest text-sm flex items-center gap-2 group"
-            >
-                {t.viewGithub}
-                <i
-                    class="ri-arrow-right-line group-hover:translate-x-1 transition-transform"
-                ></i>
-            </a>
-            <span class="h-[4px] w-24 bg-white/20"></span>
+        <!-- ═══════════ ACHIEVEMENTS TAB ═══════════ -->
+        <div id="panel-achievements" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                {certificates.map((cert, index) => {
+                    const title = lang === 'id' ? cert.data.title_id || cert.data.title : cert.data.title;
+                    const description = lang === 'id' ? cert.data.description_id || cert.data.description : cert.data.description;
+                    const isHidden = index >= INITIAL_SHOW;
+                    const achCategoryIcons: any = { "Course": "ri-book-read-line", "Bootcamp": "ri-terminal-box-line", "Event": "ri-calendar-event-line", "Competition": "ri-medal-line" };
+                    const catIcon = achCategoryIcons[cert.data.category || "Course"] || "ri-award-line";
+                    const skills = cert.data.skills_verified || [];
+                    return (
+                        <article
+                            data-aos="fade-up"
+                            data-aos-delay={String((index % 3) * 80)}
+                            class={`achievement-card group border-4 border-white bg-neo-black shadow-[6px_6px_0_0_#fff] hover:shadow-[10px_10px_0_0_#3BFF7E] hover:border-neo-green transition-all duration-300 flex flex-col overflow-hidden${isHidden ? " hidden" : ""}`}
+                        >
+                            {cert.data.image && (
+                                <div class="relative h-48 overflow-hidden border-b-4 border-white group-hover:border-neo-green transition-colors">
+                                    <img src={cert.data.image} alt={title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null;this.style.opacity='0';" />
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                    <span class="absolute top-3 left-3 flex items-center gap-1 bg-neo-green text-black text-[10px] font-black px-2 py-1 uppercase tracking-widest border-2 border-black">
+                                        <i class={catIcon + " text-xs"}></i> {cert.data.category || 'Course'}
+                                    </span>
+                                </div>
+                            )}
+                            <div class="flex flex-col flex-1 p-5">
+                                <div class="font-mono text-[10px] text-white/40 mb-2 uppercase">{cert.data.date} · {cert.data.issuer}</div>
+                                <h3 class="text-base font-black text-white uppercase leading-tight mb-2 group-hover:text-neo-green transition-colors line-clamp-2">{title}</h3>
+                                <p class="font-mono text-white/45 text-[11px] leading-relaxed mb-4 flex-1">{description}</p>
+                                
+                                {skills.length > 0 && (
+                                    <div class="flex flex-wrap gap-1.5 mb-4">
+                                        {skills.slice(0, 4).map((skill: string) => (
+                                            <span class="text-[9px] font-mono font-bold border border-white/20 text-white/50 px-2 py-0.5">#{skill}</span>
+                                        ))}
+                                        {skills.length > 4 && (
+                                            <span class="text-[9px] font-mono font-bold border border-white/20 text-white/50 px-2 py-0.5">+{skills.length - 4}</span>
+                                        )}
+                                    </div>
+                                )}
+
+                                <div class="mt-auto border-t-2 border-white/10 pt-3 flex justify-between items-center">
+                                    {cert.data.link ? (
+                                        <a href={cert.data.link} target="_blank" class="font-black text-[11px] uppercase tracking-widest text-neo-green hover:underline flex items-center gap-1">
+                                            View Credential <i class="ri-external-link-line"></i>
+                                        </a>
+                                    ) : <span></span>}
+                                </div>
+                            </div>
+                        </article>
+                    );
+                })}
+            </div>
+            <div class="flex flex-row flex-wrap justify-center items-center gap-4">
+                {certificates.length > INITIAL_SHOW && (
+                    <button id="show-more-ach-btn" class="flex items-center gap-2 px-8 py-3 bg-transparent border-4 border-white text-white font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all" onclick="showMoreAchievements()">
+                        <i class="ri-add-line text-sm"></i> {t.showMore} <span id="remaining-ach-count" class="bg-neo-green text-black px-2 py-0.5 text-[10px] ml-1">{certificates.length - INITIAL_SHOW}</span>
+                    </button>
+                )}
+                <a href={`/${lang}/achievements`} class="font-mono text-white/50 text-xs hover:text-white transition-colors underline flex items-center gap-1">
+                    {t.viewAllAch} ({certificates.length}) <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
         </div>
+
+        <!-- ═══════════ BLOG TAB ═══════════ -->
+        <div id="panel-blog" class="hidden">
+            <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                {allPosts.map((post, index) => {
+                    const isHidden = index >= INITIAL_SHOW;
+                    return (
+                        <article
+                            data-aos="fade-up"
+                            data-aos-delay={String((index % 3) * 80)}
+                            class={`blog-card group border-4 border-white bg-neo-black shadow-[6px_6px_0_0_#fff] hover:shadow-[10px_10px_0_0_rgba(251,255,72,1)] hover:border-neo-yellow transition-all duration-300 flex flex-col overflow-hidden${isHidden ? " hidden" : ""}`}
+                        >
+                            <a href={post.link} target={post.isExternal ? "_blank" : "_self"} class="flex flex-col flex-1 h-full">
+                                {/* Thumbnail */}
+                                <div class="relative h-48 overflow-hidden border-b-4 border-white group-hover:border-neo-yellow transition-colors">
+                                    {post.coverImage ? (
+                                        <img src={post.coverImage} alt={post.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                    ) : (
+                                        <div class="w-full h-full flex items-center justify-center bg-gray-900">
+                                            <i class="ri-article-line text-5xl text-white/20"></i>
+                                        </div>
+                                    )}
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                    <span class="absolute top-3 left-3 flex items-center gap-1 bg-neo-yellow text-black text-[10px] font-black px-2 py-1 uppercase tracking-widest border-2 border-black">
+                                        <i class={post.isExternal ? "ri-medium-fill text-xs" : "ri-quill-pen-line text-xs"}></i> {post.isExternal ? "Medium" : "Blog"}
+                                    </span>
+                                </div>
+
+                                {/* Info */}
+                                <div class="flex flex-col flex-1 p-5">
+                                    <div class="font-mono text-[10px] text-white/40 mb-2 uppercase">
+                                        {post.date.toLocaleDateString(lang === "id" ? "id-ID" : "en-US", { year: "numeric", month: "short", day: "numeric" })}
+                                    </div>
+                                    <h3 class="text-base font-black text-white uppercase leading-tight mb-2 group-hover:text-neo-yellow transition-colors line-clamp-2">
+                                        {post.title}
+                                    </h3>
+                                    <p class="font-mono text-white/45 text-[11px] leading-relaxed mb-4 line-clamp-2 flex-1">
+                                        {post.excerpt}
+                                    </p>
+                                    {post.topics.length > 0 && (
+                                        <div class="flex flex-wrap gap-1.5 mb-4">
+                                            {post.topics.slice(0, 3).map((topic) => (
+                                                <span class="text-[9px] font-mono font-bold border border-white/20 text-white/50 px-2 py-0.5">#{topic}</span>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <div class="mt-auto border-t-2 border-white/10 pt-3 flex justify-between items-center">
+                                        <span class="font-black text-[11px] uppercase tracking-widest text-neo-yellow">{t.readMore}</span>
+                                        <i class={`ri-${post.isExternal ? "external-link-line" : "arrow-right-line"} text-white group-hover:translate-x-1 transition-transform`}></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                    );
+                })}
+            </div>
+
+            <div class="flex flex-row flex-wrap justify-center items-center gap-4">
+                {allPosts.length > INITIAL_SHOW && (
+                    <button
+                        id="show-more-blog-btn"
+                        class="flex items-center gap-2 px-8 py-3 bg-transparent border-4 border-white text-white font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all"
+                        onclick="showMoreBlog()"
+                    >
+                        <i class="ri-add-line text-sm"></i> {t.showMore} <span id="remaining-blog-count" class="bg-neo-yellow text-black px-2 py-0.5 text-[10px] ml-1">{allPosts.length - INITIAL_SHOW}</span>
+                    </button>
+                )}
+                <a href={`/${lang}/blog`} class="font-mono text-white/50 text-xs hover:text-white transition-colors underline flex items-center gap-1">
+                    {t.viewAllBlog} ({allPosts.length}) <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+        </div>
+
     </div>
 </section>
 
-<script is:inline>
-    // Global Gallery Functions
-    window.currentImageIndices = {};
+<style>
+    .tab-btn { background: transparent; color: rgba(255,255,255,0.5); cursor: pointer; }
+    .tab-btn:hover { background: rgba(255,255,255,0.05); color: white; }
+    .active-tab { background: #FBFF48 !important; color: #000 !important; }
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+</style>
 
+<script is:inline>
+    // ── Dynamic title/subtitle per tab
+    function switchTab(tab) {
+        const panels = { projects: document.getElementById('panel-projects'), achievements: document.getElementById('panel-achievements'), blog: document.getElementById('panel-blog') };
+        const tabs   = { projects: document.getElementById('tab-projects'),   achievements: document.getElementById('tab-achievements'),   blog: document.getElementById('tab-blog')   };
+        Object.keys(panels).forEach(k => {
+            panels[k].classList.toggle('hidden', k !== tab);
+            tabs[k].classList.toggle('active-tab', k === tab);
+        });
+        const subtitleEl = document.getElementById('section-subtitle');
+        const titleEl    = document.getElementById('section-title');
+        if (titleEl && subtitleEl) {
+            titleEl.textContent    = subtitleEl.dataset['title' + tab.charAt(0).toUpperCase() + tab.slice(1)] || titleEl.textContent;
+            subtitleEl.textContent = subtitleEl.dataset[tab] || '';
+        }
+    }
+
+    // ── Show More Projects
+    function showMoreProjects() {
+        const cards = document.querySelectorAll('.project-card.hidden');
+        Array.from(cards).slice(0, 9).forEach(c => c.classList.remove('hidden'));
+        const remaining = document.querySelectorAll('.project-card.hidden').length;
+        const btn = document.getElementById('show-more-btn');
+        const count = document.getElementById('remaining-count');
+        if (count) count.textContent = remaining;
+        if (remaining === 0 && btn) btn.style.display = 'none';
+    }
+
+    // ── Show More Blog
+    function showMoreBlog() {
+        const cards = document.querySelectorAll('.blog-card.hidden');
+        Array.from(cards).slice(0, 9).forEach(c => c.classList.remove('hidden'));
+        const remaining = document.querySelectorAll('.blog-card.hidden').length;
+        const btn = document.getElementById('show-more-blog-btn');
+        const count = document.getElementById('remaining-blog-count');
+        if (count) count.textContent = remaining;
+        if (remaining === 0 && btn) btn.style.display = 'none';
+    }
+
+    // ── Show More Achievements
+    function showMoreAchievements() {
+        const cards = document.querySelectorAll('.achievement-card.hidden');
+        Array.from(cards).slice(0, 9).forEach(c => c.classList.remove('hidden'));
+        const remaining = document.querySelectorAll('.achievement-card.hidden').length;
+        const btn = document.getElementById('show-more-ach-btn');
+        const count = document.getElementById('remaining-ach-count');
+        if (count) count.textContent = remaining;
+        if (remaining === 0 && btn) btn.style.display = 'none';
+    }
+
+    // ── Gallery Functions
+    window.currentImageIndices = {};
     window.setImage = (modalId, imgSrc, index, total) => {
         const mainImg = document.querySelector(`#${modalId}-main-img`);
         const counter = document.querySelector(`#${modalId}-counter`);
-        const thumbnails = document.querySelectorAll(`#${modalId} button img`); // Simplified selector
-
-        if (mainImg) {
-            mainImg.style.opacity = "0.5";
-            setTimeout(() => {
-                mainImg.src = imgSrc;
-                mainImg.style.opacity = "1";
-            }, 150);
-        }
-
+        if (mainImg) { mainImg.style.opacity = '0.5'; setTimeout(() => { mainImg.src = imgSrc; mainImg.style.opacity = '1'; }, 150); }
         if (counter) counter.textContent = index + 1;
         window.currentImageIndices[modalId] = index;
-
-        // Update active thumbnail border
-        const buttons = document.querySelectorAll(
-            `#${modalId} .border-neo-yellow`,
-        );
-        buttons.forEach((b) => {
-            b.classList.remove("border-neo-yellow");
-            b.classList.add("border-white/20");
+        document.querySelectorAll(`#${modalId} button.w-16`).forEach((b, i) => {
+            b.classList.toggle('border-neo-yellow', i === index);
+            b.classList.toggle('border-white/20', i !== index);
         });
+    };
+    window.nextImage = (modalId, images) => { let i = (window.currentImageIndices[modalId] || 0); window.setImage(modalId, images[(i+1)%images.length], (i+1)%images.length, images.length); };
+    window.prevImage = (modalId, images) => { let i = (window.currentImageIndices[modalId] || 0); window.setImage(modalId, images[(i-1+images.length)%images.length], (i-1+images.length)%images.length, images.length); };
 
-        // Find the specific button clicked (or by index) and highlight it
-        // This part needs robust selecting, simpler to just re-render or select by index
-        const allThumbBtns = document.querySelectorAll(
-            `#${modalId} button.w-16`,
-        );
-        if (allThumbBtns[index]) {
-            allThumbBtns[index].classList.remove("border-white/20");
-            allThumbBtns[index].classList.add("border-neo-yellow");
+    // ── Hash-based tab switching: intercept clicks on #achievements / #blog links
+    // Using click interception instead of hashchange — more reliable with Astro routing
+    function activateTabFromHash(hash) {
+        if (hash === '#achievements' || hash.endsWith('#achievements')) {
+            switchTab('achievements');
+            document.getElementById('works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return true;
         }
-    };
+        if (hash === '#blog' || hash.endsWith('#blog')) {
+            switchTab('blog');
+            document.getElementById('works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return true;
+        }
+        if (hash === '#works' || hash.endsWith('#works')) {
+            switchTab('projects');
+            document.getElementById('works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return true;
+        }
+        return false;
+    }
 
-    window.nextImage = (modalId, images) => {
-        let currentIndex = window.currentImageIndices[modalId] || 0;
-        let nextIndex = (currentIndex + 1) % images.length;
-        window.setImage(modalId, images[nextIndex], nextIndex, images.length);
-    };
+    // Intercept every click on any anchor that points to #achievements, #blog, or #works
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('a[href]');
+        if (!link) return;
+        const href = link.getAttribute('href') || '';
+        const hashPart = href.includes('#') ? '#' + href.split('#')[1] : '';
+        if (hashPart === '#achievements' || hashPart === '#blog' || hashPart === '#works') {
+            e.preventDefault();
+            activateTabFromHash(hashPart);
+            history.pushState(null, '', href);
+        }
+    });
 
-    window.prevImage = (modalId, images) => {
-        let currentIndex = window.currentImageIndices[modalId] || 0;
-        let prevIndex = (currentIndex - 1 + images.length) % images.length;
-        window.setImage(modalId, images[prevIndex], prevIndex, images.length);
-    };
+    // Also handle on page load (direct URL with hash, or after refresh)
+    (function() {
+        const hash = window.location.hash;
+        if (hash) {
+            // Small delay to ensure DOM is ready
+            setTimeout(() => activateTabFromHash(hash), 100);
+        }
+    })();
+
 </script>

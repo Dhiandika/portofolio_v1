@@ -1,0 +1,12 @@
+{
+  "role": "Cloud Computing Cohort",
+  "role_id": "Cloud Computing Cohort",
+  "company": "Bangkit Academy",
+  "link": "https://www.dicoding.com/programs/bangkit",
+  "date": "Juli 2023 - Jan 2024",
+  "category": "Log",
+  "type": "Remote",
+  "logo": "/images/logos/bangkit-cloud-cohort/logo.jpg",
+  "content": "- Acted as the Cloud Computing Lead for the \"Parental Peace\" capstone project, orchestrating the backend architecture.\n- Designed and deployed robust REST APIs to seamlessly bridge mobile client requests with backend processing.\n- Managed and configured cloud infrastructure on Google Cloud Platform (GCP), utilizing services like Cloud Run for scalable deployment.",
+  "content_id": "- Bertanggung jawab sebagai Cloud Computing Lead untuk capstone project \"Parental Peace\", merancang dan mengelola arsitektur backend secara menyeluruh.\n- Mengembangkan dan melakukan deployment REST API untuk menjembatani permintaan dari aplikasi klien dengan sistem pemrosesan data.\n- Mengelola infrastruktur cloud di Google Cloud Platform (GCP), memanfaatkan layanan seperti Cloud Run untuk deployment yang dinamis dan terukur."
+}

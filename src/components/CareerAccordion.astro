@@ -35,12 +35,13 @@ const t = ui[lang as keyof typeof ui] || ui.en;
             const itemId = `job-${index}`;
             
             return (
-                <div class="group bg-white hover:bg-neo-white transition-colors">
+                <div data-aos="fade-up" data-aos-delay={String(index * 80)} class="group bg-white hover:bg-neo-white transition-colors">
                     <div class="p-6">
                         <div class="flex flex-col md:flex-row gap-6 items-start">
                             <div class="w-16 h-16 bg-white border-4 border-black flex-shrink-0 flex items-center justify-center shadow-[4px_4px_0_0_#000]">
                                 {job.data.logo ? (
-                                    <img src={job.data.logo} alt={job.data.company} class="w-full h-full object-contain p-1" />
+                                    <img src={job.data.logo} alt={job.data.company} class="w-full h-full object-contain p-1" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling?.classList.remove('hidden');" />
+                                    <span class="hidden text-3xl font-black text-neo-black">{job.data.company.charAt(0)}</span>
                                 ) : (
                                     <span class="text-3xl font-black text-neo-black">{job.data.company.charAt(0)}</span>
                                 )}

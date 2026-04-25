@@ -1,0 +1,273 @@
+---
+import { getEntry, getCollection } from 'astro:content';
+import { getTechIcon } from "../utils/techIcons";
+import SkillAnalysis from "./SkillAnalysis.tsx";
+
+interface Props {
+    lang?: string;
+}
+
+const { lang = "en" } = Astro.props;
+
+// --- 1. Fetch Data for SkillAnalysis (from old Skills.astro) ---
+const siteConfig = await getEntry('site', 'config');
+const radarEntry = await getEntry("radar", "data");
+const radarData = radarEntry?.data.categories || [];
+const radarDetails = radarEntry?.data.details || "";
+
+const githubUrl = siteConfig?.data.github || '';
+const githubUser = githubUrl.split('/').pop() || 'kpintech';
+
+let githubLanguages: { language: string, percentage: number, color: string }[] = [];
+try {
+    const response = await fetch(`https://api.github.com/users/${githubUser}/repos?per_page=100&type=owner`);
+    if (response.ok) {
+        const repos = await response.json();
+        const languageCounts: Record<string, number> = {};
+        let total = 0;
+
+        repos.forEach((repo: any) => {
+            if (repo.language && !repo.fork) {
+                languageCounts[repo.language] = (languageCounts[repo.language] || 0) + 1;
+                total++;
+            }
+        });
+
+        const langColors: Record<string, string> = {
+            'JavaScript': '#F7DF1E', 'TypeScript': '#3178C6', 'Python': '#3776AB',
+            'HTML': '#E34F26', 'CSS': '#1572B6', 'Vue': '#4FC08D', 'Svelte': '#FF3E00',
+            'Astro': '#FF5D01', 'Rust': '#000000', 'Go': '#00ADD8'
+        };
+
+        githubLanguages = Object.entries(languageCounts)
+            .map(([language, count]) => ({
+                language,
+                percentage: Math.round(((count as number) / total) * 100),
+                color: langColors[language] || '#888888'
+            }))
+            .sort((a, b) => b.percentage - a.percentage)
+            .slice(0, 7);
+    } else {
+        throw new Error(`GitHub API returned ${response.status}`);
+    }
+} catch (e) {
+    console.error("Failed to fetch GitHub data:", e);
+    githubLanguages = [
+        { language: 'TypeScript', percentage: 45, color: '#3178C6' },
+        { language: 'JavaScript', percentage: 25, color: '#F7DF1E' },
+        { language: 'Astro', percentage: 15, color: '#FF5D01' },
+        { language: 'Python', percentage: 10, color: '#3776AB' },
+        { language: 'HTML', percentage: 5, color: '#E34F26' }
+    ];
+}
+
+// --- 2. Fetch Tech Pills Data from CMS ---
+const techStackEntry = await getEntry('site', 'techstack');
+const rawSkills = techStackEntry?.data?.skills || [];
+const skillsData = rawSkills.map(skill => ({
+    name: skill.name,
+    icon: skill.icon || skill.name,
+    category: skill.category
+}));
+
+const categories = Array.from(new Set(skillsData.map(skill => skill.category).filter(Boolean))) as string[];
+const getCount = (cat: string) => skillsData.filter(s => s.category === cat).length;
+const totalCount = skillsData.length;
+
+function resolveIconUrl(name: string) {
+    const extraIcons: Record<string, string> = {
+        "Streamlit": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/streamlit/streamlit-original.svg",
+        "Express": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
+        "VSCode": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg",
+        "Github": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
+        "TensorFlow": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg",
+        "Keras": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/keras/keras-original.svg",
+        "Google Cloud": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg",
+    };
+    if (extraIcons[name]) return extraIcons[name];
+    return getTechIcon(name);
+}
+
+const ui = {
+    en: { all: "All", categories: { "Frontend": "Frontend", "Backend": "Backend", "Database": "Database", "Tools": "Tools", "Machine Learning": "Machine Learning" } },
+    id: { all: "Semua", categories: { "Frontend": "Frontend", "Backend": "Backend", "Database": "Database", "Tools": "Tools", "Machine Learning": "Machine Learning" } }
+};
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<!-- Background from old Skills.astro -->
+<section id="tech-stack" class="py-20 bg-neo-black text-neo-white border-y-4 border-black relative overflow-hidden">
+    <!-- Grid Pattern -->
+    <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+    <div class="max-w-[1200px] mx-auto px-6 relative z-10">
+        <!-- Header from old Skills.astro -->
+        <div data-aos="fade-up" class="flex flex-col md:flex-row justify-between items-end mb-12 border-b-4 border-white pb-4 reveal">
+            <h2 class="text-6xl md:text-8xl font-black uppercase text-white tracking-tighter">
+                TECH<span class="text-neo-green">_STACK</span>
+            </h2>
+            <div class="flex items-center gap-2 mb-2 md:mb-4">
+                <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                <p class="font-mono text-neo-green text-sm font-bold">/// SYSTEM_OPTIMIZED</p>
+            </div>
+        </div>
+
+        <div data-aos="fade-up" data-aos-delay="100" class="flex flex-col lg:flex-row gap-8 reveal">
+            <!-- Left Side: Filter and Pills (New addition) -->
+            <div class="flex-1 flex flex-col">
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap gap-2 md:gap-3 mb-8" id="skills-filters">
+                    <button 
+                        class="filter-btn active bg-neo-yellow text-black border-2 border-transparent hover:border-white font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full transition-all shadow-hard flex items-center gap-2 group text-sm md:text-base"
+                        data-filter="all"
+                    >
+                        {t.all}
+                        <span class="bg-black/20 text-black text-[10px] px-2 py-0.5 rounded-full font-mono">{totalCount}</span>
+                    </button>
+                    
+                    {categories.map((cat) => (
+                        <button 
+                            class="filter-btn bg-[#222] text-gray-300 border-2 border-gray-600 hover:border-neo-yellow hover:text-white font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-full transition-all flex items-center gap-2 text-sm md:text-base"
+                            data-filter={cat}
+                        >
+                            {t.categories[cat as keyof typeof t.categories] || cat}
+                            <span class="bg-black text-gray-400 text-[10px] px-2 py-0.5 rounded-full font-mono border border-gray-700">{getCount(cat)}</span>
+                        </button>
+                    ))}
+                </div>
+
+                <!-- Tech Pills Container -->
+                <div class="flex flex-wrap gap-3 md:gap-4 content-start" id="skills-container">
+                    {skillsData.map((skill) => (
+                        <div 
+                            class="skill-pill flex items-center gap-3 md:gap-4 bg-[#111] border-2 border-gray-800 rounded-full px-4 py-2.5 md:px-5 md:py-3 hover:border-neo-yellow hover:bg-[#222] transition-all duration-300 shadow-[2px_2px_0_0_#000] cursor-default hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#FBFF48]"
+                            data-category={skill.category}
+                        >
+                            <div class="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center bg-white/5 rounded-full p-1.5">
+                                <img 
+                                    src={resolveIconUrl(skill.icon)} 
+                                    alt={skill.name} 
+                                    class="w-full h-full object-contain filter drop-shadow-sm"
+                                    onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/1055/1055687.png';"
+                                />
+                            </div>
+                            <span class="font-bold text-sm md:text-base tracking-wide text-gray-200">{skill.name}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <!-- Right Side: Analysis Widget (From old Skills.astro) -->
+            <div class="w-full lg:w-[30%] mt-8 lg:mt-0">
+                <SkillAnalysis 
+                    client:visible 
+                    radarData={radarData} 
+                    githubData={githubLanguages}
+                    details={radarDetails}
+                />
+            </div>
+        </div>
+
+        <!-- Footer from old Skills.astro -->
+        <div class="border-t-4 border-white mt-12 pt-4 flex flex-col font-mono text-xs text-gray-500 reveal">
+            <div class="flex justify-between w-full">
+                <span>TOTAL_NODES: {skillsData.length}</span>
+                <span>MEMORY_USAGE: 128MB</span>
+            </div>
+            <div class="mt-2 text-[10px] text-neo-green opacity-70 break-all">
+                DEBUG_LOADED: {skillsData.map(s => s.name).sort().join(', ')}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Smooth transitions for filtering */
+    .skill-pill {
+        transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .skill-pill.hide-skill {
+        opacity: 0;
+        transform: scale(0.9);
+        pointer-events: none;
+        position: absolute;
+        visibility: hidden;
+    }
+
+    .filter-btn.active {
+        background-color: #FBFF48 !important; /* neo-yellow */
+        color: #000 !important;
+        border-color: #000 !important;
+    }
+    
+    .filter-btn.active span {
+        background-color: rgba(0,0,0,0.2) !important;
+        color: #000 !important;
+        border-color: transparent !important;
+    }
+</style>
+
+<script>
+    function initSkillsFilter() {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const skillPills = document.querySelectorAll('.skill-pill');
+
+        if (!filterBtns.length || !skillPills.length) return;
+
+        filterBtns.forEach(btn => {
+            const newBtn = btn.cloneNode(true) as HTMLElement;
+            btn.parentNode?.replaceChild(newBtn, btn);
+
+            newBtn.addEventListener('click', () => {
+                // Remove active class from all
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active', 'bg-neo-yellow', 'text-black', 'border-transparent', 'shadow-hard');
+                    b.classList.add('bg-[#222]', 'text-gray-300', 'border-gray-600');
+                    
+                    const span = b.querySelector('span');
+                    if (span) {
+                        span.classList.remove('bg-black/20', 'text-black');
+                        span.classList.add('bg-black', 'text-gray-400', 'border', 'border-gray-700');
+                    }
+                });
+
+                // Add active class to clicked
+                newBtn.classList.add('active', 'bg-neo-yellow', 'text-black', 'border-transparent', 'shadow-hard');
+                newBtn.classList.remove('bg-[#222]', 'text-gray-300', 'border-gray-600');
+                
+                const span = newBtn.querySelector('span');
+                if (span) {
+                    span.classList.add('bg-black/20', 'text-black');
+                    span.classList.remove('bg-black', 'text-gray-400', 'border', 'border-gray-700');
+                }
+
+                const filterValue = newBtn.getAttribute('data-filter');
+
+                // Filter logic
+                skillPills.forEach(pill => {
+                    const htmlPill = pill as HTMLElement;
+                    if (filterValue === 'all') {
+                        htmlPill.classList.remove('hide-skill');
+                        setTimeout(() => htmlPill.style.position = 'relative', 50);
+                    } else {
+                        if (htmlPill.getAttribute('data-category') === filterValue) {
+                            htmlPill.classList.remove('hide-skill');
+                            setTimeout(() => htmlPill.style.position = 'relative', 50);
+                        } else {
+                            htmlPill.classList.add('hide-skill');
+                            setTimeout(() => {
+                                if (htmlPill.classList.contains('hide-skill')) {
+                                    htmlPill.style.position = 'absolute';
+                                }
+                            }, 400); 
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', initSkillsFilter);
+    document.addEventListener('astro:page-load', initSkillsFilter);
+</script>

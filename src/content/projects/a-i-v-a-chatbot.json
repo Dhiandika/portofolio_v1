@@ -2,15 +2,32 @@
     "title": "A.I.V.A Chatbot",
     "title_id": "A.I.V.A Chatbot",
     "description": "Chatbot AI which answers all questions, does tasks assigned and also analyzes documents given by users.",
-    "description_id": "Chatbot AI yang menjawab semua pertanyaan, melakukan tugas yang diberikan, dan juga menganalisis dokumen dari pengguna.",
-    "image": "/images/aiva.png",
-    "link": "https://github.com/Arham43-ops/AIVA_chatbot",
+    "description_id": "Chatbot AI yang menjawab semua pertanyaan, melakukan tugas yang diberikan, dan menganalisis dokumen dari pengguna.",
+    "image": "/images/projects/a-i-v-a-chatbot/gallery/0.png",
+    "link": null,
+    "githubLink": "https://github.com/Arham43-ops/AIVA_chatbot",
+    "category": "Web",
     "techStack": [
         "Django",
         "Python",
         "MySQL",
         "AI"
     ],
-    "content": "A.I.V.A is an advanced AI virtual assistant capable of document analysis and task execution.",
-    "content_id": "A.I.V.A adalah asisten virtual AI canggih yang mampu menganalisis dokumen dan mengeksekusi tugas."
+    "gallery": [
+        "/images/projects/a-i-v-a-chatbot/gallery/0.png",
+        "/images/projects/a-i-v-a-chatbot/gallery/1.png",
+        "/images/projects/a-i-v-a-chatbot/gallery/2.png"
+    ],
+    "content": "A.I.V.A is an advanced AI virtual assistant capable of answering questions, executing assigned tasks, and performing intelligent document analysis.",
+    "content_id": "A.I.V.A adalah asisten virtual AI canggih yang mampu menjawab pertanyaan, mengeksekusi tugas yang diberikan, dan melakukan analisis dokumen secara cerdas.",
+    "keyFeatures": [
+        "Natural language question answering",
+        "Document analysis and extraction",
+        "Task automation and execution"
+    ],
+    "keyFeatures_id": [
+        "Menjawab pertanyaan dalam bahasa alami",
+        "Analisis dan ekstraksi dokumen",
+        "Otomatisasi dan eksekusi tugas"
+    ]
 }

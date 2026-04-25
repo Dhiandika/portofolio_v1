@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import CareerAccordion from '../../components/CareerAccordion.astro';
+import AboutTechStack from '../../components/AboutTechStack.astro';
 import EducationList from '../../components/EducationList.astro';
 import { getEntry } from 'astro:content';
 
@@ -16,8 +17,8 @@ const { lang } = Astro.params;
 // Fetch site config
 const siteConfig = await getEntry('site', 'config');
 const aboutConfig = await getEntry('site', 'about');
-const { data: site } = siteConfig;
-const { data: about } = aboutConfig;
+const site = siteConfig?.data || {} as any;
+const about = aboutConfig?.data || {} as any;
 
 // Multilingual text
 const bio = lang === 'id' ? about.bio_id || about.bio : about.bio;
@@ -29,14 +30,17 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 ---
 
 <Layout title={`${t.title} | ${site.brandName}`} lang={lang}>
-    <main class="min-h-screen pt-32 pb-24 px-4 bg-neo-white text-neo-black bg-neo-texture">
+    <main class="min-h-screen pt-32 pb-24 px-8 md:px-16 lg:px-24 bg-neo-white text-neo-black bg-neo-texture">
         <div class="max-w-4xl mx-auto">
             <!-- Header -->
-            <header class="mb-16 border-4 border-black bg-white shadow-hard p-8 md:p-12">
+            <header data-aos="fade-up" class="mb-16 border-4 border-black bg-white shadow-hard p-8 md:p-12">
                 <div class="flex flex-col md:flex-row items-center md:items-start gap-8 mb-8">
                     <div class="relative w-32 h-32 md:w-40 md:h-40 flex-shrink-0 bg-neo-yellow border-4 border-black shadow-[4px_4px_0px_0px_#000]">
                         {about.profileImage ? (
-                            <img src={about.profileImage} alt="Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300" />
+                            <>
+                                <img src={about.profileImage} alt="Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling?.classList.remove('hidden');" />
+                                <div class="hidden w-full h-full bg-gray-200 animate-pulse"></div>
+                            </>
                         ) : (
                             <div class="w-full h-full bg-gray-200 animate-pulse"></div>
                         )}
@@ -45,10 +49,10 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                     
                     <div class="flex-1 text-center md:text-left">
                         <div class="inline-block bg-neo-black text-white px-3 py-1 text-sm font-mono font-bold mb-2 transform -rotate-2">
-                            @{site.github?.split('/').pop() || 'username'}
+                            @{site.github?.split('/').pop() || 'Dhiandika Aditya'}
                         </div>
                         <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-2 leading-none">
-                            {site.brandName || 'Satria Bahari'}
+                            {site.brandName || 'Dhiandika Aditya'}
                             <i class="ri-verified-badge-fill text-blue-500 text-3xl align-middle"></i>
                         </h1>
                         <p class="text-gray-600 font-mono text-sm md:text-base border-l-4 border-neo-green pl-3 ml-1 mb-6">
@@ -56,7 +60,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                         </p>
                         <button
                             data-trigger="cv-modal"
-                            class="inline-flex items-center gap-2 bg-neo-yellow text-black border-4 border-black px-6 py-3 font-black shadow-hard hover:bg-neo-pink hover:-translate-y-1 hover:shadow-[4px_8px_0_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all cursor-hover uppercase text-sm md:text-base"
+                            class="inline-flex items-center gap-2 bg-neo-yellow text-black border-4 border-black px-6 py-3 font-black shadow-hard hover:bg-neo-pink neo-hover cursor-hover uppercase text-sm md:text-base"
                         >
                             <i class="ri-download-line text-xl"></i> DOWNLOAD CV
                         </button>
@@ -83,12 +87,17 @@ const t = ui[lang as keyof typeof ui] || ui.en;
             </header>
 
             <!-- Career -->
-            <div class="mb-16">
+            <div class="mb-16" data-aos="fade-up">
                 <CareerAccordion lang={lang} />
             </div>
 
+            <!-- Tech Stack (Keahlian) -->
+            <div class="mb-16" data-aos="fade-up" data-aos-delay="100">
+                <AboutTechStack lang={lang} />
+            </div>
+
             <!-- Education -->
-            <div class="mb-16">
+            <div class="mb-16" data-aos="fade-up" data-aos-delay="150">
                 <EducationList lang={lang} />
             </div>
         </div>

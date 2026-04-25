@@ -67,25 +67,27 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 
 <section
     id="blog"
-    class="py-24 bg-white border-t-4 border-black px-4 relative overflow-hidden"
+    class="py-24 bg-neo-black text-white border-t-4 border-black px-4 relative overflow-hidden"
 >
+    <!-- Neo Brutalist Top Divider Stripe -->
+    <div class="absolute top-0 left-0 w-full h-4 bg-neo-pink border-b-4 border-white z-20"></div>
     <!-- Technical Grid Pattern -->
     <div
-        class="absolute inset-0 opacity-10 pointer-events-none"
-        style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px); background-size: 40px 40px;"
+        class="absolute inset-0 opacity-20 pointer-events-none"
+        style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 40px 40px;"
     >
     </div>
 
     <div class="max-w-7xl mx-auto relative z-10">
-        <div class="flex justify-between items-end mb-16">
+        <div class="flex justify-between items-end mb-16" data-aos="fade-up">
             <h2
-                class="text-5xl md:text-8xl font-black uppercase tracking-tighter text-neo-black drop-shadow-[4px_4px_0_rgba(251,255,72,1)]"
+                class="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white drop-shadow-[4px_4px_0_rgba(251,255,72,1)]"
             >
                 {t.title}
             </h2>
             <a
                 href={`/${lang}/blog`}
-                class="hidden md:inline-block font-mono font-bold text-sm bg-neo-black text-white px-4 py-2 hover:bg-neo-purple transition-colors"
+                class="hidden md:inline-block font-mono font-bold text-sm bg-white text-black border-4 border-black px-4 py-2 hover:bg-neo-yellow transition-colors shadow-hard hover:-translate-y-1"
             >
                 {t.viewAll} //
             </a>
@@ -93,8 +95,8 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             {
-                allPosts.map((post) => (
-                    <article class="group border-4 border-black bg-neo-white shadow-hard hover:-translate-y-2 hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] transition-all duration-300">
+                allPosts.map((post, index) => (
+                    <article data-aos="fade-up" data-aos-delay={String(index * 100)} class="group border-4 border-black bg-white text-black shadow-hard hover:-translate-y-2 hover:shadow-[10px_10px_0_0_rgba(251,255,72,1)] transition-all duration-300 flex flex-col">
                         <a
                             href={post.link}
                             target={post.isExternal ? "_blank" : "_self"}
@@ -161,7 +163,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
         <div class="md:hidden mt-12 text-center">
             <a
                 href={`/${lang}/blog`}
-                class="inline-block bg-neo-black text-white px-8 py-4 font-bold font-mono border-4 border-transparent hover:border-black hover:bg-white hover:text-black transition-all shadow-hard"
+                class="inline-block bg-white text-black px-8 py-4 font-bold font-mono border-4 border-black hover:bg-neo-yellow transition-all shadow-hard hover:-translate-y-1"
             >
                 {t.viewAll}
             </a>

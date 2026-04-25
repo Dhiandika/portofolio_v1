@@ -7,198 +7,178 @@ interface Props {
 
 const { lang = "en" } = Astro.props;
 const siteConfig = await getEntry("site", "config");
-const { email = "hello@kuzup.dev", location = "Remote / Earth" } =
-    siteConfig?.data || {};
+const { email = "npemburu6@gmail.com" } = siteConfig?.data || {};
 const availabilityConfig = await getEntry("site", "availability");
 const availabilityData = availabilityConfig?.data || {};
-console.log("Available Config:", availabilityConfig);
-console.log("Available Data:", availabilityData);
 
 const { socials = [] } = availabilityData;
 
 const ui = {
     en: {
-        start: "START A PROJECT",
-        title: "Let's\nTalk\nCode.",
-        avail: "I am currently available for freelance work and open to full-time opportunities.",
-        identity: "Identity",
-        namePlace: "NAME / COMPANY",
-        coords: "Coordinates",
-        emailPlace: "EMAIL ADDRESS",
-        trans: "Transmission",
-        details: "PROJECT DETAILS...",
-        btn: "TRANSMIT DATA",
+        title: "Contact",
+        subtitle: "Let's connect.",
+        socialTitle: "Find me on social media",
+        emailTitle: "Stay Connected",
+        emailDesc: "Contact me via email for inquiries or collaboration.",
+        emailBtn: "Go to Email",
+        formTitle: "Or send me a message",
+        namePlace: "Name",
+        emailPlace: "Email",
+        msgPlace: "Message",
+        submitBtn: "Send Email"
     },
     id: {
-        start: "MULAI PROYEK",
-        title: "Mari\nBicara\nKode.",
-        avail: "Saya tersedia untuk pekerjaan freelance dan terbuka untuk peluang purna waktu.",
-        identity: "Identitas",
-        namePlace: "NAMA / PERUSAHAAN",
-        coords: "Koordinat",
-        emailPlace: "ALAMAT EMAIL",
-        trans: "Transmisi",
-        details: "DETAIL PROYEK...",
-        btn: "KIRIM DATA",
+        title: "Kontak",
+        subtitle: "Mari saling terhubung.",
+        socialTitle: "Temukan saya di media sosial",
+        emailTitle: "Tetap Terhubung",
+        emailDesc: "Hubungi saya melalui email untuk pertanyaan atau kolaborasi.",
+        emailBtn: "Pergi ke Email",
+        formTitle: "Atau kirimkan saya pesan",
+        namePlace: "Name",
+        emailPlace: "Email",
+        msgPlace: "Message",
+        submitBtn: "Kirim Email"
     },
 };
 
 const t = ui[lang as keyof typeof ui] || ui.en;
+
+const socialCopy: Record<string, { title: { id: string; en: string }; desc: { id: string; en: string } }> = {
+    instagram: { 
+        title: { id: 'Ikuti Perjalanan Saya', en: 'Follow My Journey' }, 
+        desc: { id: 'Ikuti perjalanan kreatif saya.', en: 'Follow my creative journey.' } 
+    },
+    linkedin: { 
+        title: { id: 'Mari Terhubung', en: "Let's Connect" }, 
+        desc: { id: 'Terhubung dengan saya secara profesional.', en: 'Connect with me professionally.' } 
+    },
+    tiktok: { 
+        title: { id: 'Bergabung dalam Keseruan', en: 'Join the Fun' }, 
+        desc: { id: 'Tonton konten yang menarik dan menyenangkan.', en: 'Watch engaging and fun content.' } 
+    },
+    github: { 
+        title: { id: 'Jelajahi Kode', en: 'Explore Code' }, 
+        desc: { id: 'Jelajahi karya sumber terbuka saya.', en: 'Explore my open source work.' } 
+    },
+    default: { 
+        title: { id: 'Mari Terhubung', en: "Let's Connect" }, 
+        desc: { id: 'Terhubung dengan saya di platform ini.', en: 'Connect with me on this platform.' } 
+    }
+};
+
+function getSocialCopy(platform: string) {
+    const key = platform.toLowerCase();
+    return socialCopy[key] || socialCopy.default;
+}
 ---
 
-<section id="contact" class="py-0 relative">
-    <div
-        class="w-full bg-neo-yellow border-t-4 border-black p-6 md:p-12 lg:p-20 relative"
-    >
-        <div
-            <section
-            id="contact"
-            class="py-0 relative w-full overflow-hidden border-t-4 border-black"
-        >
-            <div class="w-full bg-neo-yellow p-6 md:p-12 lg:p-24 relative">
-                <!-- Decor -->
-                <div
-                    class="absolute top-0 right-0 w-[600px] h-[600px] bg-white/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none mix-blend-overlay"
-                >
-                </div>
+<section id="contact" class="py-20 bg-neo-white border-t-4 border-black relative overflow-hidden">
+    <!-- Grid Decor Background -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px); background-size: 40px 40px;"></div>
 
-                <div
-                    class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start relative z-10"
-                >
-                    <!-- Left: Text & Info -->
-                    <div class="relative flex flex-col gap-8 md:gap-12">
-                        <div>
-                            <div
-                                class="bg-black text-white inline-block px-3 py-1 font-mono font-bold text-xs transform -rotate-2 mb-6"
-                            >
-                                /// {t.start}
-                            </div>
+    <div class="max-w-[1300px] mx-auto px-6 md:px-12 relative z-10">
+        
+        <!-- Header -->
+        <div data-aos="fade-up" class="mb-12 md:mb-16">
+            <h2 class="text-5xl md:text-6xl font-black uppercase tracking-tighter text-black">
+                {t.title}
+            </h2>
+            <p class="font-mono mt-2 text-lg md:text-xl text-gray-700 font-bold">{t.subtitle}</p>
+            <hr class="border-t-4 border-dashed border-black mt-8 opacity-50" />
+        </div>
 
-                            <h2
-                                class="text-5xl md:text-6xl lg:text-7xl xl:text-[8rem] leading-[0.85] font-black uppercase tracking-tighter text-black mix-blend-multiply break-words"
-                            >
-                                LET'S<br />TALK<br />CODE.
-                            </h2>
-                        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-stretch">
+            
+            <!-- Left: Social Media Bento Grid (Takes up 7 cols) -->
+            <div data-aos="fade-right" class="lg:col-span-7 flex flex-col">
+                <h3 class="font-bold font-mono uppercase mb-6 text-xl tracking-wide">/// {t.socialTitle}</h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-                        <div
-                            class="border-l-4 border-black pl-6 flex flex-col gap-6"
-                        >
-                            <p
-                                class="font-mono text-lg md:text-xl font-bold leading-relaxed max-w-md"
-                            >
-                                {t.avail}
-                            </p>
 
-                            <div class="flex flex-col gap-2">
-                                <a
-                                    href={`mailto:${email}`}
-                                    class="text-2xl md:text-4xl font-black underline decoration-4 decoration-black underline-offset-4 hover:decoration-white transition-all cursor-hover truncate"
-                                    >{email}</a
-                                >
+                    <!-- Dynamic Social Cards -->
+                    {socials.map((social: any) => {
+                        const copy = getSocialCopy(social.platform);
+                        const title = lang === 'id' ? copy.title.id : copy.title.en;
+                        const desc = lang === 'id' ? copy.desc.id : copy.desc.en;
+                        const btnText = lang === 'id' ? `Pergi ke ${social.platform}` : `Go to ${social.platform}`;
+                        
+                        const bgClass = social.color ? `bg-${social.color}` : 'bg-neo-blue';
+                        const textClass = ['neo-blue', 'neo-purple', 'neo-red', 'neo-pink', 'black'].includes(social.color || 'neo-blue') ? 'text-white' : 'text-black';
+                        const iconColor = textClass === 'text-white' ? social.color || 'neo-blue' : 'black';
 
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-map-pin-fill text-xl"></i>
-                                    <span class="font-bold text-xl"
-                                        >{location}</span
-                                    >
-                                </div>
-                            </div>
-
-                            <!-- Socials (Simple Row) -->
-                            <div class="flex flex-wrap gap-3 mt-2">
-                                {
-                                    socials.map((social: any) => (
-                                        <a
-                                            href={social.url}
-                                            target="_blank"
-                                            class="w-12 h-12 bg-black text-white flex items-center justify-center text-xl border-2 border-transparent hover:bg-white hover:text-black hover:border-black shadow-hard hover:shadow-none transition-all"
-                                            title={social.platform}
-                                        >
-                                            <i class={social.icon} />
-                                        </a>
-                                    ))
-                                }
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right: Form -->
-                    <div class="relative w-full lg:mt-12">
-                        <div
-                            class="bg-white border-4 border-black p-6 md:p-10 shadow-[12px_12px_0_0_rgba(0,0,0,1)] relative"
-                        >
-                            <!-- Form Header -->
-                            <div
-                                class="mb-6 border-b-4 border-black pb-4 flex justify-between items-center"
-                            >
-                                <span class="font-mono font-bold text-lg"
-                                    >/// INITIATE_UPLINK</span
-                                >
-                                <div class="flex gap-2">
-                                    <div class="w-3 h-3 rounded-full bg-black">
+                        return (
+                            <div class={`${bgClass} border-4 border-black shadow-[6px_6px_0_0_#000] p-6 hover:-translate-y-2 hover:shadow-[10px_10px_0_0_#000] transition-all group flex flex-col justify-between gap-6 relative overflow-hidden`}>
+                                <i class={`${social.icon} absolute -bottom-6 -right-6 text-9xl opacity-10 pointer-events-none transform -rotate-12`}></i>
+                                
+                                <div class="relative z-10 flex flex-col gap-3 h-full">
+                                    <div class="flex-grow">
+                                        <h4 class={`text-xl font-black uppercase ${textClass} tracking-wide`}>{title}</h4>
+                                        <p class={`font-mono ${textClass} text-xs font-bold mt-2 opacity-90 leading-relaxed`}>{desc}</p>
                                     </div>
-                                    <div class="w-3 h-3 rounded-full bg-black">
-                                    </div>
-                                    <div class="w-3 h-3 rounded-full bg-black">
-                                    </div>
+                                    <a href={social.url} target="_blank" rel="noopener noreferrer" class={`mt-4 bg-white text-black font-bold font-mono px-4 py-2 border-4 border-black w-max flex items-center gap-2 hover:bg-black hover:text-white transition-colors shadow-[2px_2px_0_0_#000] active:translate-y-1 active:shadow-none text-sm`}>
+                                        {btnText} <i class="ri-arrow-right-up-line"></i>
+                                    </a>
+                                </div>
+                                
+                                <div class="absolute top-6 right-6 w-12 h-12 bg-white border-4 border-black flex items-center justify-center rounded-lg shadow-[2px_2px_0_0_#000] group-hover:scale-110 group-hover:-rotate-6 transition-transform z-10">
+                                    <i class={`${social.icon} text-3xl text-${iconColor}`}></i>
                                 </div>
                             </div>
-
-                            <form class="space-y-6">
-                                <div class="group">
-                                    <label
-                                        class="font-mono font-black mb-1 uppercase text-xs block group-focus-within:text-neo-blue transition-colors"
-                                    >
-                                        {t.identity}
-                                        <span class="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        placeholder={t.namePlace}
-                                        class="w-full bg-gray-50 border-4 border-black p-3 font-bold text-lg focus:outline-none focus:bg-neo-yellow focus:shadow-hard transition-all placeholder:text-gray-300"
-                                    />
-                                </div>
-                                <div class="group">
-                                    <label
-                                        class="font-mono font-black mb-1 uppercase text-xs block group-focus-within:text-neo-blue transition-colors"
-                                    >
-                                        {t.coords}
-                                        <span class="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="email"
-                                        placeholder={t.emailPlace}
-                                        class="w-full bg-gray-50 border-4 border-black p-3 font-bold text-lg focus:outline-none focus:bg-neo-yellow focus:shadow-hard transition-all placeholder:text-gray-300"
-                                    />
-                                </div>
-                                <div class="group">
-                                    <label
-                                        class="font-mono font-black mb-1 uppercase text-xs flex justify-between group-focus-within:text-neo-blue transition-colors"
-                                    >
-                                        <span>{t.trans}</span>
-                                        <span
-                                            class="text-[10px] bg-black text-white px-1 py-0.5"
-                                            >TXT_ONLY</span
-                                        >
-                                    </label>
-                                    <textarea
-                                        rows="5"
-                                        placeholder={t.details}
-                                        class="w-full bg-gray-50 border-4 border-black p-3 font-bold text-lg focus:outline-none focus:bg-neo-yellow focus:shadow-hard transition-all resize-none placeholder:text-gray-300"
-                                    ></textarea>
-                                </div>
-                                <button
-                                    type="submit"
-                                    class="w-full bg-black text-white font-black text-xl py-4 border-4 border-transparent hover:bg-white hover:text-black hover:border-black shadow-none hover:shadow-hard transition-all cursor-hover uppercase tracking-widest"
-                                >
-                                    {t.btn}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                        );
+                    })}
                 </div>
             </div>
+
+            <!-- Right: Form Section (Takes up 5 cols) -->
+            <div data-aos="fade-left" class="lg:col-span-5 flex flex-col">
+                <h3 class="font-bold font-mono uppercase mb-6 text-xl tracking-wide">/// {t.formTitle}</h3>
+                
+                <form class="bg-white border-4 border-black shadow-[8px_8px_0_0_#000] p-6 md:p-8 flex flex-col flex-grow">
+                    <div class="grid grid-cols-1 gap-6 mb-6">
+                        <div class="group">
+                            <label class="font-mono font-black mb-2 uppercase text-xs block group-focus-within:text-neo-blue transition-colors">
+                                {t.namePlace} <span class="text-neo-red">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                placeholder="Jhon Doe"
+                                class="w-full bg-gray-50 border-4 border-black p-4 font-bold focus:outline-none focus:bg-neo-yellow focus:shadow-[4px_4px_0_0_#000] transition-all placeholder:text-gray-400"
+                                required
+                            />
+                        </div>
+                        <div class="group">
+                            <label class="font-mono font-black mb-2 uppercase text-xs block group-focus-within:text-neo-blue transition-colors">
+                                {t.emailPlace} <span class="text-neo-red">*</span>
+                            </label>
+                            <input 
+                                type="email" 
+                                placeholder="hello@example.com"
+                                class="w-full bg-gray-50 border-4 border-black p-4 font-bold focus:outline-none focus:bg-neo-yellow focus:shadow-[4px_4px_0_0_#000] transition-all placeholder:text-gray-400"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="group flex flex-col flex-grow min-h-[150px]">
+                        <label class="font-mono font-black mb-2 uppercase text-xs block group-focus-within:text-neo-blue transition-colors">
+                            {t.msgPlace} <span class="text-neo-red">*</span>
+                        </label>
+                        <textarea 
+                            placeholder="Type your message here..."
+                            class="w-full h-full bg-gray-50 border-4 border-black p-4 font-bold focus:outline-none focus:bg-neo-yellow focus:shadow-[4px_4px_0_0_#000] transition-all resize-none placeholder:text-gray-400 flex-grow"
+                            required
+                        ></textarea>
+                    </div>
+                    <button 
+                        type="submit"
+                        class="w-full bg-black text-white font-black text-xl py-4 mt-6 border-4 border-black hover:bg-neo-green hover:text-black transition-all shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] hover:shadow-[6px_6px_0_0_#000] uppercase tracking-widest active:translate-y-1 active:shadow-none"
+                    >
+                        {t.submitBtn}
+                    </button>
+                </form>
+            </div>
+
         </div>
     </div>
 </section>

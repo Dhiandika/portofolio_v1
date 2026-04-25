@@ -77,6 +77,7 @@ const title =
 
                 {/* Header Section */}
                 <header
+                    data-aos="fade-up"
                     class="mb-12 bg-white border-4 border-neo-black p-6 md:p-10 shadow-hard relative overflow-hidden group"
                 >
                     {/* Decorative Background Element */}
@@ -143,7 +144,7 @@ const title =
                 {/* Featured Image */}
                 {
                     post.data.coverImage && (
-                        <div class="mb-12 border-4 border-neo-black shadow-hard overflow-hidden relative group">
+                        <div data-aos="fade-up" data-aos-delay="100" class="mb-12 border-4 border-neo-black shadow-hard overflow-hidden relative group">
                             <div class="aspect-video relative">
                                 <div class="absolute inset-0 bg-neo-purple/10 group-hover:bg-transparent transition-colors z-10 pointer-events-none" />
                                 <img
@@ -168,6 +169,8 @@ const title =
 
                 {/* Content Body */}
                 <div
+                    data-aos="fade-up"
+                    data-aos-delay="150"
                     class="prose prose-lg md:prose-xl max-w-none
                     prose-headings:font-black prose-headings:font-display prose-headings:uppercase prose-headings:tracking-tight
                     prose-p:font-serif prose-p:text-neo-black/90 prose-p:leading-loose

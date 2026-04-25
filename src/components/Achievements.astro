@@ -1,0 +1,297 @@
+---
+import { getCollection } from "astro:content";
+
+interface Props {
+    lang?: string;
+}
+
+const { lang = "en" } = Astro.props;
+const certificates = await getCollection("certificates");
+
+const displayCertificates = certificates.slice(0, 6);
+
+const ui = {
+    en: {
+        title: "ACHIEVEMENTS",
+        subtitle: "Certifications & Awards",
+        viewAll: "VIEW ALL RECORDS",
+        details: "Details",
+        close: "Close"
+    },
+    id: {
+        title: "PENGHARGAAN",
+        subtitle: "Sertifikasi & Prestasi",
+        viewAll: "LIHAT SEMUA REKAMAN",
+        details: "Detail",
+        close: "Tutup"
+    }
+};
+
+const t = ui[lang as keyof typeof ui] || ui.en;
+---
+
+<section id="achievements" class="py-24 bg-neo-white text-black border-y-4 border-black relative overflow-hidden">
+    <!-- Neo Brutalist Top Divider Stripe -->
+    <div class="absolute top-0 left-0 w-full h-4 bg-neo-blue border-b-4 border-black z-20"></div>
+
+    <!-- Decor Pattern -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+    <div class="max-w-[1200px] mx-auto px-6 relative z-10 mt-6">
+        <!-- Header -->
+        <div data-aos="fade-up" class="flex flex-col md:flex-row justify-between items-end mb-16 border-b-4 border-black pb-4 reveal">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-3 h-3 bg-neo-red rounded-full animate-pulse"></div>
+                    <p class="font-mono text-neo-red text-sm font-bold">/// {t.subtitle}</p>
+                </div>
+                <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter drop-shadow-[4px_4px_0_rgba(0,0,0,1)] text-white">
+                    {t.title}
+                </h2>
+            </div>
+            {certificates.length > 6 && (
+                <a href="#" class="hidden md:inline-block border-4 border-black bg-neo-yellow px-6 py-3 font-mono font-bold hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000] transition-all mt-4">
+                    {t.viewAll} <i class="ri-arrow-right-line ml-1"></i>
+                </a>
+            )}
+        </div>
+
+        <!-- Grid -->
+        <div data-aos="fade-up" data-aos-delay="100" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal">
+            {displayCertificates.map((cert, index) => {
+                const title = lang === 'id' ? cert.data.title_id || cert.data.title : cert.data.title;
+                const desc = lang === 'id' ? cert.data.description_id || cert.data.description : cert.data.description;
+                
+                return (
+                    <div data-aos="fade-up" data-aos-delay={String(index * 80)} class="bg-white text-black border-4 border-black shadow-[8px_8px_0_0_#000] hover:-translate-y-2 hover:shadow-[12px_12px_0_0_#000] transition-all duration-300 flex flex-col group relative">
+                        <!-- Image Container -->
+                        <div class="w-full h-48 border-b-4 border-black bg-gray-100 relative overflow-hidden">
+                            {cert.data.image ? (
+                                <img src={cert.data.image} alt={cert.data.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/eeeeee/000000?text=NO+IMAGE';" />
+                            ) : (
+                                <div class="w-full h-full flex items-center justify-center bg-gray-200 text-black">
+                                    <i class="ri-award-fill text-6xl opacity-30"></i>
+                                </div>
+                            )}
+                            <div class="absolute top-4 right-4 bg-neo-yellow text-black px-3 py-1 font-mono text-xs font-bold border-2 border-black">
+                                {cert.data.category.toUpperCase()}
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-6 flex flex-col flex-grow">
+                            <div class="mb-4">
+                                <h3 class="text-xl font-black uppercase leading-tight mb-2 group-hover:text-neo-blue transition-colors">{title}</h3>
+                                <p class="font-mono text-sm font-bold bg-neo-black text-white inline-block px-2 py-1">{cert.data.issuer}</p>
+                            </div>
+
+                            {desc && (
+                                <p class="text-sm font-mono text-gray-700 line-clamp-2 mb-6 flex-grow">{desc}</p>
+                            )}
+
+                            <div class="mt-auto flex flex-col gap-3">
+                                <button 
+                                    class="open-cert-modal w-full font-mono text-sm font-bold bg-gray-100 border-2 border-black px-4 py-2 hover:bg-black hover:text-white transition-colors flex justify-between items-center"
+                                    data-title={title}
+                                    data-issuer={cert.data.issuer}
+                                    data-date={cert.data.date}
+                                    data-desc={desc || ''}
+                                    data-img={cert.data.image || ''}
+                                    data-link={cert.data.link || ''}
+                                    data-category={cert.data.category}
+                                    data-skills={cert.data.skills_verified ? cert.data.skills_verified.join(',') : ''}
+                                >
+                                    <span>{t.details}</span>
+                                    <i class="ri-information-line"></i>
+                                </button>
+                                
+                                <div class="flex items-center justify-between">
+                                    <span class="font-mono text-xs font-bold text-gray-500">{cert.data.date}</span>
+                                    {cert.data.link && (
+                                        <a href={cert.data.link} target="_blank" rel="noopener noreferrer" class="font-mono text-xs font-black text-neo-blue hover:underline">
+                                            VERIFY <i class="ri-external-link-line ml-1"></i>
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+        
+        {displayCertificates.length === 0 && (
+            <div class="w-full p-12 border-4 border-dashed border-gray-400 flex flex-col items-center justify-center text-gray-400 font-mono">
+                <i class="ri-database-2-line text-4xl mb-4"></i>
+                <p>NO_ACHIEVEMENT_RECORDS_FOUND</p>
+            </div>
+        )}
+
+        {certificates.length > 6 && (
+            <div class="mt-12 text-center md:hidden">
+                <a href="#" class="inline-block border-4 border-black bg-neo-yellow px-6 py-3 font-mono font-bold hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000] transition-all w-full">
+                    {t.viewAll}
+                </a>
+            </div>
+        )}
+    </div>
+</section>
+
+<!-- Modal Overlay -->
+<div id="cert-modal-overlay" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+    <div id="cert-modal-content" class="bg-neo-white border-4 border-black shadow-[12px_12px_0_0_#000] flex flex-col w-full max-w-2xl max-h-[90vh] scale-95 transition-transform duration-300">
+        <div class="border-b-4 border-black bg-neo-yellow p-4 flex justify-between items-center sticky top-0 z-10 shrink-0">
+            <h3 class="font-black font-mono uppercase text-lg" id="modal-title">Achievement</h3>
+            <button id="close-modal" class="w-8 h-8 flex justify-center items-center bg-white border-2 border-black hover:bg-neo-red hover:text-white transition-colors cursor-pointer">
+                <i class="ri-close-line font-bold"></i>
+            </button>
+        </div>
+        <div class="overflow-y-auto p-6 flex flex-col gap-6 relative">
+            <!-- Content filled by JS -->
+            <div id="modal-img-container" class="w-full h-64 border-4 border-black bg-gray-100 hidden">
+                <img id="modal-img" src="" alt="" class="w-full h-full object-cover" />
+            </div>
+            
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span id="modal-category" class="font-mono text-xs font-bold bg-neo-blue text-white px-2 py-1 uppercase"></span>
+                    <span id="modal-date" class="font-mono text-xs font-bold bg-gray-200 px-2 py-1"></span>
+                </div>
+                <p id="modal-issuer" class="font-mono font-bold text-gray-600 mb-4"></p>
+                <p id="modal-desc" class="font-mono text-sm leading-relaxed"></p>
+            </div>
+
+            <div id="modal-skills-container" class="hidden">
+                <h4 class="font-black uppercase mb-2 text-sm">Skills Verified:</h4>
+                <div id="modal-skills" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <div id="modal-link-container" class="mt-4 hidden pt-4 border-t-2 border-dashed border-gray-300">
+                <a id="modal-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-block bg-neo-black text-white font-mono font-bold px-6 py-3 border-2 border-black hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000] hover:bg-white hover:text-black transition-all">
+                    Verify Credential <i class="ri-external-link-line ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const overlay = document.getElementById('cert-modal-overlay');
+    const content = document.getElementById('cert-modal-content');
+    const btns = document.querySelectorAll('.open-cert-modal');
+    const closeBtn = document.getElementById('close-modal');
+
+    // Toggle Modal State
+    let isModalOpen = false;
+
+    function openModal() {
+        if(!overlay || !content) return;
+        isModalOpen = true;
+        
+        // Use Lenis if available to stop scrolling, else body overflow
+        if ((window as any).lenis) {
+            (window as any).lenis.stop();
+        }
+
+        overlay.classList.remove('hidden');
+        // Small delay to allow display block to take effect before animating opacity
+        setTimeout(() => {
+            overlay.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+        }, 10);
+    }
+
+    function closeModal() {
+        if(!overlay || !content) return;
+        isModalOpen = false;
+        
+        overlay.classList.add('opacity-0');
+        content.classList.add('scale-95');
+        
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+            
+            // Resume scrolling
+            if ((window as any).lenis) {
+                (window as any).lenis.start();
+            }
+        }, 300); // Wait for transition
+    }
+
+    if(overlay && btns.length > 0) {
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const el = btn as HTMLElement;
+                
+                // Populate data
+                const title = el.dataset.title;
+                const issuer = el.dataset.issuer;
+                const date = el.dataset.date;
+                const desc = el.dataset.desc;
+                const img = el.dataset.img;
+                const link = el.dataset.link;
+                const category = el.dataset.category;
+                const skills = el.dataset.skills;
+
+                document.getElementById('modal-title')!.textContent = title || 'Achievement';
+                document.getElementById('modal-issuer')!.textContent = issuer || '';
+                document.getElementById('modal-date')!.textContent = date || '';
+                document.getElementById('modal-category')!.textContent = category || '';
+                
+                const descEl = document.getElementById('modal-desc')!;
+                if(desc) {
+                    descEl.textContent = desc;
+                    descEl.classList.remove('hidden');
+                } else {
+                    descEl.classList.add('hidden');
+                }
+
+                const imgContainer = document.getElementById('modal-img-container')!;
+                if(img) {
+                    const imgEl = document.getElementById('modal-img') as HTMLImageElement;
+                    imgEl.src = img;
+                    imgContainer.classList.remove('hidden');
+                } else {
+                    imgContainer.classList.add('hidden');
+                }
+
+                const linkContainer = document.getElementById('modal-link-container')!;
+                if(link) {
+                    const linkEl = document.getElementById('modal-link') as HTMLAnchorElement;
+                    linkEl.href = link;
+                    linkContainer.classList.remove('hidden');
+                } else {
+                    linkContainer.classList.add('hidden');
+                }
+
+                const skillsContainer = document.getElementById('modal-skills-container')!;
+                const skillsEl = document.getElementById('modal-skills')!;
+                if(skills) {
+                    const skillsList = skills.split(',');
+                    skillsEl.innerHTML = skillsList.map(s => `<span class="border border-black px-2 py-1 text-xs font-mono font-bold bg-white">${s.trim()}</span>`).join('');
+                    skillsContainer.classList.remove('hidden');
+                } else {
+                    skillsContainer.classList.add('hidden');
+                }
+
+                openModal();
+            });
+        });
+
+        closeBtn?.addEventListener('click', closeModal);
+
+        // Close when clicking outside
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+        
+        // Handle Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isModalOpen) {
+                closeModal();
+            }
+        });
+    }
+</script>

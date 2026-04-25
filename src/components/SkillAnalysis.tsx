@@ -34,7 +34,7 @@ const SkillAnalysis: React.FC<TechRadarProps> = ({ radarData, githubData, detail
     const [activeTab, setActiveTab] = useState<'RADAR' | 'GITHUB' | 'DETAILS'>('RADAR');
 
     return (
-        <div className="w-full h-[400px] md:h-[500px] font-mono font-bold bg-white border-4 border-black shadow-hard flex flex-col relative">
+        <div className="w-full h-[400px] md:h-[450px] font-mono font-bold bg-white border-4 border-black shadow-hard flex flex-col relative">
             {/* Window Bar */}
             <div className="bg-neo-black text-white px-2 py-1 text-xs flex justify-between items-center z-10 shrink-0">
                 <span>SKILL_ANALYSIS.EXE</span>
@@ -76,7 +76,7 @@ const SkillAnalysis: React.FC<TechRadarProps> = ({ radarData, githubData, detail
                             <PolarGrid stroke="#000" strokeWidth={2} />
                             <PolarAngleAxis
                                 dataKey="label"
-                                tick={{ fill: '#000', fontSize: 12, fontWeight: 'bold' }}
+                                tick={{ fill: '#000', fontSize: 14, fontWeight: '900' }}
                             />
                             <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="#000" strokeWidth={2} tick={false} axisLine={false} />
                             <Tooltip
@@ -96,54 +96,77 @@ const SkillAnalysis: React.FC<TechRadarProps> = ({ radarData, githubData, detail
                 )}
 
                 {activeTab === 'GITHUB' && (
-                    <div className="w-full h-full flex flex-col">
-                        <div className="text-xs text-gray-500 mb-2 text-right">SOURCE: GITHUB PUBLIC REPOS</div>
-                        <ResponsiveContainer width="100%" height="90%">
-                            <BarChart data={githubData} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
+                    <div className="w-full h-full flex flex-col bg-gray-50 p-2">
+                        <div className="flex justify-end mb-2 shrink-0">
+                            <div className="text-xs bg-neo-black text-neo-green px-3 py-1 border-2 border-black shadow-[2px_2px_0_0_#000] inline-block font-mono font-bold uppercase tracking-wider">
+                                SOURCE: GITHUB_PUBLIC_REPOS
+                            </div>
+                        </div>
+                        <div className="flex-1 w-full min-h-[200px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={githubData} layout="vertical" margin={{ top: 5, right: 40, left: 40, bottom: 5 }}>
                                 <XAxis type="number" hide />
                                 <YAxis
                                     dataKey="language"
                                     type="category"
-                                    width={80}
-                                    tick={{ fill: '#000', fontSize: 10, fontWeight: 'bold' }}
+                                    width={90}
+                                    tick={{ fill: '#000', fontSize: 12, fontWeight: '900', fontFamily: 'monospace' }}
+                                    axisLine={{ stroke: '#000', strokeWidth: 2 }}
+                                    tickLine={false}
                                 />
                                 <Tooltip
-                                    contentStyle={{ border: '2px solid black', boxShadow: '4px 4px 0px 0px #000' }}
-                                    itemStyle={{ fontFamily: 'monospace', fontWeight: 'bold' }}
+                                    cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+                                    contentStyle={{ border: '3px solid black', boxShadow: '4px 4px 0px 0px #000', borderRadius: '0px', backgroundColor: '#fff' }}
+                                    itemStyle={{ fontFamily: 'monospace', fontWeight: 'bold', color: '#000' }}
                                 />
-                                <Bar dataKey="percentage" fill="#000" radius={[0, 4, 4, 0]} barSize={20}>
+                                <Bar 
+                                    dataKey="percentage" 
+                                    fill="#000" 
+                                    barSize={24}
+                                    label={{ position: 'right', fill: '#000', fontSize: 12, fontWeight: '900', formatter: (val: number) => `${val}%` }}
+                                >
                                     {githubData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} stroke="#000" strokeWidth={2} />
+                                        <Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} stroke="#000" strokeWidth={3} />
                                     ))}
                                 </Bar>
                             </BarChart>
                         </ResponsiveContainer>
+                        </div>
                     </div>
                 )}
 
                 {activeTab === 'DETAILS' && (
-                    <div className="w-full h-full overflow-y-auto font-mono text-sm leading-relaxed p-2 custom-scrollbar">
-                        <div className="prose prose-sm max-w-none prose-p:my-2 prose-headings:font-bold prose-headings:uppercase">
+                    <div className="w-full h-full overflow-y-auto font-mono text-sm leading-relaxed p-4 custom-scrollbar bg-neo-white">
+                        <div className="max-w-none">
                             {/* Auto-generated Radar Stats */}
-                            <div className="mb-4 border-b-2 border-gray-200 pb-2">
-                                <h4 className="font-bold mb-2 text-gray-500">/// RADAR_METRICS</h4>
-                                <ul className="grid grid-cols-2 gap-2">
+                            <div className="mb-8">
+                                <h4 className="inline-block bg-neo-pink text-black px-3 py-1 font-bold border-2 border-black shadow-[2px_2px_0_0_#000] mb-4">
+                                    /// RADAR_METRICS
+                                </h4>
+                                <div className="grid grid-cols-2 gap-3">
                                     {radarData.map((item, index) => (
-                                        <li key={index} className="flex justify-between items-center bg-gray-50 p-1 px-2 border border-gray-200">
-                                            <span>{item.label}</span>
-                                            <span className="font-bold text-neo-green bg-black px-1 text-xs">{item.value}%</span>
-                                        </li>
+                                        <div key={index} className="flex justify-between items-center bg-white p-2 px-3 border-2 border-black shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_0_#000] transition-all">
+                                            <span className="font-bold text-xs uppercase text-gray-800">{item.label}</span>
+                                            <span className="font-black text-black bg-neo-yellow px-1.5 py-0.5 text-xs border border-black shadow-[1px_1px_0_0_#000]">
+                                                {item.value}%
+                                            </span>
+                                        </div>
                                     ))}
-                                </ul>
+                                </div>
                             </div>
 
                             {/* Manual Details */}
                             {details && (
-                                <div>
-                                    <h4 className="font-bold mb-2 text-gray-500">/// NOTES</h4>
-                                    <ul className="list-disc list-inside space-y-1">
+                                <div className="border-t-4 border-black pt-6 border-dashed">
+                                    <h4 className="inline-block bg-neo-blue text-white px-3 py-1 font-bold border-2 border-black shadow-[2px_2px_0_0_#000] mb-4">
+                                        /// SYSTEM_NOTES
+                                    </h4>
+                                    <ul className="space-y-3 font-bold text-gray-700 text-sm">
                                         {details.split('\n').filter(line => line.trim() !== '').map((line, index) => (
-                                            <li key={index} className="break-words">{line}</li>
+                                            <li key={index} className="break-words flex items-start gap-2">
+                                                <span className="text-neo-orange font-black mt-0.5">&gt;_</span>
+                                                <span className="leading-snug">{line}</span>
+                                            </li>
                                         ))}
                                     </ul>
                                 </div>

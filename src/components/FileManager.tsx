@@ -90,6 +90,8 @@ const FileManager: React.FC<FileManagerProps> = ({ assets }) => {
                                             <a
                                                 href={asset.file}
                                                 download
+                                                data-astro-prefetch="false"
+                                                rel="noopener noreferrer"
                                                 className="inline-block bg-black text-white hover:bg-neo-green hover:text-black px-3 py-1 font-bold text-xs uppercase transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] hover:shadow-none translate-x-0 hover:translate-x-[2px] hover:translate-y-[2px]"
                                             >
                                                 DOWNLOAD

@@ -3,15 +3,5 @@
   "title_id": "FULL STACK DEVELOPER",
   "bio": "I build something digital that refuse to be boring. \n Python • Java • Node",
   "bio_id": "Saya membangun sesuatu digital yang tidak membosankan. \n Python • Java • Node",
-  "techStack": [
-    {
-      "name": "Python"
-    },
-    {
-      "name": "Java"
-    },
-    {
-      "name": "Node.js"
-    }
-  ]
+  "techStack": []
 }

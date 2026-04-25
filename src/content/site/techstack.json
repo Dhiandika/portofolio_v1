@@ -1,0 +1,129 @@
+{
+  "skills": [
+    {
+      "name": "Astro.js",
+      "category": "Frontend",
+      "icon": "Astro"
+    },
+    {
+      "name": "TailwindCSS",
+      "category": "Frontend",
+      "icon": "Tailwind"
+    },
+    {
+      "name": "Streamlit",
+      "category": "Frontend",
+      "icon": "Streamlit"
+    },
+    {
+      "name": "JavaScript",
+      "category": "Frontend",
+      "icon": "JavaScript"
+    },
+    {
+      "name": "TypeScript",
+      "category": "Frontend",
+      "icon": "TypeScript"
+    },
+    {
+      "name": "HTML",
+      "category": "Frontend",
+      "icon": "HTML"
+    },
+    {
+      "name": "CSS",
+      "category": "Frontend",
+      "icon": "CSS"
+    },
+    {
+      "name": "React.js",
+      "category": "Frontend",
+      "icon": "React"
+    },
+    {
+      "name": "Next.js",
+      "category": "Frontend",
+      "icon": "Next.js"
+    },
+    {
+      "name": "Python",
+      "category": "Backend",
+      "icon": "Python"
+    },
+    {
+      "name": "Flask",
+      "category": "Backend",
+      "icon": "Flask"
+    },
+    {
+      "name": "Node.js",
+      "category": "Backend",
+      "icon": "Node.js"
+    },
+    {
+      "name": "Express.js",
+      "category": "Backend",
+      "icon": "Express"
+    },
+    {
+      "name": "Bootstrap",
+      "category": "Frontend",
+      "icon": "Bootstrap"
+    },
+    {
+      "name": "MySQL",
+      "category": "Database",
+      "icon": "MySQL"
+    },
+    {
+      "name": "Firebase",
+      "category": "Database",
+      "icon": "Firebase"
+    },
+    {
+      "name": "Supabase",
+      "category": "Database",
+      "icon": "Supabase"
+    },
+    {
+      "name": "Git",
+      "category": "Tools",
+      "icon": "Git"
+    },
+    {
+      "name": "GitHub",
+      "category": "Tools",
+      "icon": "Github"
+    },
+    {
+      "name": "GCP",
+      "category": "Tools",
+      "icon": "Google Cloud"
+    },
+    {
+      "name": "Docker",
+      "category": "Tools",
+      "icon": "Docker"
+    },
+    {
+      "name": "VS Code",
+      "category": "Tools",
+      "icon": "VSCode"
+    },
+    {
+      "name": "TensorFlow",
+      "category": "Machine Learning",
+      "icon": "TensorFlow"
+    },
+    {
+      "name": "Keras",
+      "category": "Machine Learning",
+      "icon": "Keras"
+    },
+    {
+      "name": "Jupyter Notebook",
+      "category": "Machine Learning",
+      "icon": "Jupyter Notebook"
+    }
+  ]
+}
