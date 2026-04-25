@@ -1,12 +1,13 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import { getCollection, getEntry } from "astro:content";
-import { getTechIcon } from "../../../utils/techIcons";
+import { getTechIcon, getTechColor, getTechAbbrev } from "../../../utils/techIcons";
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-    const projects = await getCollection("projects");
+    const allProjects = await getCollection("projects");
+    const projects = allProjects.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
     const paths: { params: { lang: string; slug: string }; props: { project: any } }[] = [];
     projects.forEach((project) => {
         paths.push({ params: { lang: "en", slug: project.id }, props: { project } });
@@ -68,12 +69,12 @@ const catIcon = categoryIcons[category] || "ri-code-s-slash-line";
                     </h1>
                     <div class="h-2 w-24 bg-neo-green border-2 border-black shadow-[4px_4px_0_0_#000] mb-6"></div>
                     <!-- Description -->
-                    <p class="text-neo-black/80 font-mono text-sm leading-relaxed mb-4">
+                    <p class="text-neo-black font-mono text-sm leading-relaxed mb-4">
                         {description}
                     </p>
                     {content && (
-                        <div class="border-l-4 border-neo-yellow pl-5 mb-8">
-                            <p class="text-neo-black/70 font-mono text-sm leading-relaxed whitespace-pre-line">{content}</p>
+                        <div class="border-l-4 border-neo-yellow pl-5 mb-8 bg-black/5 py-3 pr-3">
+                            <p class="text-neo-black font-mono text-sm leading-relaxed whitespace-pre-line">{content}</p>
                         </div>
                     )}
                 </div>
@@ -106,24 +107,40 @@ const catIcon = categoryIcons[category] || "ri-code-s-slash-line";
 
                 <!-- Technologies Used -->
                 <div class="mt-8">
-                    <h3 class="flex items-center gap-2 text-neo-black font-black uppercase tracking-widest text-sm mb-4">
-                        <i class="ri-code-s-slash-line text-neo-blue"></i> Technologies Used
+                    <h3 class="flex items-center gap-2 text-neo-black font-black uppercase tracking-widest text-sm mb-4 border-b-2 border-black/10 pb-3">
+                        <i class="ri-cpu-line text-neo-blue"></i> Technologies Used
                     </h3>
-                    <div class="flex flex-wrap gap-3">
-                        {techIconsList.map((item) => (
-                            <div
-                                class="flex items-center gap-2 bg-white border-2 border-black px-4 py-2 shadow-[4px_4px_0_0_#000] hover:bg-neo-black hover:text-white transition-colors group"
-                                title={item.name}
-                            >
-                                <img
-                                    src={item.icon}
-                                    alt={item.name}
-                                    class="w-4 h-4 object-contain grayscale group-hover:grayscale-0"
-                                    onerror="this.onerror=null;this.style.display='none';"
-                                />
-                                <span class="text-xs font-black uppercase">{item.name}</span>
-                            </div>
-                        ))}
+                    <div class="flex flex-wrap gap-2">
+                        {project.data.techStack?.map((tech: string) => {
+                            const icon = getTechIcon(tech);
+                            const color = getTechColor(tech);
+                            const abbrev = getTechAbbrev(tech);
+                            return (
+                                <div
+                                    class="tech-pill group flex items-center gap-2 bg-white border-2 border-black px-3 py-2 shadow-[3px_3px_0_0_#000] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all cursor-default"
+                                    style={`--tech-bg:${color.bg};--tech-text:${color.text};`}
+                                    title={tech}
+                                >
+                                    {/* Icon layer: colored badge as base, CDN icon on top */}
+                                    <div
+                                        class="w-6 h-6 flex-shrink-0 flex items-center justify-center border border-black/20 text-[9px] font-black"
+                                        style={`background:${color.bg}; color:${color.text};`}
+                                        data-abbrev={abbrev}
+                                    >
+                                        {icon ? (
+                                            <img
+                                                src={icon}
+                                                alt={tech}
+                                                class="w-5 h-5 object-contain"
+                                                onerror={`this.style.display='none';this.parentElement.textContent=this.parentElement.dataset.abbrev;`}
+                                                loading="lazy"
+                                            />
+                                        ) : abbrev}
+                                    </div>
+                                    <span class="text-[11px] font-black uppercase tracking-wide text-neo-black">{tech}</span>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>

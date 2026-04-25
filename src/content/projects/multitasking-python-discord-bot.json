@@ -1,0 +1,36 @@
+{
+  "title": "Multitasking Python Discord Bot",
+  "order": 7,
+  "title_id": "Bot Discord Multitasking dengan Python",
+  "description": "A feature-rich, multitasking Discord bot written in Python. It integrates various APIs for AI-powered conversations, image processing, web scraping, and specialized content fetching to boost server engagement.",
+  "description_id": "Bot Discord multitasking kaya fitur yang ditulis dengan Python. Mengintegrasikan berbagai API untuk percakapan berbasis AI, pemrosesan gambar, web scraping, dan pengambilan konten khusus untuk meningkatkan interaksi server.",
+  "image": "/images/projects/multitasking-python-discord-bot/image.png",
+  "link": "https://github.com/Dhiandika/Discord-bot",
+  "githubLink": "https://github.com/Dhiandika/Discord-bot",
+  "category": "Web",
+  "techStack": [
+    "Python",
+    "Discord.py",
+    "Google AI Studio",
+    "REST APIs"
+  ],
+  "gallery": [
+    "/images/projects/multitasking-python-discord-bot/gallery/0.png"
+  ],
+  "content": "Managing active digital communities requires versatile and engaging tools. This project is a comprehensive, multitasking Discord bot developed entirely in Python to serve as an all-in-one assistant for Discord servers.\n\nThe bot leverages multiple external APIs to provide a wide array of functionalities. It utilizes Google AI Studio to enable smart, AI-driven conversations, including context-aware responses to images. Beyond chatting, the bot acts as a powerful utility tool, offering background removal for images, direct web and image searching (via Google and DuckDuckGo), and fetching specific anime-related content and quotes. It also includes specific modules for scraping imageboards and databases (restricted to appropriate channels), making it a highly customizable tool for community entertainment and utility.",
+  "content_id": "Mengelola komunitas digital yang aktif membutuhkan alat yang serbaguna dan interaktif. Proyek ini adalah bot Discord multitasking komprehensif yang dikembangkan sepenuhnya dengan Python untuk berfungsi sebagai asisten all-in-one di berbagai server Discord.\n\nBot ini memanfaatkan berbagai API eksternal untuk menyediakan berbagai macam fungsionalitas. Sistemnya menggunakan Google AI Studio untuk mengaktifkan percakapan pintar berbasis AI, termasuk respons yang peka terhadap konteks gambar yang dikirim pengguna. Selain mengobrol, bot ini bertindak sebagai alat utilitas yang kuat, menawarkan fitur penghapus latar belakang (background removal) untuk gambar, pencarian web dan gambar langsung (melalui Google dan DuckDuckGo), serta pengambilan konten dan kutipan spesifik terkait anime. Bot ini juga mencakup modul khusus untuk menarik data dari berbagai imageboard dan basis data gambar, menjadikannya alat yang sangat dapat disesuaikan untuk hiburan dan utilitas komunitas.",
+  "keyFeatures": [
+    "AI Conversation Integration: Smart chatting capabilities, including image-context understanding using Google AI Studio.",
+    "Image Processing Utilities: Features built-in tools like automatic image background removal.",
+    "Dynamic Web Search: Instant querying for images and information using DuckDuckGo and Google engines directly from the chat.",
+    "Community Engagement: Generates jokes, fetches anime quotes, and retrieves user info to keep the server active.",
+    "Content Fetching APIs: Integrated with multiple imageboard APIs to dynamically fetch requested media."
+  ],
+  "keyFeatures_id": [
+    "Integrasi Percakapan AI: Kemampuan mengobrol cerdas, termasuk pemahaman konteks gambar menggunakan Google AI Studio.",
+    "Utilitas Pemrosesan Gambar: Menyediakan fitur bawaan seperti penghapusan latar belakang gambar secara otomatis.",
+    "Pencarian Web Dinamis: Kueri instan untuk gambar dan informasi menggunakan mesin pencari DuckDuckGo dan Google langsung dari ruang obrolan.",
+    "Interaksi Komunitas: Menghasilkan lelucon, mengambil kutipan anime, dan menarik info pengguna untuk menjaga server tetap aktif.",
+    "API Pengambil Konten: Terintegrasi dengan beberapa API imageboard untuk secara dinamis mengambil media yang diminta pengguna."
+  ]
+}

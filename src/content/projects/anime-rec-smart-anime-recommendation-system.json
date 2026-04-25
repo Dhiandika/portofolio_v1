@@ -1,0 +1,39 @@
+{
+  "title": "AnimeRec - Smart Anime Recommendation System",
+  "order": 3,
+  "title_id": "AnimeRec - Sistem Rekomendasi Anime Pintar",
+  "description": "AnimeRec is a cutting-edge anime discovery platform that blends advanced content-based filtering with a modern web interface to deliver highly personalized anime recommendations.",
+  "description_id": "AnimeRec adalah platform penemuan anime mutakhir yang memadukan content-based filtering dengan antarmuka web modern untuk memberikan rekomendasi anime yang sangat personal.",
+  "image": "/images/projects/anime-rec-smart-anime-recommendation-system/image.png",
+  "link": "https://github.com/Dhiandika/anime-rekomendation-Content-Based-Filtering",
+  "githubLink": "https://github.com/Dhiandika/anime-rekomendation-Content-Based-Filtering",
+  "category": "Web",
+  "techStack": [
+    "Flask",
+    "Tailwind CSS",
+    "Alpine.js",
+    "Python",
+    "Machine Learning"
+  ],
+  "gallery": [
+    "/images/projects/anime-rec-smart-anime-recommendation-system/gallery/0.jpg",
+    "/images/projects/anime-rec-smart-anime-recommendation-system/gallery/1.jpg",
+    "/images/projects/anime-rec-smart-anime-recommendation-system/gallery/2.jpg"
+  ],
+  "content": "AnimeRec is an intelligent anime discovery web application built to solve the \"what to watch next\" dilemma. It leverages a Machine Learning approach, specifically Content-Based Filtering, to analyze user preferences and anime metadata, delivering accurate and personalized \"Top Picks For You.\"\n\nBeyond the recommendation engine, the platform is designed with a sleek, user-friendly dark-themed UI. It features an intuitive browsing experience, allowing users to explore trending shows, popular picks by genre, and even includes a \"Feeling Lucky\" feature for random discovery. The project was built robustly utilizing Flask for the backend, styled with Tailwind CSS for rapid and responsive design, and made interactive using Alpine.js.",
+  "content_id": "AnimeRec adalah aplikasi web penemuan anime cerdas yang dibangun untuk memecahkan dilema \"nonton apa selanjutnya\". Platform ini memanfaatkan pendekatan Machine Learning, khususnya Content-Based Filtering, untuk menganalisis preferensi pengguna dan metadata anime, sehingga mampu memberikan \"Top Picks For You\" yang akurat dan terpersonalisasi.\n\nDi balik mesin rekomendasinya yang kuat, platform ini dirancang dengan UI bernuansa gelap yang modern dan user-friendly. Aplikasi ini menampilkan pengalaman browsing yang intuitif, memungkinkan pengguna untuk menjelajahi tayangan yang sedang tren, pilihan populer berdasarkan genre, dan bahkan menyertakan fitur \"Feeling Lucky\" untuk penemuan acak. Proyek ini dibangun secara tangguh menggunakan Flask di sisi backend, dikreasikan dengan Tailwind CSS untuk desain yang responsif, dan dibuat interaktif menggunakan Alpine.js.",
+  "keyFeatures": [
+    "Smart Recommendations: Utilizes Content-Based Filtering to provide personalized anime suggestions.",
+    "Categorized Discovery: Explore anime by Trending, Popular, and specific Genres.",
+    "\"Feeling Lucky\" Generator: A fun feature for spontaneous anime discovery based on quick inputs.",
+    "Modern UI/UX: Sleek dark mode interface built with Tailwind CSS for a premium feel.",
+    "Responsive Design: Seamless experience across desktop and mobile devices."
+  ],
+  "keyFeatures_id": [
+    "Rekomendasi Pintar: Memanfaatkan Content-Based Filtering untuk memberikan saran anime yang personal.",
+    "Eksplorasi Terkategori: Menjelajahi anime berdasarkan kategori Trending, Populer, dan Genre spesifik.",
+    "Generator \"Feeling Lucky\": Fitur menyenangkan untuk penemuan anime secara spontan berdasarkan input cepat.",
+    "UI/UX Modern: Antarmuka dark mode yang elegan dan dibangun dengan Tailwind CSS.",
+    "Desain Responsif: Pengalaman yang mulus di berbagai perangkat, baik desktop maupun mobile."
+  ]
+}

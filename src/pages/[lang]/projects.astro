@@ -7,7 +7,9 @@ export async function getStaticPaths() {
 }
 
 const { lang } = Astro.params;
-const projects = await getCollection("projects");
+const allProjects = await getCollection("projects");
+// Sort by 'order' field (ascending) — lower number = shown first, default 99
+const projects = allProjects.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 
 const ui: any = {
     en: {

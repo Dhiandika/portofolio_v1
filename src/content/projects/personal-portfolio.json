@@ -1,0 +1,40 @@
+{
+  "title": "Personal Portfolio",
+  "order": 1,
+  "title_id": "Personal Portfolio",
+  "description": "A neo-brutalist personal portfolio website designed to showcase my journey as a Data Science Developer, featuring my experience log, tech stack, real-time coding stats, and project showcases.",
+  "description_id": "Website portofolio personal dengan desain neo-brutalist untuk menampilkan perjalanan saya sebagai Data Science Developer, mencakup riwayat pengalaman, tech stack, statistik coding real-time, dan etalase proyek.",
+  "image": "/images/projects/personal-portfolio/image.png",
+  "link": "https://npemburu.my.id",
+  "githubLink": "https://github.com/Dhiandika/portofolio_v1",
+  "category": "Web",
+  "techStack": [
+    "Astro",
+    "Keystatic CMS",
+    "Tailwind CSS",
+    "ReactJs"
+  ],
+  "gallery": [
+    "/images/projects/personal-portfolio/gallery/0.jpg",
+    "/images/projects/personal-portfolio/gallery/1.jpg",
+    "/images/projects/personal-portfolio/gallery/2.jpg",
+    "/images/projects/personal-portfolio/gallery/3.jpg",
+    "/images/projects/personal-portfolio/gallery/4.jpg"
+  ],
+  "content": "This project is my personal portfolio website, built with a unique neo-brutalist design aesthetic. It serves as a central hub for my professional identity as a Data Science Developer and web developer. The site is structured to provide a comprehensive overview of my skills and journey, integrating various dynamic sections. It includes a detailed experience timeline, an interactive tech stack showcase, live coding statistics to reflect my daily development activities, and a dedicated gallery for my past projects. It is built using modern web technologies to ensure high performance and seamless content management.",
+  "content_id": "Proyek ini adalah website portofolio personal saya yang dibangun dengan estetika desain bergaya neo-brutalist yang unik dan tegas. Website ini berfungsi sebagai pusat identitas profesional saya sebagai Data Science Developer sekaligus pengembang web. Situs ini distrukturkan untuk memberikan gambaran komprehensif tentang keahlian dan perjalanan karir saya, mengintegrasikan berbagai bagian yang dinamis. Di dalamnya terdapat lini masa pengalaman yang detail, etalase tech stack interaktif, integrasi statistik coding (live stats) yang merefleksikan aktivitas development harian saya, serta galeri khusus untuk proyek-proyek yang telah saya kerjakan. Website ini dibangun dengan teknologi modern untuk memastikan performa yang cepat dan kemudahan dalam mengelola konten.",
+  "keyFeatures": [
+    "Bold neo-brutalist UI/UX design with a fully responsive layout.",
+    "Dynamic Experience Log and Portfolio Showcase powered by a CMS.",
+    "Live integration of coding statistics (WakaTime/GitHub).",
+    "Integrated contact form with seamless functionality.",
+    "Interactive and categorized Tech Stack section."
+  ],
+  "keyFeatures_id": [
+    "Desain UI/UX neo-brutalist yang berani dengan layout responsif sepenuhnya.",
+    "Log Pengalaman dan Etalase Portofolio dinamis yang dikelola melalui CMS.",
+    "Integrasi langsung untuk statistik coding secara real-time (seperti WakaTime/GitHub).",
+    "Bagian Tech Stack yang interaktif dan terkategorisasi.",
+    "Terintegrasi dengan form kontak yang fungsional."
+  ]
+}

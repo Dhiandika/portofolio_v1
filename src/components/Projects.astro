@@ -1,13 +1,15 @@
 ---
 import { getCollection } from "astro:content";
 import { getEntry } from "astro:content";
-import { getTechIcon } from "../utils/techIcons";
+import { getTechIcon, getTechColor, getTechAbbrev } from "../utils/techIcons";
 import { getMediumPosts } from "../utils/medium";
 
 interface Props { lang?: string; }
 const { lang = "en" } = Astro.props;
 
-const projects = await getCollection("projects");
+const allProjects = await getCollection("projects");
+// Sort by 'order' field (ascending) — set in Keystatic CMS, lower = first, default 99
+const projects = allProjects.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 const certificates = await getCollection("certificates");
 
 // Blog posts
@@ -119,7 +121,12 @@ const INITIAL_SHOW = 9;
                 {projects.map((project, index) => {
                     const title = lang === "id" ? project.data.title_id || project.data.title : project.data.title;
                     const description = lang === "id" ? project.data.description_id || project.data.description : project.data.description;
-                    const techIconsList = project.data.techStack.map((tech: any) => ({ name: tech, icon: getTechIcon(tech) }));
+                    const techIconsList = project.data.techStack.map((tech: any) => ({
+                        name: tech,
+                        icon: getTechIcon(tech),
+                        color: getTechColor(tech),
+                        abbrev: getTechAbbrev(tech),
+                    }));
                     const isHidden = index >= INITIAL_SHOW;
                     const detailHref = `/${lang}/projects/${project.id}`;
                     const DESC_LIMIT = 90;
@@ -173,15 +180,28 @@ const INITIAL_SHOW = 9;
                                     )}
                                 </p>
 
-                                {/* Tech stack icons */}
+                                {/* Tech stack icons — colored badge as base, CDN icon on top */}
                                 <div class="flex flex-wrap gap-1.5 mb-4">
                                     {techIconsList.slice(0, 5).map((item: any) => (
-                                        <div class="w-6 h-6 bg-white/10 border border-white/20 flex items-center justify-center" title={item.name}>
-                                            <img src={item.icon} alt={item.name} class="w-3.5 h-3.5 object-contain" onerror="this.onerror=null;this.style.display='none';" />
+                                        <div
+                                            class="w-7 h-7 border border-black/30 flex items-center justify-center text-[8px] font-black overflow-hidden"
+                                            style={`background:${item.color.bg}; color:${item.color.text};`}
+                                            title={item.name}
+                                            data-abbrev={item.abbrev}
+                                        >
+                                            {item.icon ? (
+                                                <img
+                                                    src={item.icon}
+                                                    alt={item.name}
+                                                    class="w-4 h-4 object-contain"
+                                                    onerror={`this.style.display='none';this.parentElement.textContent=this.parentElement.dataset.abbrev;`}
+                                                    loading="lazy"
+                                                />
+                                            ) : item.abbrev}
                                         </div>
                                     ))}
                                     {techIconsList.length > 5 && (
-                                        <span class="w-6 h-6 bg-white/10 border border-white/20 flex items-center justify-center text-white/40 text-[9px] font-black">+{techIconsList.length - 5}</span>
+                                        <span class="w-7 h-7 bg-white/10 border border-white/20 flex items-center justify-center text-white/60 text-[9px] font-black">+{techIconsList.length - 5}</span>
                                     )}
                                 </div>
 

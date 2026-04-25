@@ -362,6 +362,12 @@ export default config({
             format: { data: 'json' },
             schema: {
                 title: fields.slug({ name: { label: 'Title' } }),
+                order: fields.integer({
+                    label: '📌 Display Order',
+                    description: 'Lower number = shown first. e.g. 1 = first, 2 = second. Default 99.',
+                    defaultValue: 99,
+                    validation: { isRequired: false, min: 1, max: 999 },
+                }),
                 title_id: fields.text({ label: 'Title (ID)', description: 'Indonesian translation.', validation: { isRequired: false } }),
                 description: fields.text({ label: 'Description' }),
                 description_id: fields.text({ label: 'Description (ID)', description: 'Indonesian translation.', validation: { isRequired: false } }),
