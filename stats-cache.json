@@ -3,142 +3,48 @@
     "id": "abc77e1d-80d4-4fdb-9551-66e836a1130f",
     "user_id": "f64538f6-eaa9-4ce2-a021-ff11cf565d88",
     "range": "last_7_days",
-    "start": "2026-04-17T16:00:00Z",
-    "end": "2026-04-24T15:59:59Z",
+    "start": "2026-04-18T16:00:00Z",
+    "end": "2026-04-25T15:59:59Z",
     "timeout": 15,
     "writes_only": false,
     "timezone": "Asia/Makassar",
     "ai_additions": 0,
     "ai_deletions": 0,
-    "human_additions": 173,
+    "human_additions": 200,
     "human_deletions": 201,
     "ai_input_tokens": 0,
     "ai_output_tokens": 0,
     "ai_prompt_length": 0,
-    "holidays": 4,
-    "status": "ok",
+    "holidays": 3,
+    "status": "pending_update",
     "created_at": "2026-04-17T19:55:53Z",
-    "modified_at": "2026-04-24T19:13:48Z",
-    "total_seconds_including_other_language": 13657.162,
-    "is_up_to_date": true,
-    "days_minus_holidays": 3,
+    "modified_at": "2026-04-25T19:16:36Z",
     "is_already_updating": false,
-    "human_readable_daily_average_including_other_language": "1 hr 15 mins",
-    "days_including_holidays": 7,
-    "daily_average_including_other_language": 4552,
-    "human_readable_daily_average": "1 hr 15 mins",
-    "human_readable_total_including_other_language": "3 hrs 47 mins",
-    "editors": [
-      {
-        "total_seconds": 13657.162,
-        "name": "Antigravity",
-        "ai_additions": 0,
-        "ai_deletions": 0,
-        "human_additions": 173,
-        "human_deletions": 201,
-        "ai_input_tokens": 0,
-        "ai_output_tokens": 0,
-        "ai_prompt_length": 0,
-        "ai_prompt_events": 0,
-        "percent": 100,
-        "digital": "3:47",
-        "decimal": "3.78",
-        "text": "3 hrs 47 mins",
-        "hours": 3,
-        "minutes": 47
-      }
-    ],
-    "best_day": {
-      "date": "2026-04-22",
-      "total_seconds": 7921.874,
-      "text": "2 hrs 12 mins"
-    },
-    "is_stuck": false,
-    "percent_calculated": 100,
-    "machines": [
-      {
-        "total_seconds": 13657.162,
-        "name": "ZERO",
-        "machine_name_id": "f2957d09-0aab-4c6a-a2f6-e906862b0671",
-        "percent": 100,
-        "digital": "3:47",
-        "decimal": "3.78",
-        "text": "3 hrs 47 mins",
-        "hours": 3,
-        "minutes": 47
-      }
-    ],
-    "is_up_to_date_pending_future": false,
-    "projects": [
-      {
-        "total_seconds": 13657.162,
-        "name": "portofolio_v1",
-        "ai_additions": 0,
-        "ai_deletions": 0,
-        "human_additions": 173,
-        "human_deletions": 201,
-        "ai_input_tokens": 0,
-        "ai_output_tokens": 0,
-        "ai_prompt_length": 0,
-        "ai_prompt_events": 0,
-        "percent": 100,
-        "digital": "3:47",
-        "decimal": "3.78",
-        "text": "3 hrs 47 mins",
-        "hours": 3,
-        "minutes": 47
-      }
-    ],
-    "operating_systems": [
-      {
-        "total_seconds": 13657.162,
-        "name": "Windows",
-        "percent": 100,
-        "digital": "3:47",
-        "decimal": "3.78",
-        "text": "3 hrs 47 mins",
-        "hours": 3,
-        "minutes": 47
-      }
-    ],
-    "human_readable_total": "3 hrs 47 mins",
-    "categories": [
-      {
-        "name": "Coding",
-        "total_seconds": 13657.162,
-        "percent": 100,
-        "digital": "3:47",
-        "decimal": "3.78",
-        "text": "3 hrs 47 mins",
-        "hours": 3,
-        "minutes": 47
-      }
-    ],
     "languages": [
       {
         "name": "Astro",
-        "total_seconds": 9725.132,
-        "percent": 71.21,
-        "digital": "2:42",
-        "decimal": "2.70",
-        "text": "2 hrs 42 mins",
+        "total_seconds": 10724.452,
+        "percent": 66.54,
+        "digital": "2:58",
+        "decimal": "2.97",
+        "text": "2 hrs 58 mins",
         "hours": 2,
-        "minutes": 42
+        "minutes": 58
       },
       {
         "name": "JSON",
-        "total_seconds": 2339.507,
-        "percent": 17.13,
-        "digital": "0:38",
-        "decimal": "0.63",
-        "text": "38 mins",
+        "total_seconds": 3450.282,
+        "percent": 21.41,
+        "digital": "0:57",
+        "decimal": "0.95",
+        "text": "57 mins",
         "hours": 0,
-        "minutes": 38
+        "minutes": 57
       },
       {
         "name": "HTML",
         "total_seconds": 982.844,
-        "percent": 7.2,
+        "percent": 6.1,
         "digital": "0:16",
         "decimal": "0.27",
         "text": "16 mins",
@@ -147,18 +53,18 @@
       },
       {
         "name": "TypeScript",
-        "total_seconds": 577.135,
-        "percent": 4.23,
-        "digital": "0:09",
-        "decimal": "0.15",
-        "text": "9 mins",
+        "total_seconds": 926.672,
+        "percent": 5.75,
+        "digital": "0:15",
+        "decimal": "0.25",
+        "text": "15 mins",
         "hours": 0,
-        "minutes": 9
+        "minutes": 15
       },
       {
         "name": "JavaScript",
         "total_seconds": 17.102,
-        "percent": 0.13,
+        "percent": 0.11,
         "digital": "0:00",
         "decimal": "0.00",
         "text": "0 secs",
@@ -168,7 +74,7 @@
       {
         "name": "TSConfig",
         "total_seconds": 15.442,
-        "percent": 0.11,
+        "percent": 0.1,
         "digital": "0:00",
         "decimal": "0.00",
         "text": "0 secs",
@@ -176,13 +82,23 @@
         "minutes": 0
       }
     ],
-    "daily_average": 4552,
-    "total_seconds": 13657.162,
+    "human_readable_total": "4 hrs 28 mins",
+    "is_stuck": false,
+    "days_including_holidays": 7,
+    "human_readable_daily_average_including_other_language": "1 hr 7 mins",
+    "total_seconds_including_other_language": 16116.794,
+    "is_up_to_date": true,
+    "human_readable_total_including_other_language": "4 hrs 28 mins",
+    "best_day": {
+      "date": "2026-04-22",
+      "total_seconds": 7921.874,
+      "text": "2 hrs 12 mins"
+    },
     "dependencies": [
       {
         "total_seconds": 636.744,
         "name": "\"https://www.tiktok.com/embed.js\"",
-        "percent": 57.89,
+        "percent": 38.27,
         "digital": "0:10",
         "decimal": "0.17",
         "text": "10 mins",
@@ -192,7 +108,7 @@
       {
         "total_seconds": 346.1,
         "name": "\"//platform.instagram.com/en_US/embeds.js\"",
-        "percent": 31.46,
+        "percent": 20.8,
         "digital": "0:05",
         "decimal": "0.08",
         "text": "5 mins",
@@ -200,36 +116,120 @@
         "minutes": 5
       },
       {
-        "total_seconds": 76.396,
-        "name": "astro:content",
-        "percent": 6.95,
-        "digital": "0:01",
-        "decimal": "0.02",
-        "text": "1 min",
-        "hours": 0,
-        "minutes": 1
-      },
-      {
-        "total_seconds": 20.372,
+        "total_seconds": 234.554,
         "name": "core",
-        "percent": 1.85,
-        "digital": "0:00",
-        "decimal": "0.00",
-        "text": "0 secs",
+        "percent": 14.1,
+        "digital": "0:03",
+        "decimal": "0.05",
+        "text": "3 mins",
         "hours": 0,
-        "minutes": 0
+        "minutes": 3
       },
       {
-        "total_seconds": 20.372,
+        "total_seconds": 234.554,
         "name": "production",
-        "percent": 1.85,
-        "digital": "0:00",
-        "decimal": "0.00",
-        "text": "0 secs",
+        "percent": 14.1,
+        "digital": "0:03",
+        "decimal": "0.05",
+        "text": "3 mins",
         "hours": 0,
-        "minutes": 0
+        "minutes": 3
+      },
+      {
+        "total_seconds": 211.751,
+        "name": "astro:content",
+        "percent": 12.73,
+        "digital": "0:03",
+        "decimal": "0.05",
+        "text": "3 mins",
+        "hours": 0,
+        "minutes": 3
       }
     ],
+    "categories": [
+      {
+        "name": "Coding",
+        "total_seconds": 16116.794,
+        "percent": 100,
+        "digital": "4:28",
+        "decimal": "4.47",
+        "text": "4 hrs 28 mins",
+        "hours": 4,
+        "minutes": 28
+      }
+    ],
+    "daily_average": 4029,
+    "days_minus_holidays": 4,
+    "human_readable_daily_average": "1 hr 7 mins",
+    "projects": [
+      {
+        "total_seconds": 16116.794,
+        "name": "portofolio_v1",
+        "ai_additions": 0,
+        "ai_deletions": 0,
+        "human_additions": 200,
+        "human_deletions": 201,
+        "ai_input_tokens": 0,
+        "ai_output_tokens": 0,
+        "ai_prompt_length": 0,
+        "ai_prompt_events": 0,
+        "percent": 100,
+        "digital": "4:28",
+        "decimal": "4.47",
+        "text": "4 hrs 28 mins",
+        "hours": 4,
+        "minutes": 28
+      }
+    ],
+    "editors": [
+      {
+        "total_seconds": 16116.794,
+        "name": "Antigravity",
+        "ai_additions": 0,
+        "ai_deletions": 0,
+        "human_additions": 200,
+        "human_deletions": 201,
+        "ai_input_tokens": 0,
+        "ai_output_tokens": 0,
+        "ai_prompt_length": 0,
+        "ai_prompt_events": 0,
+        "percent": 100,
+        "digital": "4:28",
+        "decimal": "4.47",
+        "text": "4 hrs 28 mins",
+        "hours": 4,
+        "minutes": 28
+      }
+    ],
+    "is_up_to_date_pending_future": false,
+    "percent_calculated": 100,
+    "operating_systems": [
+      {
+        "total_seconds": 16116.794,
+        "name": "Windows",
+        "percent": 100,
+        "digital": "4:28",
+        "decimal": "4.47",
+        "text": "4 hrs 28 mins",
+        "hours": 4,
+        "minutes": 28
+      }
+    ],
+    "total_seconds": 16116.794,
+    "machines": [
+      {
+        "total_seconds": 16116.794,
+        "name": "ZERO",
+        "machine_name_id": "f2957d09-0aab-4c6a-a2f6-e906862b0671",
+        "percent": 100,
+        "digital": "4:28",
+        "decimal": "4.47",
+        "text": "4 hrs 28 mins",
+        "hours": 4,
+        "minutes": 28
+      }
+    ],
+    "daily_average_including_other_language": 4029,
     "is_cached": true,
     "username": null,
     "is_including_today": false,
@@ -289,5 +289,5 @@
     },
     "uid": "ZdL3r4RjLbM4ypJd0qFs7OsGglf2"
   },
-  "lastUpdated": 1777125425491
+  "lastUpdated": 1777219799029
 }

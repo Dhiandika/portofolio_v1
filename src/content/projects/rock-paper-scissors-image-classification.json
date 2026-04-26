@@ -1,0 +1,35 @@
+{
+  "title": "Rock Paper Scissors - Image Classification",
+  "order": 99,
+  "title_id": "Klasifikasi Gambar Rock, Paper, Scissors",
+  "description": "A foundational Computer Vision project developing a machine learning model capable of classifying hand gestures (rock, paper, scissors) using a Sequential neural network.",
+  "description_id": "Proyek fundamental Computer Vision yang mengembangkan model machine learning untuk mengklasifikasikan gestur tangan (batu, kertas, gunting) menggunakan neural network Sequential.",
+  "image": "/images/projects/rock-paper-scissors-image-classification/image.png",
+  "link": "https://github.com/Dhiandika/Proyek-Klasifikasi-Gambar-Rock-Paper-Scissors",
+  "githubLink": "https://github.com/Dhiandika/Proyek-Klasifikasi-Gambar-Rock-Paper-Scissors",
+  "category": "Web",
+  "techStack": [
+    "Python",
+    "TensorFlow",
+    "Keras",
+    "Jupyter Notebook",
+    "Google Colaboratory"
+  ],
+  "gallery": [
+    "/images/projects/rock-paper-scissors-image-classification/gallery/0.png"
+  ],
+  "content": "This project was developed as the final submission for the \"Belajar Machine Learning untuk Pemula\" (Learning Machine Learning for Beginners) course at Dicoding. The primary objective was to build a robust image classification model capable of accurately recognizing hand gestures representing rock, paper, or scissors.\n\nThe development process involved a complete machine learning pipeline. It started with dataset preparation, including an optimal train-validation split. To ensure the model's ability to generalize and prevent overfitting, extensive Image Augmentation techniques were implemented using Image Data Generators. The core of the project is a custom Sequential model architecture that was trained to achieve an accuracy of over 85%. Furthermore, the project includes an interactive prediction feature within Google Colab, allowing users to upload custom images to be classified by the trained model in real-time.",
+  "content_id": "Proyek ini dikembangkan sebagai submission akhir untuk kelas \"Belajar Machine Learning untuk Pemula\" di platform Dicoding. Tujuan utamanya adalah membangun model klasifikasi gambar yang tangguh dan mampu mengenali gestur tangan yang merepresentasikan batu, kertas, atau gunting secara akurat.\n\nProses pengembangannya mencakup pipeline machine learning yang lengkap. Dimulai dari persiapan dataset, termasuk pembagian data training dan validation yang optimal. Untuk memastikan kemampuan model dalam menggeneralisasi data dan mencegah overfitting, teknik Augmentasi Gambar (Image Augmentation) diterapkan secara komprehensif menggunakan Image Data Generator. Inti dari proyek ini adalah arsitektur model Sequential kustom yang dilatih hingga mencapai akurasi lebih dari 85%. Selain itu, proyek ini menyertakan fitur prediksi interaktif di dalam Google Colab, yang memungkinkan pengguna untuk mengunggah gambar kustom untuk diklasifikasikan oleh model secara real-time.",
+  "keyFeatures": [
+    "Image Augmentation: Implementation of data generators to artificially expand the training dataset and improve model robustness.",
+    "Sequential Model Architecture: Built using deep learning frameworks tailored for image feature extraction.",
+    "High Accuracy Output: Successfully trained to achieve an accuracy rate exceeding 85% with under 30 minutes of training time.",
+    "Interactive Image Prediction: Built-in widget functionality to test the model with newly uploaded user images."
+  ],
+  "keyFeatures_id": [
+    "Augmentasi Gambar: Implementasi data generator untuk memperluas variasi dataset pelatihan dan meningkatkan ketangguhan model.",
+    "Output Akurasi Tinggi: Berhasil dilatih untuk mencapai tingkat akurasi di atas 85% dengan waktu pelatihan di bawah 30 menit.",
+    "Arsitektur Model Sequential: Dibangun menggunakan framework deep learning yang disesuaikan untuk ekstraksi fitur gambar.",
+    "Prediksi Gambar Interaktif: Fungsionalitas widget bawaan untuk menguji model dengan gambar baru yang diunggah pengguna."
+  ]
+}

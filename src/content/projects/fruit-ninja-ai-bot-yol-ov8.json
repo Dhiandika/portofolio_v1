@@ -1,0 +1,36 @@
+{
+  "title": "Fruit Ninja AI Bot - YOLOv8",
+  "order": 99,
+  "title_id": "Bot AI Fruit Ninja - Deteksi YOLOv8",
+  "description": "An automated computer vision bot capable of playing the classic game Fruit Ninja in real-time, utilizing a custom-trained YOLOv8 object detection model to slice fruits and avoid bombs.",
+  "description_id": "Bot computer vision otomatis yang mampu memainkan game klasik Fruit Ninja secara real-time, memanfaatkan model deteksi objek YOLOv8 yang dilatih khusus untuk memotong buah dan menghindari bom.",
+  "image": "/images/projects/fruit-ninja-ai-bot-yol-ov8/image.png",
+  "link": "https://github.com/Dhiandika/Fruitninja-YoloV8",
+  "githubLink": "https://github.com/Dhiandika/Fruitninja-YoloV8",
+  "category": "Other",
+  "techStack": [
+    "Python",
+    "YOLOv8",
+    "OpenCV",
+    "PyAutoGUI",
+    "Roboflow"
+  ],
+  "gallery": [
+    "/images/projects/fruit-ninja-ai-bot-yol-ov8/gallery/0.png"
+  ],
+  "content": "This project demonstrates a fun and practical application of real-time computer vision by creating an AI bot capable of autonomously playing the classic game \"Fruit Ninja\". The core intelligence of the system relies on the state-of-the-art YOLOv8 object detection model. The model was custom-trained using a tailored dataset of in-game fruits and bombs sourced from Roboflow to ensure high accuracy within the game's specific visual environment.\n\nThe bot operates through a continuous, high-speed loop: it captures the game screen in real-time using mss, passes these frames through the trained YOLOv8 model to identify coordinates, and executes a smart filtering algorithm. This algorithm ensures the bot targets safe fruits while strictly calculating paths to avoid slicing bombs. Finally, PyAutoGUI is utilized to simulate rapid, precise mouse movements and clicks, effectively executing the \"slicing\" action on the screen.",
+  "content_id": "Proyek ini mendemonstrasikan penerapan computer vision real-time yang menyenangkan dan praktis dengan membuat bot AI yang mampu memainkan game klasik \"Fruit Ninja\" secara otonom. Kecerdasan inti dari sistem ini mengandalkan model deteksi objek mutakhir YOLOv8. Model ini dilatih secara khusus menggunakan dataset buah-buahan dan bom dari dalam game yang bersumber dari Roboflow untuk memastikan akurasi tinggi di dalam lingkungan visual game tersebut.\n\nBot ini beroperasi melalui loop berkecepatan tinggi yang terus-menerus: sistem menangkap layar permainan secara real-time menggunakan library mss, memproses frame tersebut melalui model YOLOv8 yang telah dilatih untuk mengidentifikasi koordinat, dan menjalankan algoritma pemfilteran pintar. Algoritma ini memastikan bot menargetkan buah yang aman sambil secara ketat menghitung jalur untuk menghindari memotong bom. Terakhir, PyAutoGUI dimanfaatkan untuk mensimulasikan pergerakan dan klik mouse yang cepat dan presisi, secara efektif mengeksekusi aksi \"memotong\" di layar.",
+  "keyFeatures": [
+    "Real-Time Object Detection: Rapidly identifies objects on the screen using the highly optimized YOLOv8 architecture.",
+    "Custom Trained Model: Utilizes a specifically curated dataset from Roboflow for accurate in-game asset recognition.",
+    "Smart Bomb Avoidance: Implements logic to filter out dangerous coordinates, ensuring the bot doesn't hit bombs.",
+    "Automated Input Simulation: Translates detection coordinates into precise mouse drag events via PyAutoGUI.",
+    "Custom Trained Model: Utilizes a specifically curated dataset from Roboflow for accurate in-game asset recognition."
+  ],
+  "keyFeatures_id": [
+    "Deteksi Objek Real-Time: Mengidentifikasi objek di layar dengan cepat menggunakan arsitektur YOLOv8 yang sangat optimal.",
+    "Model Terlatih Kustom: Memanfaatkan dataset yang dikurasi khusus dari Roboflow untuk pengenalan aset in-game yang akurat.",
+    "Penghindaran Bom Pintar: Mengimplementasikan logika untuk menyaring koordinat berbahaya, memastikan bot tidak mengenai bom.",
+    "Simulasi Input Otomatis: Menerjemahkan koordinat deteksi menjadi gerakan drag mouse yang presisi melalui PyAutoGUI."
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "title": "Emotion Recognition Synthetic Dataset with Stable Diffusion",
+  "order": 99,
+  "title_id": "Dataset Sintetis Pengenalan Emosi dengan Stable Diffusion",
+  "description": "A data science project focused on generating a high-quality synthetic dataset for facial emotion recognition using Python and Stable Diffusion, complete with a deployment test phase.",
+  "description_id": "Proyek data science yang berfokus pada pembuatan kumpulan data sintetis berkualitas tinggi untuk pengenalan emosi wajah menggunakan Python dan Stable Diffusion, dilengkapi dengan fase deployment test.",
+  "image": "/images/projects/emotion-recognition-synthetic-dataset-with-stable-diffusion/image.png",
+  "link": "https://github.com/Dhiandika/Facial-Expression-Recognition-Mediapipe",
+  "githubLink": "https://github.com/Dhiandika/Facial-Expression-Recognition-Mediapipe",
+  "category": "Other",
+  "techStack": [
+    "Python",
+    "Stable Diffusion",
+    "Generative AI",
+    "Machine Learning",
+    "Computer Vision"
+  ],
+  "gallery": [
+    "/images/projects/emotion-recognition-synthetic-dataset-with-stable-diffusion/gallery/0.png"
+  ],
+  "content": "This project focuses on the creation of a synthetic dataset for emotion recognition using Python and Stable Diffusion. The primary goal of this dataset is to be utilized in training machine learning models capable of accurately recognizing and classifying human emotions derived from facial expressions.\n\nBy leveraging advanced image generation techniques via Stable Diffusion, this project aims to produce diverse, high-quality images of various facial emotions, thereby overcoming the limitations of traditional data gathering. Furthermore, the project scope includes a deployment phase specifically designed to test the emotion recognition model's performance in real-world or simulated scenarios.",
+  "content_id": "Proyek ini berfokus pada pembuatan kumpulan data sintetis untuk pengenalan emosi menggunakan Python dan Stable Diffusion. Kumpulan data ini dimaksudkan untuk digunakan dalam pelatihan model pembelajaran mesin yang dapat mengenali dan mengklasifikasikan emosi manusia dari ekspresi wajah secara akurat.\n\nDengan memanfaatkan teknik pembuatan gambar canggih dengan Stable Diffusion, proyek ini bertujuan untuk membuat gambar emosi wajah yang beragam dan berkualitas tinggi, sehingga dapat mengatasi keterbatasan pengumpulan data konvensional. Selain itu, cakupan proyek ini juga mencakup tahap deployment untuk pengetesan emosi, memastikan model dapat berjalan dan diuji dengan baik.",
+  "keyFeatures": [
+    "Advanced Image Generation: Utilizes Stable Diffusion to create highly realistic and diverse facial expressions.",
+    "Synthetic Dataset Creation: Builds a scalable, custom dataset tailored specifically for training emotion recognition models.",
+    "Python Automation: Employs Python scripting to streamline and automate the image generation pipeline.",
+    "Emotion Classification Testing: Includes a dedicated deployment phase to validate and test the emotion classification accuracy."
+  ],
+  "keyFeatures_id": [
+    "Pembuatan Gambar Lanjutan: Memanfaatkan Stable Diffusion untuk membuat ekspresi wajah yang sangat realistis dan beragam.",
+    "Pembuatan Dataset Sintetis: Membangun dataset kustom yang terukur dan disesuaikan secara khusus untuk melatih model pengenalan emosi.",
+    "Otomatisasi Python: Menggunakan scripting Python untuk merampingkan dan mengotomatiskan pipeline pembuatan gambar.",
+    "Pengujian Klasifikasi Emosi: Mencakup fase deployment khusus untuk memvalidasi dan menguji akurasi klasifikasi emosi."
+  ]
+}
