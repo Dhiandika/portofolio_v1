@@ -7,6 +7,6 @@
   "category": "Log",
   "type": "Remote",
   "logo": "/images/logos/bangkit-cloud-cohort/logo.jpg",
-  "content": "- Acted as the Cloud Computing Lead for the \"Parental Peace\" capstone project, orchestrating the backend architecture.\n- Designed and deployed robust REST APIs to seamlessly bridge mobile client requests with backend processing.\n- Managed and configured cloud infrastructure on Google Cloud Platform (GCP), utilizing services like Cloud Run for scalable deployment.",
-  "content_id": "- Bertanggung jawab sebagai Cloud Computing Lead untuk capstone project \"Parental Peace\", merancang dan mengelola arsitektur backend secara menyeluruh.\n- Mengembangkan dan melakukan deployment REST API untuk menjembatani permintaan dari aplikasi klien dengan sistem pemrosesan data.\n- Mengelola infrastruktur cloud di Google Cloud Platform (GCP), memanfaatkan layanan seperti Cloud Run untuk deployment yang dinamis dan terukur."
+  "content": "Participated in an intensive, industry-led cloud computing training program. Collaborated in a cross-functional team to architect and deploy the backend infrastructure for our capstone project, \"Parental Peace,\" utilizing Google Cloud Platform (GCP) to bridge machine learning models with a mobile frontend.",
+  "content_id": "Berpartisipasi dalam program pelatihan cloud computing intensif yang dipimpin oleh industri. Berkolaborasi dalam tim lintas divisi untuk merancang dan melakukan deployment infrastruktur backend proyek capstone \"Parental Peace\", memanfaatkan Google Cloud Platform (GCP) untuk menjembatani model machine learning dengan antarmuka aplikasi mobile."
 }
