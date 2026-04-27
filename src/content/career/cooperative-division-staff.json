@@ -1,0 +1,42 @@
+{
+  "role": "Cooperative Division Staff",
+  "role_id": "Fungsionaris - Anggota Divisi Koprasi",
+  "company": "HMTI Universitas Udayana",
+  "link": "https://ng.hmtiudayana.id/",
+  "date": "2023",
+  "location": "Jimbaran, Bali",
+  "type": "Onsite",
+  "logo": "/images/logos/cooperative-division-staff/logo.png",
+  "tasks": [
+    "Managed entrepreneurial activities and cooperative operations.",
+    "Handled organizational administration related to the division.",
+    "Supported the financial sustainability of the student association through creative fundraising."
+  ],
+  "tasks_id": [
+    "Mengelola kegiatan kewirausahaan dan operasional koperasi himpunan.",
+    "Menangani administrasi organisasi yang berkaitan dengan divisi.",
+    "Mendukung keberlanjutan finansial himpunan melalui program penggalangan dana kreatif."
+  ],
+  "skills_learned": [
+    "Organizational Management",
+    "Basic Financial Administration",
+    "Entrepreneurship & Sales",
+    "Teamwork & Communication"
+  ],
+  "skills_learned_id": [
+    "Administrasi Keuangan Dasar",
+    "Perencanaan strategis untuk adopsi dan implementasi teknologi.",
+    "Kewirausahaan & Penjualan",
+    "Kerja Sama Tim & Komunikasi"
+  ],
+  "impact": [
+    "Ensured the smooth operation of the student cooperative to meet students' needs.",
+    "Contributed to the successful funding of various HMTI work programs."
+  ],
+  "impact_id": [
+    "Memastikan kelancaran operasional koperasi mahasiswa untuk memenuhi kebutuhan mahasiswa.",
+    "Berkontribusi pada kesuksesan pendanaan berbagai program kerja HMTI."
+  ],
+  "content": "Active as a functionary in the Information Technology Student Association (HMTI) at Udayana University, specifically assigned to the Cooperative Division to manage entrepreneurial activities and organizational administration.",
+  "content_id": "Aktif sebagai fungsionaris di Himpunan Mahasiswa Teknologi Informasi (HMTI) Universitas Udayana, bertugas secara spesifik di Divisi Koprasi dalam mengelola kegiatan kewirausahaan dan administrasi organisasi."
+}
