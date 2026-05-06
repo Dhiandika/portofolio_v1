@@ -192,6 +192,10 @@ const displayBio = lang === "id" ? bio_id || bio : bio;
                             <img
                                 src={profileImage}
                                 alt="Profile"
+                                width="400"
+                                height="400"
+                                fetchpriority="high"
+                                loading="eager"
                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                 onerror="this.onerror=null; this.style.opacity='0';"
                             />
