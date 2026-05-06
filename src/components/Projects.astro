@@ -12,6 +12,9 @@ const allProjects = await getCollection("projects");
 const projects = allProjects.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 const certificates = await getCollection("certificates");
 
+const allDesigns = await getCollection("designs");
+const designs = allDesigns.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
 // Blog posts
 const siteConfig = await getEntry("site", "config");
 const { data: siteData } = siteConfig || { data: { mediumUsername: "dhiandika" } };
@@ -47,6 +50,10 @@ const tabMeta = {
         en: { title: "Achievements",          subtitle: `${certificates.length} certifications, awards & milestones.` },
         id: { title: "Penghargaan",           subtitle: `${certificates.length} sertifikasi, penghargaan & pencapaian.` },
     },
+    designs: {
+        en: { title: "Graphic Designs",       subtitle: `${designs.length} creative artworks and posters.` },
+        id: { title: "Desain Grafis",         subtitle: `${designs.length} karya seni dan poster kreatif.` },
+    },
     blog: {
         en: { title: "Latest Transmission",  subtitle: `${allPosts.length} articles from local & Medium.` },
         id: { title: "Transmisi Terbaru",    subtitle: `${allPosts.length} artikel dari lokal & Medium.` },
@@ -54,8 +61,8 @@ const tabMeta = {
 };
 
 const ui = {
-    en: { tabProjects: "Projects", tabAchievements: "Achievements", tabBlog: "Blog", showMore: "Show More", liveDemo: "Live Demo", details: "Details →", readMore: "Read Post →", viewAll: "View All Projects", viewAllBlog: "View Archive", viewAllAch: "View All" },
-    id: { tabProjects: "Proyek", tabAchievements: "Penghargaan", tabBlog: "Blog", showMore: "Tampilkan Lebih", liveDemo: "Live Demo", details: "Detail →", readMore: "Baca Artikel →", viewAll: "Lihat Semua Proyek", viewAllBlog: "Lihat Arsip", viewAllAch: "Lihat Semua" },
+    en: { tabProjects: "Projects", tabAchievements: "Awards", tabDesigns: "Designs", tabBlog: "Blog", showMore: "Show More", liveDemo: "Live Demo", details: "Details →", readMore: "Read Post →", viewAll: "View All Projects", viewAllBlog: "View Archive", viewAllAch: "View All" },
+    id: { tabProjects: "Proyek", tabAchievements: "Awards", tabDesigns: "Desain", tabBlog: "Blog", showMore: "Tampilkan", liveDemo: "Live Demo", details: "Detail →", readMore: "Baca Artikel →", viewAll: "Lihat Semua Proyek", viewAllBlog: "Lihat Arsip", viewAllAch: "Lihat Semua" },
 };
 const t = ui[lang as keyof typeof ui] || ui.en;
 const initMeta = tabMeta.projects[lang as keyof typeof tabMeta.projects] || tabMeta.projects.en;
@@ -66,6 +73,7 @@ const INITIAL_SHOW = 9;
 <section id="works" class="py-24 md:py-32 bg-neo-black px-4 relative overflow-hidden border-t-8 border-white">
     <!-- Anchor hooks for navbar hash links — do not remove -->
     <div id="achievements" style="position:absolute; top:-80px; left:0; height:0; width:0; visibility:hidden;"></div>
+    <div id="designs" style="position:absolute; top:-80px; left:0; height:0; width:0; visibility:hidden;"></div>
     <div id="blog" style="position:absolute; top:-80px; left:0; height:0; width:0; visibility:hidden;"></div>
     <!-- Top stripe -->
     <div class="absolute top-0 left-0 w-full h-3 bg-neo-yellow border-b-4 border-black z-20"></div>
@@ -83,32 +91,41 @@ const INITIAL_SHOW = 9;
                class="font-mono text-white/50 text-sm max-w-xl mx-auto"
                data-projects={initMeta.subtitle}
                data-achievements={tabMeta.achievements[lang as keyof typeof tabMeta.achievements]?.subtitle || tabMeta.achievements.en.subtitle}
+               data-designs={tabMeta.designs[lang as keyof typeof tabMeta.designs]?.subtitle || tabMeta.designs.en.subtitle}
                data-blog={tabMeta.blog[lang as keyof typeof tabMeta.blog]?.subtitle || tabMeta.blog.en.subtitle}
                data-title-projects={tabMeta.projects[lang as keyof typeof tabMeta.projects]?.title || tabMeta.projects.en.title}
                data-title-achievements={tabMeta.achievements[lang as keyof typeof tabMeta.achievements]?.title || tabMeta.achievements.en.title}
+               data-title-designs={tabMeta.designs[lang as keyof typeof tabMeta.designs]?.title || tabMeta.designs.en.title}
                data-title-blog={tabMeta.blog[lang as keyof typeof tabMeta.blog]?.title || tabMeta.blog.en.title}
             >{initMeta.subtitle}</p>
         </div>
 
-        <!-- Tab Navigation — 3 tabs -->
-        <div class="flex mb-12 border-4 border-white w-max mx-auto overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+        <!-- Tab Navigation — 4 tabs -->
+        <div class="flex mb-12 border-4 border-white w-max mx-auto overflow-hidden flex-wrap" data-aos="fade-up" data-aos-delay="100">
             <button
                 id="tab-projects"
-                class="tab-btn active-tab px-6 py-3 font-black uppercase text-xs tracking-widest transition-all border-r-4 border-white flex items-center gap-2"
+                class="tab-btn active-tab px-4 sm:px-6 py-3 font-black uppercase text-[10px] sm:text-xs tracking-widest transition-all border-b-4 sm:border-b-0 sm:border-r-4 border-white flex items-center gap-2 flex-grow justify-center"
                 onclick="switchTab('projects')"
             >
                 <i class="ri-briefcase-fill"></i> {t.tabProjects}
             </button>
             <button
                 id="tab-achievements"
-                class="tab-btn px-6 py-3 font-black uppercase text-xs tracking-widest transition-all border-r-4 border-white flex items-center gap-2"
+                class="tab-btn px-4 sm:px-6 py-3 font-black uppercase text-[10px] sm:text-xs tracking-widest transition-all border-b-4 sm:border-b-0 sm:border-r-4 border-white flex items-center gap-2 flex-grow justify-center"
                 onclick="switchTab('achievements')"
             >
                 <i class="ri-trophy-fill"></i> {t.tabAchievements}
             </button>
             <button
+                id="tab-designs"
+                class="tab-btn px-4 sm:px-6 py-3 font-black uppercase text-[10px] sm:text-xs tracking-widest transition-all sm:border-r-4 border-white flex items-center gap-2 flex-grow justify-center"
+                onclick="switchTab('designs')"
+            >
+                <i class="ri-brush-fill"></i> {t.tabDesigns}
+            </button>
+            <button
                 id="tab-blog"
-                class="tab-btn px-6 py-3 font-black uppercase text-xs tracking-widest transition-all flex items-center gap-2"
+                class="tab-btn px-4 sm:px-6 py-3 font-black uppercase text-[10px] sm:text-xs tracking-widest transition-all flex items-center gap-2 flex-grow justify-center"
                 onclick="switchTab('blog')"
             >
                 <i class="ri-article-fill"></i> {t.tabBlog}
@@ -272,7 +289,7 @@ const INITIAL_SHOW = 9;
                             data-aos-delay={String((index % 3) * 80)}
                             class={`achievement-card group border-4 border-white bg-neo-black shadow-[6px_6px_0_0_#fff] hover:shadow-[10px_10px_0_0_#3BFF7E] hover:border-neo-green transition-all duration-300 flex flex-col overflow-hidden${isHidden ? " hidden" : ""}`}
                         >
-                            {cert.data.image && (
+                            {cert.data.image ? (
                                 <div class="relative h-48 overflow-hidden border-b-4 border-white group-hover:border-neo-green transition-colors">
                                     <img src={cert.data.image} alt={title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null;this.style.opacity='0';" />
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -280,11 +297,25 @@ const INITIAL_SHOW = 9;
                                         <i class={catIcon + " text-xs"}></i> {cert.data.category || 'Course'}
                                     </span>
                                 </div>
+                            ) : (
+                                <div class="relative h-32 overflow-hidden border-b-4 border-white group-hover:border-neo-green transition-colors bg-gradient-to-br from-gray-800 to-black flex flex-col items-center justify-center pt-2">
+                                    <i class={`${catIcon} text-6xl text-white/10 group-hover:text-neo-green/20 transition-colors duration-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}></i>
+                                    <div class="z-10 flex flex-col items-center gap-1">
+                                        <span class="text-[9px] font-mono font-bold text-neo-green tracking-widest uppercase bg-black px-2 py-0.5 border border-neo-green">Verified</span>
+                                    </div>
+                                    <span class="absolute top-3 left-3 flex items-center gap-1 bg-neo-green text-black text-[10px] font-black px-2 py-1 uppercase tracking-widest border-2 border-black">
+                                        <i class={catIcon + " text-xs"}></i> {cert.data.category || 'Course'}
+                                    </span>
+                                </div>
                             )}
-                            <div class="flex flex-col flex-1 p-5">
+                            <div class="flex flex-col flex-1 p-5 relative z-10">
                                 <div class="font-mono text-[10px] text-white/40 mb-2 uppercase">{cert.data.date} · {cert.data.issuer}</div>
                                 <h3 class="text-base font-black text-white uppercase leading-tight mb-2 group-hover:text-neo-green transition-colors line-clamp-2">{title}</h3>
                                 <p class="font-mono text-white/45 text-[11px] leading-relaxed mb-4 flex-1">{description}</p>
+                                
+                                {cert.data.credentialId && (
+                                    <div class="font-mono text-[9px] text-white/30 uppercase mt-auto mb-3">ID: {cert.data.credentialId}</div>
+                                )}
                                 
                                 {skills.length > 0 && (
                                     <div class="flex flex-wrap gap-1.5 mb-4">
@@ -318,6 +349,51 @@ const INITIAL_SHOW = 9;
                 <a href={`/${lang}/achievements`} class="font-mono text-white/50 text-xs hover:text-white transition-colors underline flex items-center gap-1">
                     {t.viewAllAch} ({certificates.length}) <i class="ri-arrow-right-line"></i>
                 </a>
+            </div>
+        </div>
+
+        <!-- ═══════════ DESIGNS TAB ═══════════ -->
+        <div id="panel-designs" class="hidden">
+            <div id="designs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                {designs.map((design, index) => {
+                    const title = lang === "id" && design.data.title_id ? design.data.title_id : design.data.title;
+                    const description = lang === "id" && design.data.description_id ? design.data.description_id : design.data.description;
+                    const isHidden = index >= INITIAL_SHOW;
+                    return (
+                        <article
+                            data-aos="fade-up"
+                            data-aos-delay={String((index % 3) * 80)}
+                            class={`design-card group border-4 border-white bg-neo-black shadow-[6px_6px_0_0_#fff] hover:shadow-[10px_10px_0_0_#FF2D78] hover:border-neo-pink transition-all duration-300 flex flex-col overflow-hidden${isHidden ? " hidden" : ""}`}
+                        >
+                            <div class="relative h-64 overflow-hidden border-b-4 border-white group-hover:border-neo-pink transition-colors">
+                                <img src={design.data.image} alt={title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                    {design.data.link && (
+                                        <a href={design.data.link} target="_blank" class="text-white font-black uppercase tracking-widest text-xs border-2 border-white px-3 py-1.5 hover:bg-white hover:text-black transition-colors flex items-center gap-2">
+                                            View Details <i class="ri-external-link-line"></i>
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                            <div class="flex flex-col flex-1 p-5">
+                                <h3 class="text-base font-black text-white uppercase leading-tight mb-2 group-hover:text-neo-pink transition-colors line-clamp-2">{title}</h3>
+                                {description && <p class="font-mono text-white/45 text-[11px] leading-relaxed mb-4 line-clamp-2">{description}</p>}
+                                <div class="mt-auto pt-2 flex flex-wrap gap-1.5">
+                                    {design.data.tools?.map((tool: string) => (
+                                        <span class="text-[9px] font-mono font-bold bg-white/10 text-white px-2 py-0.5 border border-white/20">{tool}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        </article>
+                    );
+                })}
+            </div>
+            <div class="flex flex-row flex-wrap justify-center items-center gap-4">
+                {designs.length > INITIAL_SHOW && (
+                    <button id="show-more-designs-btn" class="flex items-center gap-2 px-8 py-3 bg-transparent border-4 border-white text-white font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all" onclick="showMoreDesigns()">
+                        <i class="ri-add-line text-sm"></i> {t.showMore} <span id="remaining-designs-count" class="bg-neo-pink text-black px-2 py-0.5 text-[10px] ml-1">{designs.length - INITIAL_SHOW}</span>
+                    </button>
+                )}
             </div>
         </div>
 
@@ -406,11 +482,11 @@ const INITIAL_SHOW = 9;
 <script is:inline>
     // ── Dynamic title/subtitle per tab
     function switchTab(tab) {
-        const panels = { projects: document.getElementById('panel-projects'), achievements: document.getElementById('panel-achievements'), blog: document.getElementById('panel-blog') };
-        const tabs   = { projects: document.getElementById('tab-projects'),   achievements: document.getElementById('tab-achievements'),   blog: document.getElementById('tab-blog')   };
+        const panels = { projects: document.getElementById('panel-projects'), achievements: document.getElementById('panel-achievements'), designs: document.getElementById('panel-designs'), blog: document.getElementById('panel-blog') };
+        const tabs   = { projects: document.getElementById('tab-projects'),   achievements: document.getElementById('tab-achievements'),   designs: document.getElementById('tab-designs'), blog: document.getElementById('tab-blog')   };
         Object.keys(panels).forEach(k => {
-            panels[k].classList.toggle('hidden', k !== tab);
-            tabs[k].classList.toggle('active-tab', k === tab);
+            if (panels[k]) panels[k].classList.toggle('hidden', k !== tab);
+            if (tabs[k]) tabs[k].classList.toggle('active-tab', k === tab);
         });
         const subtitleEl = document.getElementById('section-subtitle');
         const titleEl    = document.getElementById('section-title');
@@ -418,6 +494,16 @@ const INITIAL_SHOW = 9;
             titleEl.textContent    = subtitleEl.dataset['title' + tab.charAt(0).toUpperCase() + tab.slice(1)] || titleEl.textContent;
             subtitleEl.textContent = subtitleEl.dataset[tab] || '';
         }
+        
+        refreshLayout();
+    }
+
+    function refreshLayout() {
+        setTimeout(() => {
+            if (typeof window.AOS !== 'undefined') window.AOS.refresh();
+            if (typeof window.ScrollTrigger !== 'undefined') window.ScrollTrigger.refresh();
+            window.dispatchEvent(new Event('scroll'));
+        }, 100);
     }
 
     // ── Show More Projects
@@ -429,6 +515,7 @@ const INITIAL_SHOW = 9;
         const count = document.getElementById('remaining-count');
         if (count) count.textContent = remaining;
         if (remaining === 0 && btn) btn.style.display = 'none';
+        refreshLayout();
     }
 
     // ── Show More Blog
@@ -440,6 +527,7 @@ const INITIAL_SHOW = 9;
         const count = document.getElementById('remaining-blog-count');
         if (count) count.textContent = remaining;
         if (remaining === 0 && btn) btn.style.display = 'none';
+        refreshLayout();
     }
 
     // ── Show More Achievements
@@ -451,6 +539,19 @@ const INITIAL_SHOW = 9;
         const count = document.getElementById('remaining-ach-count');
         if (count) count.textContent = remaining;
         if (remaining === 0 && btn) btn.style.display = 'none';
+        refreshLayout();
+    }
+
+    // ── Show More Designs
+    function showMoreDesigns() {
+        const cards = document.querySelectorAll('.design-card.hidden');
+        Array.from(cards).slice(0, 9).forEach(c => c.classList.remove('hidden'));
+        const remaining = document.querySelectorAll('.design-card.hidden').length;
+        const btn = document.getElementById('show-more-designs-btn');
+        const count = document.getElementById('remaining-designs-count');
+        if (count) count.textContent = remaining;
+        if (remaining === 0 && btn) btn.style.display = 'none';
+        refreshLayout();
     }
 
     // ── Gallery Functions
@@ -482,6 +583,11 @@ const INITIAL_SHOW = 9;
             document.getElementById('works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             return true;
         }
+        if (hash === '#designs' || hash.endsWith('#designs')) {
+            switchTab('designs');
+            document.getElementById('works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return true;
+        }
         if (hash === '#works' || hash.endsWith('#works')) {
             switchTab('projects');
             document.getElementById('works')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -490,13 +596,13 @@ const INITIAL_SHOW = 9;
         return false;
     }
 
-    // Intercept every click on any anchor that points to #achievements, #blog, or #works
+    // Intercept every click on any anchor that points to #achievements, #blog, #designs, or #works
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a[href]');
         if (!link) return;
         const href = link.getAttribute('href') || '';
         const hashPart = href.includes('#') ? '#' + href.split('#')[1] : '';
-        if (hashPart === '#achievements' || hashPart === '#blog' || hashPart === '#works') {
+        if (hashPart === '#achievements' || hashPart === '#blog' || hashPart === '#designs' || hashPart === '#works') {
             e.preventDefault();
             activateTabFromHash(hashPart);
             history.pushState(null, '', href);

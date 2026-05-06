@@ -98,10 +98,11 @@ const certificates = defineCollection({
         title_id: z.string().optional(),
         issuer: z.string(),
         date: z.string(),
-        category: z.enum(['Course', 'Bootcamp', 'Event', 'Competition']),
-        image: z.string().optional(),
+        category: z.enum(['Course', 'Bootcamp', 'Event', 'Competition', 'Certification', 'Organization', 'Appreciation']),
+        tags: z.array(z.string()).optional(),
+        image: z.string().optional().nullable(),
         link: z.string().url().or(z.literal('')).optional(),
-        credentialId: z.string().optional(),
+        credentialId: z.string().optional().nullable(),
         skills_verified: z.array(z.string()).optional(),
         description: z.string().optional(),
         description_id: z.string().optional(),
@@ -190,6 +191,15 @@ const site = defineCollection({
             category: z.string(),
         })).optional(),
         wallpaper: z.string().optional(),
+
+        // Sidebar
+        banner: z.string().optional().nullable(),
+        navItems: z.array(z.object({
+            label: z.string(),
+            label_id: z.string().optional().nullable(),
+            path: z.string().optional(), // optional so root "" works smoothly
+            icon: z.string(),
+        })).optional(),
     }),
 });
 
@@ -215,6 +225,20 @@ const snippets = defineCollection({
         description: z.string(),
         publishedDate: z.string(),
         tags: z.array(z.string()).optional(),
+    }),
+});
+
+const designs = defineCollection({
+    type: 'data',
+    schema: z.object({
+        title: z.string(),
+        title_id: z.string().optional().nullable(),
+        description: z.string().optional().nullable(),
+        description_id: z.string().optional().nullable(),
+        image: z.string(),
+        tools: z.array(z.string()),
+        link: z.string().url().or(z.literal('')).optional().nullable(),
+        order: z.number().int().min(1).max(999).optional().default(99),
     }),
 });
 
@@ -293,6 +317,7 @@ const socialBrands = defineCollection({
 
 export const collections = {
     projects,
+    designs,
     experience,
     career,
     education,

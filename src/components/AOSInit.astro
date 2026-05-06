@@ -15,6 +15,7 @@
 
     // Init on first load
     AOS.init(aosConfig);
+    window.AOS = AOS;
 
     // Re-init on every Astro page navigation (View Transitions)
     document.addEventListener('astro:page-load', () => {

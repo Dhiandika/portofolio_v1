@@ -302,14 +302,40 @@ export default config({
                 currencySymbol: fields.text({ label: 'Currency Symbol', defaultValue: '$' }),
             }
         }),
+        sidebar: singleton({
+            label: 'Sidebar Navigation',
+            path: 'src/content/site/sidebar',
+            format: { data: 'json' },
+            schema: {
+                banner: fields.image({
+                    label: 'Cover Banner (Image/GIF)',
+                    directory: 'public/images/sidebar',
+                    publicPath: '/images/sidebar/',
+                    description: 'The banner displayed when the sidebar is expanded. Can be a GIF.',
+                    validation: { isRequired: false }
+                }),
+                navItems: fields.array(
+                    fields.object({
+                        label: fields.text({ label: 'Label (EN)' }),
+                        label_id: fields.text({ label: 'Label (ID)' }),
+                        path: fields.text({ label: 'Route Path', description: 'e.g. "about", "projects", or leave empty for home ""' }),
+                        icon: fields.text({ label: 'Remix Icon Class', description: 'e.g. ri-home-4-fill' })
+                    }),
+                    {
+                        label: 'Navigation Items',
+                        itemLabel: props => props.fields.label.value
+                    }
+                )
+            }
+        }),
     },
     ui: {
         brand: { name: 'Dhiandika Aditya' },
         navigation: {
-            'Site Settings': ['site', 'radar', 'techStack', 'uses', 'estimator'],
+            'Site Settings': ['site', 'radar', 'techStack', 'uses', 'estimator', 'sidebar'],
             'Page Content': ['hero', 'whoami', 'about', 'now'],
             'Blog': ['blog'],
-            'Collections': ['projects', 'socialBrands', 'career', 'experience', 'education', 'certificates', 'reviews', 'companies', 'assets'],
+            'Collections': ['projects', 'designs', 'socialBrands', 'career', 'experience', 'education', 'certificates', 'reviews', 'companies', 'assets'],
         },
     },
     collections: {
@@ -352,6 +378,33 @@ export default config({
                         itemLabel: props => props.fields.platformType.value
                     }
                 )
+            }
+        }),
+
+        designs: collection({
+            label: 'Graphics & Posters',
+            slugField: 'title',
+            path: 'src/content/designs/*',
+            format: { data: 'json' },
+            schema: {
+                title: fields.slug({ name: { label: 'Title' } }),
+                title_id: fields.text({ label: 'Title (ID)', description: 'Indonesian translation.', validation: { isRequired: false } }),
+                description: fields.text({ label: 'Description', multiline: true, validation: { isRequired: false } }),
+                description_id: fields.text({ label: 'Description (ID)', multiline: true, validation: { isRequired: false } }),
+                image: fields.image({
+                    label: 'Poster Image',
+                    directory: 'public/images/designs',
+                    publicPath: '/images/designs/',
+                    validation: { isRequired: true }
+                }),
+                tools: fields.array(fields.text({ label: 'Tool Name' }), { label: 'Tools Used (e.g. Figma, Canva)' }),
+                link: fields.url({ label: 'External Link', validation: { isRequired: false } }),
+                order: fields.integer({
+                    label: '📌 Display Order',
+                    description: 'Lower number = shown first.',
+                    defaultValue: 99,
+                    validation: { isRequired: false, min: 1, max: 999 },
+                }),
             }
         }),
 
@@ -574,15 +627,24 @@ export default config({
                         { label: 'Bootcamp', value: 'Bootcamp' },
                         { label: 'Event', value: 'Event' },
                         { label: 'Competition', value: 'Competition' },
+                        { label: 'Certification', value: 'Certification' },
+                        { label: 'Organization', value: 'Organization' },
+                        { label: 'Appreciation', value: 'Appreciation' },
                     ],
                     defaultValue: 'Course'
                 }),
+                tags: fields.array(
+                    fields.text({ label: 'Tag' }),
+                    { label: 'Tags (Multi-label)', description: 'e.g., Cloud Computing, React, GCP, Machine Learning' }
+                ),
                 image: fields.image({
                     label: 'Certificate Image',
                     directory: 'public/images/certificates',
                     publicPath: '/images/certificates/',
+                    validation: { isRequired: false }
                 }),
                 link: fields.url({ label: 'Credential URL', validation: { isRequired: false } }),
+                credentialId: fields.text({ label: 'Credential ID', validation: { isRequired: false } }),
                 description: fields.text({ label: 'Description', multiline: true }),
                 description_id: fields.text({ label: 'Description (ID)', multiline: true, description: 'Indonesian translation.' }),
             }

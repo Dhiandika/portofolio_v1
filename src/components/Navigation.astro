@@ -2,6 +2,7 @@
 import { getEntry } from "astro:content";
 const siteConfig  = await getEntry("site", "config");
 const aboutConfig = await getEntry("site", "whoami");
+const sidebarConfig = await getEntry("site", "sidebar");
 
 const brandName    = siteConfig?.data?.brandName  || "Dhiandika Aditya";
 const profilePhoto = aboutConfig?.data?.profileImage || siteConfig?.data?.profilePhoto || "";
@@ -11,7 +12,7 @@ const { lang = "en" } = Astro.props;
 
 const initials = brandName.split(" ").map((w: string) => w[0]).join("").slice(0,2).toUpperCase();
 
-const navItems = [
+const defaultNavItems = [
     { href: `/${lang}`,              icon: "ri-home-4-fill",     label: "Home"      },
     { href: `/${lang}/about`,        icon: "ri-user-3-fill",     label: "About"     },
     { href: `/${lang}/projects`,     icon: "ri-briefcase-fill",  label: "Projects"  },
@@ -20,6 +21,17 @@ const navItems = [
     { href: `/${lang}/blog`,         icon: "ri-article-fill",    label: "Blog"      },
     { href: `/${lang}/dashboard`,    icon: "ri-dashboard-fill",  label: "Dashboard" },
 ];
+
+let navItems = defaultNavItems;
+if (sidebarConfig?.data?.navItems && sidebarConfig.data.navItems.length > 0) {
+    navItems = sidebarConfig.data.navItems.map((item: any) => ({
+        href: `/${lang}${item.path ? '/' + item.path.replace(/^\//, '') : ''}`,
+        icon: item.icon || 'ri-home-4-fill',
+        label: lang === 'id' && item.label_id ? item.label_id : item.label,
+    }));
+}
+
+const customBanner = sidebarConfig?.data?.banner;
 ---
 
 <!-- =============================================
@@ -76,10 +88,13 @@ const navItems = [
     >
         <!-- Dark gradient banner -->
         <div class="h-20 w-full bg-gradient-to-br from-black via-gray-800 to-gray-900 relative">
+            {customBanner && (
+                <img src={customBanner} alt="Cover Banner" class="absolute inset-0 w-full h-full object-cover z-0" />
+            )}
             <!-- Grid texture -->
-            <div class="absolute inset-0 opacity-20" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:16px 16px;"></div>
+            {!customBanner && <div class="absolute inset-0 opacity-20" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:16px 16px;"></div>}
             <!-- ✅ Hire me badge — absolute top-left INSIDE banner -->
-            <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 bg-neo-green/20 border border-neo-green px-2 py-0.5 rounded-full z-10">
+            <div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 bg-neo-green/20 border border-neo-green px-2 py-0.5 rounded-full z-10 backdrop-blur-sm">
                 <div class="w-1.5 h-1.5 bg-neo-green rounded-full animate-pulse shrink-0"></div>
                 <span class="font-mono text-neo-green text-[9px] font-bold uppercase tracking-wide whitespace-nowrap">Hire me.</span>
             </div>
@@ -159,9 +174,12 @@ const navItems = [
         <!-- Cover + avatar -->
         <div class="relative flex-shrink-0">
             <div class="h-20 w-full bg-gradient-to-br from-black via-gray-800 to-gray-900 relative overflow-hidden">
-                <div class="absolute inset-0 opacity-20" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:16px 16px;"></div>
+                {customBanner && (
+                    <img src={customBanner} alt="Cover Banner" class="absolute inset-0 w-full h-full object-cover z-0" />
+                )}
+                {!customBanner && <div class="absolute inset-0 opacity-20" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:16px 16px;"></div>}
                 <!-- Hire me badge -->
-                <div class="absolute top-3 left-3 flex items-center gap-1.5 bg-neo-green/20 border border-neo-green px-2.5 py-1 rounded-full">
+                <div class="absolute top-3 left-3 flex items-center gap-1.5 bg-neo-green/20 border border-neo-green px-2.5 py-1 rounded-full z-10 backdrop-blur-sm">
                     <div class="w-1.5 h-1.5 bg-neo-green rounded-full animate-pulse shrink-0"></div>
                     <span class="font-mono text-neo-green text-[9px] font-bold uppercase">Hire me.</span>
                 </div>
