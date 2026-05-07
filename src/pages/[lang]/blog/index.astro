@@ -161,11 +161,9 @@ const localBlogImages = import.meta.glob<{ default: ImageMetadata }>('/src/asset
                                             class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-110"
                                         />
                                     ) : (
-                                        <img
-                                            src={post.coverImage}
-                                            alt={post.title}
-                                            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-110"
-                                        />
+                                        <div class="w-full h-full flex items-center justify-center bg-gray-800">
+                                            <i class="ri-article-line text-6xl text-white/20"></i>
+                                        </div>
                                     );
                                 })()
                             )}

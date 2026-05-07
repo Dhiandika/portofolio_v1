@@ -1,5 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+const eduImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpeg,jpg,png,gif,webp}');
 
 interface Props {
     lang?: string;
@@ -31,7 +34,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
     </div>
 
     <div class="grid grid-cols-1 gap-0 divide-y-4 divide-black">
-        {education.length > 0 ? education.map((edu, index) => {
+        {education.length > 0 ? await Promise.all(education.map(async (edu, index) => {
             const degree = lang === 'id' ? edu.data.degree_id || edu.data.degree : edu.data.degree;
             const description = lang === 'id' ? edu.data.description_id || edu.data.description : edu.data.description;
             
@@ -40,12 +43,15 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                     <div class="flex flex-col gap-4 h-full">
                         <div class="flex justify-between items-start">
                              <div class="w-16 h-16 bg-white border-4 border-black flex items-center justify-center shadow-[4px_4px_0_0_#000] group-hover:-translate-y-1 group-hover:shadow-[6px_6px_0_0_#000] transition-all">
-                                {edu.data.logo ? (
-                                    <img src={edu.data.logo} alt={edu.data.institution} class="w-full h-full object-cover p-1" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling?.classList.remove('hidden');" />
-                                    <i class="ri-school-fill text-3xl text-neo-black hidden"></i>
-                                ) : (
-                                    <i class="ri-school-fill text-3xl text-neo-black"></i>
-                                )}
+                                {await (async () => {
+                                    const logoPromise = edu.data.logo ? eduImages[edu.data.logo] : null;
+                                    const logoImg = logoPromise ? await logoPromise() : null;
+                                    return logoImg ? (
+                                        <Image src={logoImg.default} alt={edu.data.institution} width={64} height={64} format="webp" class="w-full h-full object-cover p-1" />
+                                    ) : (
+                                        <i class="ri-school-fill text-3xl text-neo-black"></i>
+                                    );
+                                })()}
                             </div>
                             <span class="bg-neo-black text-white px-2 py-1 font-mono text-xs font-bold border-2 border-transparent">{edu.data.date}</span>
                         </div>
@@ -79,7 +85,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                     </div>
                 </div>
             );
-        }) : (
+        })) : (
              <div class="col-span-2 p-8 text-center bg-gray-100 font-mono text-gray-500 border-2 border-dashed border-gray-400 m-4">
                 NO_DATA_FOUND
              </div>

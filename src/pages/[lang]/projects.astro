@@ -1,7 +1,9 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 
+const projectPageImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpeg,jpg,png,gif,webp}');
 export async function getStaticPaths() {
     return [{ params: { lang: "en" } }, { params: { lang: "id" } }];
 }
@@ -103,7 +105,7 @@ const t = ui[lang as string] || ui.en;
                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
                 {
-                    projects.map((project, index) => {
+                    await Promise.all(projects.map(async (project, index) => {
                         const title = lang === "id" ? project.data.title_id || project.data.title : project.data.title;
                         const desc = lang === "id" ? project.data.description_id || project.data.description : project.data.description;
                         const detailHref = `/${lang}/projects/${project.id}`;
@@ -126,6 +128,10 @@ const t = ui[lang as string] || ui.en;
                             ? desc.slice(0, DESC_LIMIT).trimEnd() + "..."
                             : desc;
 
+                        const imgPath = project.data.image || (project.data.gallery?.find((g: string | null) => g !== null) ?? null);
+                        const imgPromise = imgPath ? projectPageImages[imgPath] : null;
+                        const optimizedImg = imgPromise ? await imgPromise() : null;
+
                         return (
                             <article
                                 data-aos="fade-up"
@@ -136,12 +142,14 @@ const t = ui[lang as string] || ui.en;
                             >
                                 <a href={detailHref} class="flex flex-col flex-1 h-full hover:no-underline">
                                     <div class="relative h-48 overflow-hidden border-b-4 border-black group-hover:border-neo-yellow transition-colors">
-                                        {project.data.image ? (
-                                            <img
-                                                src={project.data.image}
+                                        {optimizedImg ? (
+                                            <Image
+                                                src={optimizedImg.default}
                                                 alt={title}
+                                                width={600}
+                                                height={400}
+                                                format="webp"
                                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                                onerror="this.onerror=null;this.style.opacity='0';"
                                             />
                                         ) : (
                                             <div class="w-full h-full flex items-center justify-center bg-gray-100 text-black/20">
@@ -199,7 +207,7 @@ const t = ui[lang as string] || ui.en;
                                 </a>
                             </article>
                         );
-                    })
+                    }))
                 }
             </div>
 

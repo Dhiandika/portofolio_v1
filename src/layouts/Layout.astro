@@ -56,6 +56,23 @@ const image = Astro.props.image || defaultOgUrl;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 
+        <!-- Canonical URL -->
+        <link rel="canonical" href={new URL(Astro.url.pathname, 'https://npemburu.my.id').href} />
+
+        <!-- Hreflang: Tell search engines about language alternatives -->
+        {(() => {
+            const path = Astro.url.pathname;
+            const enPath = path.replace(/^\/(id|en)\//, '/en/');
+            const idPath = path.replace(/^\/(id|en)\//, '/id/');
+            return null;
+        })()}
+        <link rel="alternate" hreflang="en" href={new URL(Astro.url.pathname.replace(/^\/(id|en)\//, '/en/'), 'https://npemburu.my.id').href} />
+        <link rel="alternate" hreflang="id" href={new URL(Astro.url.pathname.replace(/^\/(id|en)\//, '/id/'), 'https://npemburu.my.id').href} />
+        <link rel="alternate" hreflang="x-default" href={new URL(Astro.url.pathname.replace(/^\/(id|en)\//, '/en/'), 'https://npemburu.my.id').href} />
+
+        <!-- Allow indexing -->
+        <meta name="robots" content="index, follow" />
+
         <!-- Meta Tags -->
         <meta name="keywords" content={metaKeywords}>
         <meta name="author" content={data.brandName || "Arham"}>
