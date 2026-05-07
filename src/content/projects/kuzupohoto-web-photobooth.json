@@ -4,7 +4,7 @@
   "title_id": "Kuzupohoto - Photobooth Berbasis Web",
   "description": "An interactive web-based photobooth application built for KUZUPost, allowing users to capture moments directly from their browser with customizable frames and backgrounds.",
   "description_id": "Aplikasi photobooth interaktif berbasis web yang dibangun untuk KUZUPost, memungkinkan pengguna mengabadikan momen langsung dari browser dengan bingkai dan latar belakang yang dapat disesuaikan.",
-  "image": "/images/projects/kuzupohoto-web-photobooth/image.png",
+  "image": "/src/assets/images/projects/kuzupohoto-web-photobooth/image.png",
   "link": "https://dhiandika.github.io/Kuzupohoto/index.html",
   "githubLink": "https://github.com/Dhiandika/Kuzupohoto",
   "category": "Web",
@@ -16,7 +16,7 @@
     "HTML"
   ],
   "gallery": [
-    "/images/projects/kuzupohoto-web-photobooth/gallery/0.png"
+    "/src/assets/images/projects/kuzupohoto-web-photobooth/gallery/0.png"
   ],
   "content": "Kuzupohoto is a fun, interactive web-based photobooth application developed as part of the KUZUPost ecosystem. The application brings the classic photobooth experience directly to the user's browser. It allows users to capture their moments using their device's webcam with real-time video feedback.\n\nTo make the experience highly personal, the app features a variety of customization options. Users can select from multiple themed frames and change the background color using predefined color palettes (Black, White, Pink, Grey) or a custom color picker. Recently remade from the ground up using the Astro framework, this project focuses on delivering a fast, lightweight, and engaging user experience for creating and reliving digital memories.",
   "content_id": "Kuzupohoto adalah aplikasi photobooth interaktif berbasis web yang menyenangkan, dikembangkan sebagai bagian dari ekosistem KUZUPost. Aplikasi ini membawa pengalaman photobooth klasik langsung ke peramban (browser) pengguna. Aplikasi ini memungkinkan pengguna untuk mengabadikan momen mereka menggunakan webcam perangkat dengan tangkapan video real-time.\n\nUntuk membuat pengalaman menjadi lebih personal, aplikasi ini dilengkapi dengan berbagai opsi kustomisasi. Pengguna dapat memilih dari beberapa bingkai bertema dan mengubah warna latar belakang menggunakan palet warna yang sudah disediakan (Hitam, Putih, Pink, Abu-abu) atau menggunakan color picker kustom. Proyek ini baru saja dibangun ulang (remake) menggunakan framework Astro, dengan fokus pada penyajian pengalaman pengguna yang cepat, ringan, dan interaktif dalam menciptakan kenangan digital.",

@@ -4,7 +4,7 @@
   "issuer": "Badan Eksekutif Mahasiswa Fakultas Teknik Universitas Udayana",
   "date": "May 2023",
   "category": "Event",
-  "image": "/images/certificates/seminar-teknik-2023/image.jpg",
+  "image": "/src/assets/images/certificates/seminar-teknik-2023/image.jpg",
   "link": "",
   "credentialId": "",
   "description": "This seminar focused on optimizing Occupational Health and Safety (K3) culture to face competition in the Industrial Revolution 4.0 era.",

@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import { getEntry } from "astro:content";
 import { getTechIcon, getTechColor, getTechAbbrev } from "../utils/techIcons";
 import { getMediumPosts } from "../utils/medium";
+import { Image } from "astro:assets";
 
 interface Props { lang?: string; }
 const { lang = "en" } = Astro.props;
@@ -14,6 +15,8 @@ const certificates = await getCollection("certificates");
 
 const allDesigns = await getCollection("designs");
 const designs = allDesigns.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+const projectImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpeg,jpg,png,gif,webp}');
 
 // Blog posts
 const siteConfig = await getEntry("site", "config");
@@ -135,7 +138,7 @@ const INITIAL_SHOW = 9;
         <!-- ═══════════ PROJECTS TAB ═══════════ -->
         <div id="panel-projects">
             <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                {projects.map((project, index) => {
+                {await Promise.all(projects.map(async (project, index) => {
                     const title = lang === "id" ? project.data.title_id || project.data.title : project.data.title;
                     const description = lang === "id" ? project.data.description_id || project.data.description : project.data.description;
                     const techIconsList = project.data.techStack.map((tech: any) => ({
@@ -155,6 +158,10 @@ const INITIAL_SHOW = 9;
                     // Fallback: use first gallery image if no thumbnail set
                     const thumbnailSrc = project.data.image
                         || (project.data.gallery?.find((g: string | null) => g !== null) ?? null);
+                    
+                    const imagePromise = thumbnailSrc ? projectImages[thumbnailSrc] : null;
+                    const optimizedImage = imagePromise ? await imagePromise() : null;
+
                     return (
                         <article
                             data-aos="fade-up"
@@ -163,7 +170,16 @@ const INITIAL_SHOW = 9;
                         >
                             {/* Thumbnail */}
                             <div class="relative h-48 overflow-hidden border-b-4 border-white group-hover:border-neo-yellow transition-colors">
-                                {thumbnailSrc ? (
+                                {optimizedImage ? (
+                                    <Image
+                                        src={optimizedImage.default}
+                                        alt={title}
+                                        width={600}
+                                        height={400}
+                                        format="webp"
+                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
+                                ) : thumbnailSrc ? (
                                     <img
                                         src={thumbnailSrc}
                                         alt={title}
@@ -193,7 +209,7 @@ const INITIAL_SHOW = 9;
                                 <p class="font-mono text-white/45 text-[11px] leading-relaxed mb-4 flex-1">
                                     {shortDesc}
                                     {description && description.length > DESC_LIMIT && (
-                                        <a href={detailHref} class="text-neo-yellow ml-1 hover:underline font-bold">Read more</a>
+                                        <a href={detailHref} class="text-neo-yellow ml-1 hover:underline font-bold">Read more <span class="sr-only">about {title}</span></a>
                                     )}
                                 </p>
 
@@ -245,13 +261,13 @@ const INITIAL_SHOW = 9;
                                         href={detailHref}
                                         class="flex-1 py-2 font-black text-[11px] uppercase tracking-widest bg-neo-yellow text-black border-2 border-neo-yellow hover:bg-transparent hover:text-neo-yellow transition-all text-center flex items-center justify-center gap-1"
                                     >
-                                        <i class="ri-eye-line"></i> {t.details}
+                                        <i class="ri-eye-line"></i> {t.details} <span class="sr-only">about {title}</span>
                                     </a>
                                 </div>
                             </div>
                         </article>
                     );
-                })}
+                }))}
             </div>
 
 

@@ -4,7 +4,7 @@
   "title_id": "Landing Page Event Natal Kuzupost",
   "description": "A festive and interactive event landing page built for the Kuzupost X-Mas community gathering, featuring competition details, guest star showcases, and an event timeline.",
   "description_id": "Landing page acara yang meriah dan interaktif untuk perayaan komunitas Kuzupost X-Mas, menampilkan detail kompetisi, etalase bintang tamu, dan lini masa acara.",
-  "image": "/images/projects/kuzupost-x-mas-event-landing-page/image.jpg",
+  "image": "/src/assets/images/projects/kuzupost-x-mas-event-landing-page/image.jpg",
   "link": "https://github.com/Dhiandika/Dhiandika.github.io",
   "githubLink": "https://github.com/Dhiandika/Dhiandika.github.io",
   "category": "Web",
@@ -16,9 +16,9 @@
     "Vite"
   ],
   "gallery": [
-    "/images/projects/kuzupost-x-mas-event-landing-page/gallery/0.jpg",
-    "/images/projects/kuzupost-x-mas-event-landing-page/gallery/1.jpg",
-    "/images/projects/kuzupost-x-mas-event-landing-page/gallery/2.jpg"
+    "/src/assets/images/projects/kuzupost-x-mas-event-landing-page/gallery/0.jpg",
+    "/src/assets/images/projects/kuzupost-x-mas-event-landing-page/gallery/1.jpg",
+    "/src/assets/images/projects/kuzupost-x-mas-event-landing-page/gallery/2.jpg"
   ],
   "content": "This project is a dedicated landing page created for the \"Kuzupost X-Mas Event\" community gathering. The main objective was to design a festive, engaging, and informative website to attract attendees and provide clear information about the event's activities.\n\nThe page features a vibrant, Christmas-themed UI utilizing red and green palettes combined with modern glassmorphism elements. It comprehensively displays all crucial event details in a single-page scrolling experience. This includes the competition lineup (Cosplay, Tree Decorating, Singing), event highlights, a photo gallery, and special VTuber and Cosplayer guest star profiles. Furthermore, an integrated Google Maps section and a clear, interactive event timeline ensure that participants have all the logistical information they need in one accessible hub.",
   "content_id": "Proyek ini adalah landing page khusus yang dibuat untuk acara komunitas \"Kuzupost X-Mas Event\". Tujuan utamanya adalah untuk merancang situs web yang meriah, interaktif, dan informatif untuk menarik pengunjung dan memberikan informasi yang jelas tentang berbagai kegiatan acara.\n\nHalaman ini menampilkan UI bertema Natal yang semarak, menggunakan palet warna merah dan hijau yang dipadukan dengan elemen glassmorphism modern. Situs ini secara komprehensif menampilkan semua detail acara yang penting dalam pengalaman satu halaman gulir (single-page scrolling). Di dalamnya terdapat deretan kompetisi (Cosplay, Hias Pohon Natal, Menyanyi), sorotan acara utama, galeri foto, serta profil bintang tamu spesial yang terdiri dari VTuber dan Cosplayer. Selain itu, integrasi bagian Google Maps dan lini masa acara yang interaktif memastikan peserta mendapatkan semua informasi logistik yang mereka butuhkan dalam satu tempat yang mudah diakses.",

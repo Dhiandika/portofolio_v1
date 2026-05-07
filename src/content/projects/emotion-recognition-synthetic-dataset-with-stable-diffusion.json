@@ -4,7 +4,7 @@
   "title_id": "Dataset Sintetis Pengenalan Emosi dengan Stable Diffusion",
   "description": "A data science project focused on generating a high-quality synthetic dataset for facial emotion recognition using Python and Stable Diffusion, complete with a deployment test phase.",
   "description_id": "Proyek data science yang berfokus pada pembuatan kumpulan data sintetis berkualitas tinggi untuk pengenalan emosi wajah menggunakan Python dan Stable Diffusion, dilengkapi dengan fase deployment test.",
-  "image": "/images/projects/emotion-recognition-synthetic-dataset-with-stable-diffusion/image.png",
+  "image": "/src/assets/images/projects/emotion-recognition-synthetic-dataset-with-stable-diffusion/image.png",
   "link": "https://github.com/Dhiandika/Facial-Expression-Recognition-Mediapipe",
   "githubLink": "https://github.com/Dhiandika/Facial-Expression-Recognition-Mediapipe",
   "category": "Other",
@@ -16,7 +16,7 @@
     "Computer Vision"
   ],
   "gallery": [
-    "/images/projects/emotion-recognition-synthetic-dataset-with-stable-diffusion/gallery/0.png"
+    "/src/assets/images/projects/emotion-recognition-synthetic-dataset-with-stable-diffusion/gallery/0.png"
   ],
   "content": "This project focuses on the creation of a synthetic dataset for emotion recognition using Python and Stable Diffusion. The primary goal of this dataset is to be utilized in training machine learning models capable of accurately recognizing and classifying human emotions derived from facial expressions.\n\nBy leveraging advanced image generation techniques via Stable Diffusion, this project aims to produce diverse, high-quality images of various facial emotions, thereby overcoming the limitations of traditional data gathering. Furthermore, the project scope includes a deployment phase specifically designed to test the emotion recognition model's performance in real-world or simulated scenarios.",
   "content_id": "Proyek ini berfokus pada pembuatan kumpulan data sintetis untuk pengenalan emosi menggunakan Python dan Stable Diffusion. Kumpulan data ini dimaksudkan untuk digunakan dalam pelatihan model pembelajaran mesin yang dapat mengenali dan mengklasifikasikan emosi manusia dari ekspresi wajah secara akurat.\n\nDengan memanfaatkan teknik pembuatan gambar canggih dengan Stable Diffusion, proyek ini bertujuan untuk membuat gambar emosi wajah yang beragam dan berkualitas tinggi, sehingga dapat mengatasi keterbatasan pengumpulan data konvensional. Selain itu, cakupan proyek ini juga mencakup tahap deployment untuk pengetesan emosi, memastikan model dapat berjalan dan diuji dengan baik.",

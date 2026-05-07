@@ -6,7 +6,7 @@
   "date": "Juli 2023 - Jan 2024",
   "location": "Daring",
   "type": "Remote",
-  "logo": "/images/logos/bangkit-cloud-cohort/logo.jpg",
+  "logo": "/src/assets/images/logos/bangkit-cloud-cohort/logo.jpg",
   "tasks": [
     "Acted as the Cloud Computing Lead for the \"Parental Peace\" capstone project, orchestrating the backend architecture.",
     "Designed and deployed robust REST APIs to seamlessly bridge mobile client requests with backend processing.",

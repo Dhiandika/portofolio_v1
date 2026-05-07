@@ -4,7 +4,7 @@
   "title_id": "PDDIKTI Clone - Sistem Pencarian Data Akademik",
   "description": "A fast and responsive web application built with Flask to search and retrieve comprehensive Indonesian academic data (students, lecturers, universities) integrating the PDDIKTI API.",
   "description_id": "Aplikasi web responsif berbasis Flask untuk mencari dan mengambil data akademik Indonesia secara komprehensif (mahasiswa, dosen, perguruan tinggi) menggunakan integrasi API PDDIKTI.",
-  "image": "/images/projects/pddikti-clone-academic-data-search/image.png",
+  "image": "/src/assets/images/projects/pddikti-clone-academic-data-search/image.png",
   "link": "https://github.com/Dhiandika/Pddikti_clone",
   "githubLink": "https://github.com/Dhiandika/Pddikti_clone",
   "category": "Web",
@@ -17,10 +17,10 @@
     "REST API (pddiktipy)"
   ],
   "gallery": [
-    "/images/projects/pddikti-clone-academic-data-search/gallery/0.png",
-    "/images/projects/pddikti-clone-academic-data-search/gallery/1.png",
-    "/images/projects/pddikti-clone-academic-data-search/gallery/2.png",
-    "/images/projects/pddikti-clone-academic-data-search/gallery/3.png"
+    "/src/assets/images/projects/pddikti-clone-academic-data-search/gallery/0.png",
+    "/src/assets/images/projects/pddikti-clone-academic-data-search/gallery/1.png",
+    "/src/assets/images/projects/pddikti-clone-academic-data-search/gallery/2.png",
+    "/src/assets/images/projects/pddikti-clone-academic-data-search/gallery/3.png"
   ],
   "content": "PDDIKTI Clone is a web-based application designed to provide a seamless and user-friendly interface for searching Indonesian higher education data. Utilizing the official PDDIKTI (Pangkalan Data Pendidikan Tinggi) API via the pddiktipy library, the platform allows users to quickly look up verified information regarding students, lecturers, universities, and specific study programs.\n\nBuilt with a robust Python Flask backend and a modern, responsive frontend using HTML5, CSS3, and Bootstrap 5, the application effectively bridges raw API data into a readable format. A notable technical implementation in this project is the custom loading and asynchronous handling system designed specifically to manage high-latency API responses smoothly, ensuring the user experience remains uninterrupted even when fetching large amounts of detailed academic records.",
   "content_id": "PDDIKTI Clone adalah aplikasi berbasis web yang dirancang untuk menyediakan antarmuka yang mulus dan user-friendly dalam mencari data pendidikan tinggi di Indonesia. Memanfaatkan API resmi PDDIKTI (Pangkalan Data Pendidikan Tinggi) melalui library pddiktipy, platform ini memungkinkan pengguna untuk dengan cepat mencari informasi terverifikasi mengenai mahasiswa, dosen, perguruan tinggi, dan program studi spesifik.\n\nDibangun dengan backend Python Flask yang tangguh dan frontend modern serta responsif menggunakan HTML5, CSS3, dan Bootstrap 5, aplikasi ini secara efektif menjembatani data API mentah menjadi format yang mudah dibaca. Implementasi teknis yang menonjol dalam proyek ini adalah sistem loading kustom yang dirancang khusus untuk menangani respons API dengan latensi tinggi secara mulus, memastikan pengalaman pengguna tetap tidak terganggu bahkan saat mengambil data catatan akademik detail dalam jumlah besar.",

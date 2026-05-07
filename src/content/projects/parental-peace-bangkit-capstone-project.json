@@ -4,7 +4,7 @@
   "title_id": "Parental Peace - Proyek Capstone Bangkit",
   "description": "Parental Peace is a mobile application designed to protect children from the threat of pornography. Developed as a collaborative Bangkit Academy Capstone project where I served as the Cloud Computing Engineer.",
   "description_id": "Parental Peace adalah aplikasi mobile perlindungan anak dari ancaman pornografi. Dikembangkan sebagai proyek Capstone Bangkit Academy secara tim, di mana saya bertanggung jawab sebagai Cloud Computing Engineer.",
-  "image": "/images/projects/parental-peace-bangkit-capstone-project/image.png",
+  "image": "/src/assets/images/projects/parental-peace-bangkit-capstone-project/image.png",
   "link": "https://parental-peace.github.io/",
   "githubLink": "https://github.com/Dhiandika/Parental_Peace/tree/CC",
   "category": "Web",
@@ -17,9 +17,9 @@
     "TensorFlow"
   ],
   "gallery": [
-    "/images/projects/parental-peace-bangkit-capstone-project/gallery/0.png",
-    "/images/projects/parental-peace-bangkit-capstone-project/gallery/1.jpg",
-    "/images/projects/parental-peace-bangkit-capstone-project/gallery/2.jpg"
+    "/src/assets/images/projects/parental-peace-bangkit-capstone-project/gallery/0.png",
+    "/src/assets/images/projects/parental-peace-bangkit-capstone-project/gallery/1.jpg",
+    "/src/assets/images/projects/parental-peace-bangkit-capstone-project/gallery/2.jpg"
   ],
   "content": "Parental Peace is an application created to protect children by focusing on fighting the threat of pornography. Built as our final Capstone Project for Bangkit Academy, this project integrates three main learning paths: Mobile Development, Machine Learning, and Cloud Computing. The application features intelligent audio classification, expert consultation services, and educational articles.\n\nIn this cross-functional team, I took on the role of Cloud Computing Engineer. My primary responsibility was architecting and deploying the robust cloud infrastructure required to bridge the machine learning models with the Android mobile frontend, ensuring the backend services ran seamlessly and securely.",
   "content_id": "Parental Peace adalah aplikasi yang diciptakan untuk melindungi anak-anak dengan fokus memerangi ancaman pornografi. Dibangun sebagai Proyek Capstone akhir kami untuk Bangkit Academy, proyek ini mengintegrasikan tiga jalur pembelajaran utama: Mobile Development, Machine Learning, dan Cloud Computing. Aplikasi ini dilengkapi dengan fitur klasifikasi audio cerdas, layanan konsultasi pakar, dan artikel edukasi.\n\nDalam tim lintas divisi ini, saya mengambil peran di bagian Cloud Computing. Tanggung jawab utama saya adalah merancang dan men-deploy infrastruktur cloud yang tangguh untuk menjembatani model machine learning dengan antarmuka mobile Android, serta memastikan layanan backend berjalan dengan lancar, aman, dan dapat diskalakan.",

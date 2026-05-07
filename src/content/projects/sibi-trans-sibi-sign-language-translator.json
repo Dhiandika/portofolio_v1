@@ -4,7 +4,7 @@
   "title_id": "SibiTrans - Penerjemah Bahasa Isyarat SIBI",
   "description": "A comprehensive web-based learning and translation platform for Indonesian Sign Language (SIBI), developed as a final thesis project utilizing Mediapipe and Multilayer Perceptron (MLP) deep learning models.",
   "description_id": "Platform pembelajaran dan penerjemah berbasis web untuk Sistem Isyarat Bahasa Indonesia (SIBI), dikembangkan sebagai proyek tugas akhir (skripsi) menggunakan Mediapipe dan model deep learning Multilayer Perceptron (MLP).",
-  "image": "/images/projects/sibi-trans-sibi-sign-language-translator/image.png",
+  "image": "/src/assets/images/projects/sibi-trans-sibi-sign-language-translator/image.png",
   "link": "https://github.com/Dhiandika/Fix_TA_Website",
   "githubLink": "https://github.com/Dhiandika/Fix_TA_Website",
   "category": "Web",
@@ -19,10 +19,10 @@
     "JS"
   ],
   "gallery": [
-    "/images/projects/sibi-trans-sibi-sign-language-translator/gallery/0.png",
-    "/images/projects/sibi-trans-sibi-sign-language-translator/gallery/1.png",
-    "/images/projects/sibi-trans-sibi-sign-language-translator/gallery/2.png",
-    "/images/projects/sibi-trans-sibi-sign-language-translator/gallery/3.png"
+    "/src/assets/images/projects/sibi-trans-sibi-sign-language-translator/gallery/0.png",
+    "/src/assets/images/projects/sibi-trans-sibi-sign-language-translator/gallery/1.png",
+    "/src/assets/images/projects/sibi-trans-sibi-sign-language-translator/gallery/2.png",
+    "/src/assets/images/projects/sibi-trans-sibi-sign-language-translator/gallery/3.png"
   ],
   "content": "SibiTrans is an innovative web application designed to bridge the communication gap by serving as an interactive learning platform and real-time translator for Indonesian Sign Language (SIBI). Developed as my final undergraduate thesis project, it integrates a Flask-based web frontend with Google Mediapipe for high-accuracy real-time hand tracking, and a custom-trained Multilayer Perceptron (MLP) deep learning model for sign recognition.\n\nThe platform goes beyond simple translation; it provides a comprehensive learning ecosystem including a SIBI alphabet dictionary, an interactive learning module, and quizzes to evaluate user proficiency. It also features a built-in tool for customized dataset collection. The future roadmap for SibiTrans focuses on transitioning this robust recognition system into a native mobile application (Android/iOS) to leverage On-Device Machine Learning for even wider accessibility.",
   "content_id": "SibiTrans adalah aplikasi web inovatif yang dirancang untuk menjembatani kesenjangan komunikasi dengan berfungsi sebagai platform pembelajaran interaktif dan penerjemah real-time untuk Sistem Isyarat Bahasa Indonesia (SIBI). Dikembangkan sebagai proyek tugas akhir (skripsi) sarjana saya, platform ini mengintegrasikan frontend web berbasis Flask dengan Google Mediapipe untuk pelacakan tangan real-time berakurasi tinggi, serta model deep learning Multilayer Perceptron (MLP) yang dilatih khusus untuk pengenalan isyarat.\n\nPlatform ini tidak hanya sekadar alat penerjemah; SibiTrans menyediakan ekosistem pembelajaran yang komprehensif, termasuk kamus alfabet SIBI, modul pembelajaran interaktif, dan kuis untuk mengevaluasi kemampuan pengguna. Terdapat juga fitur bawaan untuk pengumpulan dataset kustom. Arah pengembangan selanjutnya (roadmap) untuk SibiTrans difokuskan pada transisi sistem pengenalan yang tangguh ini ke ekosistem aplikasi mobile native (Android/iOS) dengan memanfaatkan teknologi On-Device Machine Learning agar lebih mudah diakses oleh masyarakat luas.",

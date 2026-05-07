@@ -9,7 +9,7 @@
     "GCP",
     "Bangkit Academy"
   ],
-  "image": "/images/certificates/2024-distinction-graduate-certificate-of-completion/image.jpg",
+  "image": "/src/assets/images/certificates/2024-distinction-graduate-certificate-of-completion/image.jpg",
   "link": "",
   "credentialId": "BA23/DIST/XXIV-01/C014BSY4164",
   "description": "Focuses on Cloud Computing specifically in Google Cloud Platform services and infrastructure. Validates proficiency in deploying, managing, and scaling applications on cloud environments.",

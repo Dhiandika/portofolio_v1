@@ -1,6 +1,7 @@
 ---
 import { getEntry } from "astro:content";
 import HeroGeometric from "./HeroGeometric.astro";
+import { Image } from "astro:assets";
 
 interface Props {
     lang?: string;
@@ -20,13 +21,18 @@ const {
 const {
     bio = "Creative Developer.",
     bio_id,
-    profileImage = "/images/img.jpg",
+    profileImage = "/src/assets/images/img.jpg",
 } = aboutConfig?.data || {};
 
 const { location = "Remote" } = siteConfig?.data || {};
 
 const displayTitle = lang === "id" ? title_id || title : title;
 const displayBio = lang === "id" ? bio_id || bio : bio;
+
+// Dynamic Image Resolution
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpeg,jpg,png,gif,webp}');
+const imagePromise = images[profileImage];
+const optimizedImage = imagePromise ? await imagePromise() : null;
 ---
 
 <section
@@ -55,11 +61,10 @@ const displayBio = lang === "id" ? bio_id || bio : bio;
         >
             <!-- 1. Left Column: Hero Typography & Info (Order 1 in mobile) -->
             <div
-                data-aos="fade-right"
                 class="order-1 lg:col-span-7 lg:col-start-1 lg:row-start-1 flex flex-col items-center lg:items-start text-center lg:text-left w-full"
             >
                 <div
-                    class="flex flex-wrap items-center gap-3 justify-center lg:justify-start mb-6 w-full reveal"
+                    class="flex flex-wrap items-center gap-3 justify-center lg:justify-start mb-6 w-full"
                 >
                     <div
                         class="bg-neo-white border-2 border-black px-4 py-1 shadow-hard rotate-[-2deg]"
@@ -80,7 +85,7 @@ const displayBio = lang === "id" ? bio_id || bio : bio;
                 </div>
 
                 <h1
-                    class="text-[10vw] sm:text-[8vw] lg:text-[4.5vw] xl:text-[5vw] leading-[0.85] font-black uppercase tracking-tighter mb-8 reveal mix-blend-darken whitespace-pre-line min-h-[1.6em]"
+                    class="text-[10vw] sm:text-[8vw] lg:text-[4.5vw] xl:text-[5vw] leading-[0.85] font-black uppercase tracking-tighter mb-8 mix-blend-darken whitespace-pre-line min-h-[1.6em]"
                 >
                     <span id="typewriter-text"
                         >{displayTitle.replace(" DEVELOPER", "")}</span
@@ -138,7 +143,8 @@ const displayBio = lang === "id" ? bio_id || bio : bio;
 
                     if (typeof window !== "undefined") {
                         document.addEventListener("DOMContentLoaded", () => {
-                            setTimeout(typeWriter, 1000);
+                            // Immediately start typing to avoid render delay
+                            typeWriter();
                         });
                     }
                 </script>
@@ -146,8 +152,7 @@ const displayBio = lang === "id" ? bio_id || bio : bio;
 
             <!-- 2. Right Column: Profile "Window" (Order 2 in mobile) -->
             <div
-                data-aos="fade-left"
-                class="order-2 lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:row-span-2 reveal mt-4 mb-4 lg:my-0 flex justify-center lg:justify-end w-full"
+                class="order-2 lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:row-span-2 mt-4 mb-4 lg:my-0 flex justify-center lg:justify-end w-full"
             >
                 <div
                     class="relative group w-full max-w-[18rem] md:max-w-sm mx-auto lg:mx-0"
@@ -189,20 +194,32 @@ const displayBio = lang === "id" ? bio_id || bio : bio;
                         <div
                             class="aspect-square relative overflow-hidden group"
                         >
-                            <img
-                                src={profileImage}
-                                alt="Profile"
-                                width="400"
-                                height="400"
-                                fetchpriority="high"
-                                loading="eager"
-                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                                onerror="this.onerror=null; this.style.opacity='0';"
-                            />
+                            {optimizedImage ? (
+                                <Image
+                                    src={optimizedImage.default}
+                                    alt="Profile"
+                                    width={400}
+                                    height={400}
+                                    format="webp"
+                                    fetchpriority="high"
+                                    loading="eager"
+                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                />
+                            ) : (
+                                <img
+                                    src={profileImage}
+                                    alt="Profile"
+                                    width="400"
+                                    height="400"
+                                    fetchpriority="high"
+                                    loading="eager"
+                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                />
+                            )}
 
                             <!-- Tags/Badges -->
                             <span
-                                class="absolute top-4 left-0 bg-neo-red text-white px-3 py-1 font-mono text-xs border-y-4 border-r-4 border-black font-bold shadow-md uppercase"
+                                class="absolute top-4 left-0 bg-neo-red text-black px-3 py-1 font-mono text-xs border-y-4 border-r-4 border-black font-black shadow-md uppercase"
                             >
                                 IDENTITY
                             </span>

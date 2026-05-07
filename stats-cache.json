@@ -3,14 +3,14 @@
     "id": "fdf4919f-cb63-4c96-8d89-539393958192",
     "user_id": "f64538f6-eaa9-4ce2-a021-ff11cf565d88",
     "range": "last_7_days",
-    "start": "2026-04-28T16:00:00Z",
-    "end": "2026-05-05T15:59:59Z",
+    "start": "2026-04-29T16:00:00Z",
+    "end": "2026-05-06T15:59:59Z",
     "timeout": 15,
     "writes_only": false,
     "timezone": "Asia/Makassar",
     "ai_additions": 0,
     "ai_deletions": 0,
-    "human_additions": 0,
+    "human_additions": 1,
     "human_deletions": 0,
     "ai_agent_line_changes": {},
     "ai_agent_costs": {},
@@ -19,80 +19,86 @@
     "ai_prompt_length_sum": 0,
     "ai_prompt_length_avg": 0,
     "ai_prompt_events": 0,
-    "holidays": 5,
+    "holidays": 4,
     "status": "ok",
     "created_at": "2026-05-04T17:37:04Z",
-    "modified_at": "2026-05-05T17:21:37Z",
+    "modified_at": "2026-05-06T16:08:05Z",
+    "ai_agent_total_cost": 0,
+    "ai_agent_breakdown": [],
+    "human_readable_total": "11 mins",
+    "days_including_holidays": 7,
+    "projects": [
+      {
+        "total_seconds": 699.861,
+        "name": "portofolio_v1",
+        "ai_additions": 0,
+        "ai_deletions": 0,
+        "human_additions": 1,
+        "human_deletions": 0,
+        "ai_input_tokens": 0,
+        "ai_output_tokens": 0,
+        "ai_prompt_length_avg": 0,
+        "ai_prompt_length_sum": 0,
+        "ai_prompt_events": 0,
+        "percent": 100,
+        "digital": "0:11",
+        "decimal": "0.18",
+        "text": "11 mins",
+        "hours": 0,
+        "minutes": 11
+      }
+    ],
     "best_day": {
       "date": "2026-05-03",
       "total_seconds": 654.803,
       "text": "10 mins"
     },
-    "human_readable_total": "11 mins",
-    "daily_average_including_other_language": 344,
-    "days_minus_holidays": 2,
-    "categories": [
-      {
-        "name": "Coding",
-        "total_seconds": 688.155,
-        "percent": 100,
-        "digital": "0:11",
-        "decimal": "0.18",
-        "text": "11 mins",
-        "hours": 0,
-        "minutes": 11
-      }
-    ],
-    "is_stuck": false,
+    "human_readable_daily_average_including_other_language": "3 mins",
     "is_up_to_date": true,
-    "total_seconds_including_other_language": 688.155,
-    "editors": [
+    "human_readable_daily_average": "3 mins",
+    "human_readable_total_including_other_language": "11 mins",
+    "days_minus_holidays": 3,
+    "dependencies": [],
+    "is_already_updating": false,
+    "total_seconds_including_other_language": 699.861,
+    "languages": [
       {
-        "total_seconds": 688.155,
-        "name": "Antigravity",
-        "ai_additions": 0,
-        "ai_deletions": 0,
-        "human_additions": 0,
-        "human_deletions": 0,
-        "ai_input_tokens": 0,
-        "ai_output_tokens": 0,
-        "ai_prompt_length_avg": 0,
-        "ai_prompt_length_sum": 0,
-        "ai_prompt_events": 0,
-        "percent": 100,
-        "digital": "0:11",
-        "decimal": "0.18",
-        "text": "11 mins",
+        "name": "JSON",
+        "total_seconds": 654.803,
+        "percent": 93.56,
+        "digital": "0:10",
+        "decimal": "0.17",
+        "text": "10 mins",
         "hours": 0,
-        "minutes": 11
-      }
-    ],
-    "ai_agent_total_cost": 0,
-    "projects": [
+        "minutes": 10
+      },
       {
-        "total_seconds": 688.155,
-        "name": "portofolio_v1",
-        "ai_additions": 0,
-        "ai_deletions": 0,
-        "human_additions": 0,
-        "human_deletions": 0,
-        "ai_input_tokens": 0,
-        "ai_output_tokens": 0,
-        "ai_prompt_length_avg": 0,
-        "ai_prompt_length_sum": 0,
-        "ai_prompt_events": 0,
-        "percent": 100,
-        "digital": "0:11",
-        "decimal": "0.18",
-        "text": "11 mins",
+        "name": "Bash",
+        "total_seconds": 45.058,
+        "percent": 6.44,
+        "digital": "0:00",
+        "decimal": "0.00",
+        "text": "0 secs",
         "hours": 0,
-        "minutes": 11
+        "minutes": 0
       }
     ],
     "is_up_to_date_pending_future": false,
+    "categories": [
+      {
+        "name": "Coding",
+        "total_seconds": 699.861,
+        "percent": 100,
+        "digital": "0:11",
+        "decimal": "0.18",
+        "text": "11 mins",
+        "hours": 0,
+        "minutes": 11
+      }
+    ],
     "machines": [
       {
-        "total_seconds": 688.155,
+        "total_seconds": 699.861,
         "name": "ZERO",
         "machine_name_id": "7a6f6b7f-cac6-4f20-8951-89f24285bf2b",
         "percent": 100,
@@ -103,9 +109,30 @@
         "minutes": 11
       }
     ],
+    "editors": [
+      {
+        "total_seconds": 699.861,
+        "name": "Antigravity",
+        "ai_additions": 0,
+        "ai_deletions": 0,
+        "human_additions": 1,
+        "human_deletions": 0,
+        "ai_input_tokens": 0,
+        "ai_output_tokens": 0,
+        "ai_prompt_length_avg": 0,
+        "ai_prompt_length_sum": 0,
+        "ai_prompt_events": 0,
+        "percent": 100,
+        "digital": "0:11",
+        "decimal": "0.18",
+        "text": "11 mins",
+        "hours": 0,
+        "minutes": 11
+      }
+    ],
     "operating_systems": [
       {
-        "total_seconds": 688.155,
+        "total_seconds": 699.861,
         "name": "Windows",
         "percent": 100,
         "digital": "0:11",
@@ -115,38 +142,11 @@
         "minutes": 11
       }
     ],
-    "ai_agent_breakdown": [],
+    "is_stuck": false,
+    "daily_average": 233,
+    "total_seconds": 699.861,
     "percent_calculated": 100,
-    "total_seconds": 688.155,
-    "days_including_holidays": 7,
-    "human_readable_total_including_other_language": "11 mins",
-    "human_readable_daily_average_including_other_language": "5 mins",
-    "languages": [
-      {
-        "name": "JSON",
-        "total_seconds": 654.803,
-        "percent": 95.15,
-        "digital": "0:10",
-        "decimal": "0.17",
-        "text": "10 mins",
-        "hours": 0,
-        "minutes": 10
-      },
-      {
-        "name": "Bash",
-        "total_seconds": 33.352,
-        "percent": 4.85,
-        "digital": "0:00",
-        "decimal": "0.00",
-        "text": "0 secs",
-        "hours": 0,
-        "minutes": 0
-      }
-    ],
-    "is_already_updating": false,
-    "human_readable_daily_average": "5 mins",
-    "daily_average": 344,
-    "dependencies": [],
+    "daily_average_including_other_language": 233,
     "is_cached": true,
     "username": null,
     "is_including_today": false,
@@ -206,5 +206,5 @@
     },
     "uid": "ZdL3r4RjLbM4ypJd0qFs7OsGglf2"
   },
-  "lastUpdated": 1778078535799
+  "lastUpdated": 1778127898485
 }

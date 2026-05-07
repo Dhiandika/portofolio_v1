@@ -3,6 +3,7 @@ import Layout from "../../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { getEntry } from "astro:content";
 import { getMediumPosts } from "../../../utils/medium";
+import { Image } from "astro:assets";
 
 export async function getStaticPaths() {
     return [{ params: { lang: "en" } }, { params: { lang: "id" } }];
@@ -73,6 +74,8 @@ const ui = {
 const allTopics = [...new Set(allPosts.flatMap((post) => post.topics))].sort();
 
 const t = ui[lang as keyof typeof ui] || ui.en;
+
+const localBlogImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpeg,jpg,png,gif,webp}');
 ---
 
 <Layout title={`${t.title} | ${siteData.brandName || "ARHAM"}`} lang={lang}>
@@ -145,7 +148,28 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                             class="block h-64 border-b-4 border-neo-black overflow-hidden relative flex-shrink-0 group-hover:brightness-110 transition-all"
                         >
                             <div class="absolute inset-0 bg-neo-purple/20 group-hover:bg-transparent transition-colors z-10" />
-                            {post.coverImage && (
+                            {post.coverImage && !post.isExternal && (
+                                (() => {
+                                    const imagePromise = localBlogImages[post.coverImage];
+                                    return imagePromise ? (
+                                        <Image
+                                            src={imagePromise()}
+                                            alt={post.title}
+                                            width={600}
+                                            height={400}
+                                            format="webp"
+                                            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-110"
+                                        />
+                                    ) : (
+                                        <img
+                                            src={post.coverImage}
+                                            alt={post.title}
+                                            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-110"
+                                        />
+                                    );
+                                })()
+                            )}
+                            {post.coverImage && post.isExternal && (
                                 <img
                                     src={post.coverImage}
                                     alt={post.title}
@@ -214,6 +238,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                     class="inline-flex items-center gap-2 font-bold font-mono group-hover:translate-x-2 transition-transform"
                                 >
                                     {t.readMore}{" "}
+                                    <span class="sr-only">about {post.title}</span>
                                     <i
                                         class={`ri-${post.isExternal ? "external-link-line" : "arrow-right-line"}`}
                                     />

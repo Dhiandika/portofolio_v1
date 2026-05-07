@@ -55,7 +55,7 @@ export default config({
                 location: fields.text({ label: 'Location', description: 'Shown in the About section (e.g., "WORLDWIDE").' }),
                 resume: fields.file({ label: 'Resume / CV File (EN)', directory: 'public', publicPath: '/', description: 'The file linked to the "DOWNLOAD CV" button for English.' }),
                 resume_id: fields.file({ label: 'Resume / CV File (ID)', directory: 'public', publicPath: '/', description: 'The file linked to the "DOWNLOAD CV" button for Indonesian.' }),
-                signature: fields.image({ label: 'Signature Image', directory: 'public/images', publicPath: '/images/', description: 'Signature to display at the end of bio.' }),
+                signature: fields.image({ label: 'Signature Image', directory: 'src/assets/images', publicPath: '/src/assets/images/', description: 'Signature to display at the end of bio.' }),
 
                 // Socials
                 github: fields.url({ label: 'GitHub URL', description: 'Link to your GitHub profile.', validation: { isRequired: false } }),
@@ -86,8 +86,8 @@ export default config({
                         name: fields.text({ label: 'Name' }),
                         icon: fields.image({
                             label: 'Icon',
-                            directory: 'public/images/logos',
-                            publicPath: '/images/logos/',
+                            directory: 'src/assets/images/logos',
+                            publicPath: '/src/assets/images/logos/',
                         }),
                     }),
                     {
@@ -104,7 +104,7 @@ export default config({
             schema: {
                 bio: fields.text({ label: 'About Bio', multiline: true, description: 'The main text in the "Who am I?" section. Supports Markdown-style > blockquotes.' }),
                 bio_id: fields.text({ label: 'About Bio (ID)', multiline: true, description: 'Indonesian translation.' }),
-                profileImage: fields.image({ label: 'Profile Image', directory: 'public/images', publicPath: '/images/', description: 'The photo displayed in the About section.' }),
+                profileImage: fields.image({ label: 'Profile Image', directory: 'src/assets/images', publicPath: '/src/assets/images/', description: 'The photo displayed in the About section.' }),
             }
         }),
         whoami: singleton({
@@ -114,7 +114,7 @@ export default config({
             schema: {
                 bio: fields.text({ label: 'Main Bio', multiline: true, description: 'The text displayed on the homepage "Who Am I" section.' }),
                 bio_id: fields.text({ label: 'Main Bio (ID)', multiline: true, description: 'Indonesian translation.' }),
-                profileImage: fields.image({ label: 'Profile Image', directory: 'public/images', publicPath: '/images/', description: 'Image shown on the homepage card.' }),
+                profileImage: fields.image({ label: 'Profile Image', directory: 'src/assets/images', publicPath: '/src/assets/images/', description: 'Image shown on the homepage card.' }),
             }
         }),
         now: singleton({
@@ -270,8 +270,8 @@ export default config({
                 ),
                 wallpaper: fields.image({
                     label: 'Desk Setup / Wallpaper',
-                    directory: 'public/images/uses',
-                    publicPath: '/images/uses/',
+                    directory: 'src/assets/images/uses',
+                    publicPath: '/src/assets/images/uses/',
                 })
             }
         }),
@@ -309,8 +309,8 @@ export default config({
             schema: {
                 banner: fields.image({
                     label: 'Cover Banner (Image/GIF)',
-                    directory: 'public/images/sidebar',
-                    publicPath: '/images/sidebar/',
+                    directory: 'src/assets/images/sidebar',
+                    publicPath: '/src/assets/images/sidebar/',
                     description: 'The banner displayed when the sidebar is expanded. Can be a GIF.',
                     validation: { isRequired: false }
                 }),
@@ -362,8 +362,8 @@ export default config({
                         avatar: fields.image({
                             label: 'Avatar (Opsional)',
                             description: 'Upload foto profil brand. Jika kosong, akan tampil huruf inisial berwarna.',
-                            directory: 'public/images/creations',
-                            publicPath: '/images/creations/',
+                            directory: 'src/assets/images/creations',
+                            publicPath: '/src/assets/images/creations/',
                         }),
                         profileUrl: fields.url({ label: '⚠️ Profile URL [REQUIRED]', description: 'Link langsung ke profil platform ini. Wajib diisi.' }),
                         profileEmbedHtml: fields.text({ label: 'Profile Embed HTML (Opsional)', multiline: true, description: 'Paste kode embed profil dari TikTok/Instagram/Facebook di sini. Jika kosong, tampil placeholder.' }),
@@ -393,8 +393,8 @@ export default config({
                 description_id: fields.text({ label: 'Description (ID)', multiline: true, validation: { isRequired: false } }),
                 image: fields.image({
                     label: 'Poster Image',
-                    directory: 'public/images/designs',
-                    publicPath: '/images/designs/',
+                    directory: 'src/assets/images/designs',
+                    publicPath: '/src/assets/images/designs/',
                     validation: { isRequired: true }
                 }),
                 tools: fields.array(fields.text({ label: 'Tool Name' }), { label: 'Tools Used (e.g. Figma, Canva)' }),
@@ -426,8 +426,8 @@ export default config({
                 description_id: fields.text({ label: 'Description (ID)', description: 'Indonesian translation.', validation: { isRequired: false } }),
                 image: fields.image({
                     label: 'Thumbnail',
-                    directory: 'public/images/projects',
-                    publicPath: '/images/projects/',
+                    directory: 'src/assets/images/projects',
+                    publicPath: '/src/assets/images/projects/',
                 }),
                 link: fields.url({ label: 'Live Demo URL', validation: { isRequired: false } }),
                 githubLink: fields.url({ label: 'GitHub Repository URL (optional)', validation: { isRequired: false } }),
@@ -445,8 +445,8 @@ export default config({
                 gallery: fields.array(
                     fields.image({
                         label: 'Gallery Image',
-                        directory: 'public/images/projects',
-                        publicPath: '/images/projects/',
+                        directory: 'src/assets/images/projects',
+                        publicPath: '/src/assets/images/projects/',
                     }),
                     {
                         label: 'Project Gallery (Max 5)',
@@ -488,8 +488,8 @@ export default config({
                 }),
                 logo: fields.image({
                     label: 'Company Logo',
-                    directory: 'public/images/logos',
-                    publicPath: '/images/logos/',
+                    directory: 'src/assets/images/logos',
+                    publicPath: '/src/assets/images/logos/',
                 }),
                 content: fields.text({ label: 'Description', multiline: true }),
                 content_id: fields.text({ label: 'Description (ID)', multiline: true, description: 'Indonesian translation.' }),
@@ -518,8 +518,8 @@ export default config({
                 }),
                 logo: fields.image({
                     label: 'Company Logo',
-                    directory: 'public/images/logos',
-                    publicPath: '/images/logos/',
+                    directory: 'src/assets/images/logos',
+                    publicPath: '/src/assets/images/logos/',
                 }),
                 // Details
                 tasks: fields.array(fields.text({ label: 'Task' }), { label: 'Tasks' }),
@@ -550,8 +550,8 @@ export default config({
                 location: fields.text({ label: 'Location' }),
                 logo: fields.image({
                     label: 'Institution Logo',
-                    directory: 'public/images/logos',
-                    publicPath: '/images/logos/',
+                    directory: 'src/assets/images/logos',
+                    publicPath: '/src/assets/images/logos/',
                 }),
                 description: fields.text({ label: 'Description', multiline: true }),
                 description_id: fields.text({ label: 'Description (ID)', description: 'Indonesian translation.' }),
@@ -592,18 +592,18 @@ export default config({
                 publishedDate: fields.date({ label: 'Published Date', validation: { isRequired: true } }),
                 coverImage: fields.image({
                     label: 'Cover Image',
-                    directory: 'public/images/blog',
-                    publicPath: '/images/blog/',
+                    directory: 'src/assets/images/blog',
+                    publicPath: '/src/assets/images/blog/',
                 }),
                 excerpt: fields.text({ label: 'Excerpt', multiline: true }),
                 excerpt_id: fields.text({ label: 'Excerpt (ID)', multiline: true, description: 'Indonesian translation.' }),
                 content: fields.mdx({
                     label: 'Content',
-                    options: { image: { directory: 'public/images/blog', publicPath: '/images/blog/' } }
+                    options: { image: { directory: 'src/assets/images/blog', publicPath: '/src/assets/images/blog/' } }
                 }),
                 content_id: fields.mdx({
                     label: 'Content (ID)',
-                    options: { image: { directory: 'public/images/blog', publicPath: '/images/blog/' } }
+                    options: { image: { directory: 'src/assets/images/blog', publicPath: '/src/assets/images/blog/' } }
                 }),
                 subtitle: fields.text({ label: 'Subtitle', description: 'Medium-style subtitle (optional).' }),
                 topics: fields.array(fields.text({ label: 'Topic' }), { label: 'Topics (Tags)' }),
@@ -639,8 +639,8 @@ export default config({
                 ),
                 image: fields.image({
                     label: 'Certificate Image',
-                    directory: 'public/images/certificates',
-                    publicPath: '/images/certificates/',
+                    directory: 'src/assets/images/certificates',
+                    publicPath: '/src/assets/images/certificates/',
                     validation: { isRequired: false }
                 }),
                 link: fields.url({ label: 'Credential URL', validation: { isRequired: false } }),
@@ -658,8 +658,8 @@ export default config({
                 name: fields.slug({ name: { label: 'Company Name' } }),
                 logo: fields.image({
                     label: 'Company Logo',
-                    directory: 'public/images/companies',
-                    publicPath: '/images/companies/',
+                    directory: 'src/assets/images/companies',
+                    publicPath: '/src/assets/images/companies/',
                     validation: { isRequired: true }
                 }),
                 link: fields.url({ label: 'Website URL', validation: { isRequired: false } }),

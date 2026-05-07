@@ -9,7 +9,7 @@
     "GCP",
     "Cloud Engineer"
   ],
-  "image": "/images/certificates/2023-google-cloud-engineer/image.jpg",
+  "image": "/src/assets/images/certificates/2023-google-cloud-engineer/image.jpg",
   "link": "",
   "credentialId": "NVP78LMYVXR0",
   "description": "Focuses on Google Cloud Platform specifically in engineering and deployment of cloud solutions. Validates proficiency in designing, developing, and managing robust cloud infrastructure.",

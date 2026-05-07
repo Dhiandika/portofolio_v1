@@ -107,12 +107,12 @@ const image = Astro.props.image || defaultOgUrl;
         <CVDownloadModal lang={lang} />
 
         <!-- Main Content Wrapper -->
-        <div id="main-content" class="relative z-10 lg:pl-12">
+        <main id="main-content" class="relative z-10 lg:pl-12">
             <Navigation lang={lang} />
             <ThemeSettings lang={lang} />
             <Spotify />
             <slot />
-        </div>
+        </main>
 
         <script>
             import '../scripts/main.js';

@@ -4,7 +4,7 @@
   "title_id": "Dashboard Analisis Sentimen YouTube",
   "description": "An end-to-end Data Science web application designed to automatically extract and analyze the sentiment of YouTube video comments, featuring interactive data visualizations and NLP techniques.",
   "description_id": "Aplikasi web Data Science end-to-end yang dirancang untuk mengekstrak dan menganalisis sentimen komentar video YouTube secara otomatis, dilengkapi dengan visualisasi data interaktif dan teknik NLP.",
-  "image": "/images/projects/you-tube-sentiment-analysis-dashboard/image.png",
+  "image": "/src/assets/images/projects/you-tube-sentiment-analysis-dashboard/image.png",
   "link": "https://github.com/Dhiandika/Sentimen-WEBSITE-FLASK/tree/main",
   "githubLink": "https://github.com/Dhiandika/Sentimen-WEBSITE-FLASK/tree/main",
   "category": "Web",
@@ -16,9 +16,9 @@
     "Streamlit"
   ],
   "gallery": [
-    "/images/projects/you-tube-sentiment-analysis-dashboard/gallery/0.jpg",
-    "/images/projects/you-tube-sentiment-analysis-dashboard/gallery/1.jpg",
-    "/images/projects/you-tube-sentiment-analysis-dashboard/gallery/2.jpg"
+    "/src/assets/images/projects/you-tube-sentiment-analysis-dashboard/gallery/0.jpg",
+    "/src/assets/images/projects/you-tube-sentiment-analysis-dashboard/gallery/1.jpg",
+    "/src/assets/images/projects/you-tube-sentiment-analysis-dashboard/gallery/2.jpg"
   ],
   "content": "This project is a comprehensive NLP (Natural Language Processing) tool built to extract and analyze audience sentiment from YouTube comments. By simply inputting a YouTube video URL, the system utilizes the YouTube Data API to fetch hundreds of user comments automatically. It then processes the text data using machine learning models to classify the general sentiment (positive, negative, or neutral) of each comment.\n\nBeyond simple data processing, the project features a rich, interactive web dashboard tailored for easy data exploration. It provides insightful visualizations, including sentiment distribution charts (pie and bar charts), top keyword extraction, and dynamic word clouds that adapt to specific sentiment labels. This tool is highly valuable for extracting actionable insights, understanding public reaction, and summarizing large volumes of unstructured audience feedback.",
   "content_id": "Proyek ini adalah alat NLP (Pemrosesan Bahasa Alami) komprehensif yang dibangun untuk mengekstrak dan menganalisis sentimen audiens dari komentar YouTube. Hanya dengan memasukkan URL video YouTube, sistem memanfaatkan YouTube Data API untuk mengambil ratusan komentar pengguna secara otomatis. Sistem kemudian memproses data teks menggunakan model machine learning untuk mengklasifikasikan sentimen umum (positif, negatif, atau netral) dari setiap komentar.\n\nLebih dari sekadar pemrosesan data, proyek ini dilengkapi dengan dashboard web interaktif yang dirancang untuk kemudahan eksplorasi data. Aplikasi ini menyediakan visualisasi yang mendalam, termasuk grafik distribusi sentimen (pie dan bar chart), ekstraksi kata kunci teratas, dan word cloud dinamis yang menyesuaikan dengan label sentimen spesifik. Alat ini sangat berharga untuk mengekstrak insight yang dapat ditindaklanjuti, memahami reaksi publik, dan merangkum umpan balik audiens yang tidak terstruktur dalam volume besar.",

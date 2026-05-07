@@ -4,7 +4,7 @@
   "title_id": "Deteksi Ukuran Packaging 3D dengan Computer Vision",
   "description": "A computer vision application that utilizes ArUco markers and a dual-camera setup to accurately measure the 3D dimensions of packaging boxes and visualize them in real-time.",
   "description_id": "Aplikasi computer vision yang memanfaatkan marker ArUco dan setup dua kamera untuk mengukur dimensi 3D kotak kemasan secara akurat dan memvisualisasikannya secara real-time.",
-  "image": "/images/projects/3-d-packaging-measurement-via-computer-vision/image.png",
+  "image": "/src/assets/images/projects/3-d-packaging-measurement-via-computer-vision/image.png",
   "link": "https://github.com/Dhiandika/aruco_measure_object_size_computer_vision",
   "githubLink": "https://github.com/Dhiandika/aruco_measure_object_size_computer_vision",
   "category": "Other",
@@ -16,7 +16,7 @@
     "Blender Python API"
   ],
   "gallery": [
-    "/images/projects/3-d-packaging-measurement-via-computer-vision/gallery/0.png"
+    "/src/assets/images/projects/3-d-packaging-measurement-via-computer-vision/gallery/0.png"
   ],
   "content": "This project is a specialized Computer Vision application designed to automate the physical measurement of 3D objects, specifically packaging boxes. By utilizing ArUco markers as a reliable physical scale reference, the system processes image feeds from two different camera angles to calculate the real-world length, width, and height of an object in centimeters.\n\nBuilt with a sleek Streamlit web interface, the application provides an easy-to-use dashboard for users to monitor the camera feeds and see the calculated dimensions instantly. Beyond just outputting numerical data (which is automatically saved to a JSON file), the system generates a 3D wireframe visualization of the detected box. Furthermore, it features an advanced integration with Blender via its Python API (bpy), allowing the system to automatically generate and render 3D models based on the measured physical dimensions.",
   "content_id": "Proyek ini adalah aplikasi Computer Vision khusus yang dirancang untuk mengotomatisasi pengukuran fisik objek 3D, khususnya kotak kemasan (packaging). Dengan menggunakan marker ArUco sebagai referensi skala fisik yang andal, sistem ini memproses umpan gambar dari dua sudut kamera yang berbeda untuk menghitung panjang, lebar, dan tinggi fisik objek di dunia nyata dalam satuan sentimeter.\n\nDibangun dengan antarmuka web Streamlit yang modern, aplikasi ini menyediakan dashboard yang mudah digunakan agar pengguna dapat memantau tangkapan kamera dan melihat dimensi yang dihitung secara instan. Selain menghasilkan data numerik (yang secara otomatis disimpan ke file JSON), sistem ini juga menghasilkan visualisasi wireframe 3D dari kotak yang terdeteksi. Lebih jauh lagi, proyek ini dilengkapi dengan integrasi tingkat lanjut dengan Blender melalui API Python-nya (bpy), yang memungkinkan sistem untuk secara otomatis membuat dan me-render model 3D berdasarkan dimensi fisik yang telah diukur.",

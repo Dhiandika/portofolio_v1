@@ -1,5 +1,6 @@
 ---
 import { getEntry } from "astro:content";
+import { Image } from "astro:assets";
 
 interface Props {
     lang?: string;
@@ -12,11 +13,15 @@ const siteConfig = await getEntry("site", "config");
 const {
     bio = "Creative Developer.",
     bio_id,
-    profileImage = "/images/img.jpg",
+    profileImage = "/src/assets/images/img.jpg",
 } = aboutConfig?.data || {};
 const { location = "Remote" } = siteConfig?.data || {};
 
 const displayBio = lang === "id" ? bio_id || bio : bio;
+
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpeg,jpg,png,gif,webp}');
+const imagePromise = images[profileImage];
+const optimizedImage = imagePromise ? await imagePromise() : null;
 ---
 
 <section id="about" class="max-w-7xl mx-auto my-24 shadow-hard-lg">
@@ -83,15 +88,26 @@ const displayBio = lang === "id" ? bio_id || bio : bio;
                         <div
                             class="aspect-square relative overflow-hidden group"
                         >
-                            <img
-                                src={profileImage}
-                                alt="Profile"
-                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                            />
+                            {optimizedImage ? (
+                                <Image
+                                    src={optimizedImage.default}
+                                    alt="Profile"
+                                    width={400}
+                                    height={400}
+                                    format="webp"
+                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                />
+                            ) : (
+                                <img
+                                    src={profileImage}
+                                    alt="Profile"
+                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                />
+                            )}
 
                             <!-- Tags/Badges -->
                             <span
-                                class="absolute top-4 left-0 bg-neo-red text-white px-3 py-1 font-mono text-xs border-y-4 border-r-4 border-black font-bold shadow-md"
+                                class="absolute top-4 left-0 bg-neo-red text-black px-3 py-1 font-mono text-xs border-y-4 border-r-4 border-black font-black shadow-md"
                             >
                                 AVATAR.JPG
                             </span>

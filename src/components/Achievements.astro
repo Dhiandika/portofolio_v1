@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 
 interface Props {
     lang?: string;
@@ -9,6 +10,10 @@ const { lang = "en" } = Astro.props;
 const certificates = await getCollection("certificates");
 
 const displayCertificates = certificates.slice(0, 6);
+
+// Pre-load image paths
+const certImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpeg,jpg,png,gif,webp}');
+
 
 const ui = {
     en: {
@@ -58,15 +63,27 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 
         <!-- Grid -->
         <div data-aos="fade-up" data-aos-delay="100" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal">
-            {displayCertificates.map((cert, index) => {
+            {await Promise.all(displayCertificates.map(async (cert, index) => {
                 const title = lang === 'id' ? cert.data.title_id || cert.data.title : cert.data.title;
                 const desc = lang === 'id' ? cert.data.description_id || cert.data.description : cert.data.description;
                 
+                const imagePromise = cert.data.image ? certImages[cert.data.image] : null;
+                const optimizedImage = imagePromise ? await imagePromise() : null;
+
                 return (
                     <div data-aos="fade-up" data-aos-delay={String(index * 80)} class="bg-white text-black border-4 border-black shadow-[8px_8px_0_0_#000] hover:-translate-y-2 hover:shadow-[12px_12px_0_0_#000] transition-all duration-300 flex flex-col group relative">
                         <!-- Image Container -->
                         <div class="w-full h-48 border-b-4 border-black bg-gray-100 relative overflow-hidden">
-                            {cert.data.image ? (
+                            {optimizedImage ? (
+                                <Image 
+                                    src={optimizedImage.default} 
+                                    alt={cert.data.title} 
+                                    width={600}
+                                    height={400}
+                                    format="webp"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                />
+                            ) : cert.data.image ? (
                                 <img src={cert.data.image} alt={cert.data.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/eeeeee/000000?text=NO+IMAGE';" />
                             ) : (
                                 <div class="w-full h-full flex items-center justify-center bg-gray-200 text-black">
@@ -117,7 +134,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                         </div>
                     </div>
                 );
-            })}
+            }))}
         </div>
         
         {displayCertificates.length === 0 && (

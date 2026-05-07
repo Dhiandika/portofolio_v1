@@ -4,7 +4,7 @@
   "title_id": "Web Scraping - Peraturan.go.id",
   "description": "An automated Python web scraping tool designed to efficiently extract and structure public legal document data from the official Indonesian government website, peraturan.go.id.",
   "description_id": "Alat web scraping otomatis berbasis Python yang dirancang untuk mengekstrak dan menyusun data dokumen hukum publik secara efisien dari situs web resmi pemerintah Indonesia, peraturan.go.id.",
-  "image": "/images/projects/web-scraping-peraturan-go-id/image.png",
+  "image": "/src/assets/images/projects/web-scraping-peraturan-go-id/image.png",
   "link": "https://github.com/Dhiandika/Scraping_peraturan.go.id",
   "githubLink": "https://github.com/Dhiandika/Scraping_peraturan.go.id",
   "category": "Other",
@@ -15,7 +15,7 @@
     "Multi-threading"
   ],
   "gallery": [
-    "/images/projects/web-scraping-peraturan-go-id/gallery/0.png"
+    "/src/assets/images/projects/web-scraping-peraturan-go-id/gallery/0.png"
   ],
   "content": "This project focuses on efficient data collection, a crucial first step in any data science pipeline. The repository contains a suite of Python scripts specifically built to scrape legal documents, laws, and regulations from the official Indonesian government portal, peraturan.go.id.\n\nThe tool is highly configurable and offers multiple scraping strategies to handle different data volume needs. It includes modular scripts for single-page scraping, automated pagination handling, and advanced multi-threaded scraping for high-speed data extraction. The final output is automatically organized into structured CSV files, capturing key metadata such as document titles, issuing ministries, context, and direct PDF download links. This makes the raw public data readily available for further data analysis, text mining, or database integration.",
   "content_id": "Proyek ini berfokus pada pengumpulan data yang efisien, sebuah langkah pertama yang krusial dalam pipeline data science. Repositori ini berisi serangkaian skrip Python yang secara khusus dibangun untuk melakukan scraping pada dokumen hukum, undang-undang, dan peraturan dari portal resmi pemerintah Indonesia, peraturan.go.id.\n\nAlat ini sangat fleksibel dan menawarkan beberapa strategi scraping untuk menangani kebutuhan volume data yang berbeda. Proyek ini mencakup skrip modular untuk scraping halaman tunggal, penanganan paginasi otomatis, hingga scraping tingkat lanjut menggunakan multi-threading untuk ekstraksi data berkecepatan tinggi. Output akhirnya secara otomatis disusun rapi ke dalam file CSV terstruktur, menangkap metadata penting seperti judul dokumen, kementerian penerbit, konteks, dan tautan unduhan langsung (PDF). Hal ini membuat data publik mentah tersebut siap digunakan untuk analisis data lanjutan, text mining, atau integrasi basis data.",
