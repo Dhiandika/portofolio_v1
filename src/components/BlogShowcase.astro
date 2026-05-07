@@ -2,6 +2,9 @@
 import { getCollection } from "astro:content";
 import { getEntry } from "astro:content";
 import { getMediumPosts } from "../utils/medium";
+import { Image } from "astro:assets";
+
+const blogShowcaseImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpeg,jpg,png,gif,webp}');
 
 interface Props {
     lang?: string;
@@ -95,21 +98,36 @@ const t = ui[lang as keyof typeof ui] || ui.en;
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             {
-                allPosts.map((post, index) => (
+                await Promise.all(allPosts.map(async (post, index) => {
+                    const imgPromise = !post.isExternal && post.coverImage ? blogShowcaseImages[post.coverImage] : null;
+                    const localOptImg = imgPromise ? await imgPromise() : null;
+
+                    return (
                     <article data-aos="fade-up" data-aos-delay={String(index * 100)} class="group border-4 border-black bg-white text-black shadow-hard hover:-translate-y-2 hover:shadow-[10px_10px_0_0_rgba(251,255,72,1)] transition-all duration-300 flex flex-col">
                         <a
                             href={post.link}
                             target={post.isExternal ? "_blank" : "_self"}
                             class="block h-full flex flex-col"
                         >
-                            {post.coverImage && (
+                            {(localOptImg || (post.isExternal && post.coverImage)) && (
                                 <div class="h-48 border-b-4 border-black overflow-hidden relative">
                                     <div class="absolute inset-0 bg-neo-green/20 group-hover:bg-transparent transition-colors z-10" />
-                                    <img
-                                        src={post.coverImage}
-                                        alt={post.title}
-                                        class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                                    />
+                                    {localOptImg ? (
+                                        <Image
+                                            src={localOptImg.default}
+                                            alt={post.title}
+                                            width={600}
+                                            height={400}
+                                            format="webp"
+                                            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                                        />
+                                    ) : (
+                                        <img
+                                            src={post.coverImage}
+                                            alt={post.title}
+                                            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                                        />
+                                    )}
                                     {post.isExternal && (
                                         <div class="absolute top-2 right-2 bg-black text-white text-xs font-mono px-2 py-1 z-20">
                                             MEDIUM
@@ -156,7 +174,8 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                             </div>
                         </a>
                     </article>
-                ))
+                    );
+                }))
             }
         </div>
 

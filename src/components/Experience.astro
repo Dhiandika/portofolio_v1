@@ -1,5 +1,8 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+
+const expImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpeg,jpg,png,gif,webp}');
 
 interface Props {
     lang?: string;
@@ -19,7 +22,7 @@ const experience = await getCollection("experience");
 
     <div class="relative border-l-4 border-black ml-4 md:ml-10 space-y-12">
         {
-            experience.map((entry, index) => {
+            await Promise.all(experience.map(async (entry, index) => {
                 const colorMap = {
                     "neo-yellow": {
                         bg: "bg-neo-yellow",
@@ -59,21 +62,24 @@ const experience = await getCollection("experience");
                                 <div class="flex items-center gap-4">
                                     <!-- Company Logo -->
                                     <div class={`w-14 h-14 shrink-0 border-4 border-black overflow-hidden ${theme.bg} flex items-center justify-center shadow-[4px_4px_0_0_#000]`}>
-                                        {entry.data.logo ? (
-                                            <img
-                                                src={entry.data.logo}
-                                                alt={entry.data.company}
-                                                class="w-full h-full object-contain p-1 bg-white"
-                                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                                            />
-                                            <span class="hidden w-full h-full items-center justify-center font-black text-xl text-black" aria-hidden="true">
-                                                {entry.data.company.charAt(0)}
-                                            </span>
-                                        ) : (
-                                            <span class="font-black text-xl text-black">
-                                                {entry.data.company.charAt(0)}
-                                            </span>
-                                        )}
+                                        {await (async () => {
+                                            const logoPromise = entry.data.logo ? expImages[entry.data.logo] : null;
+                                            const logoImg = logoPromise ? await logoPromise() : null;
+                                            return logoImg ? (
+                                                <Image
+                                                    src={logoImg.default}
+                                                    alt={entry.data.company}
+                                                    width={56}
+                                                    height={56}
+                                                    format="webp"
+                                                    class="w-full h-full object-contain p-1 bg-white"
+                                                />
+                                            ) : (
+                                                <span class="font-black text-xl text-black">
+                                                    {entry.data.company.charAt(0)}
+                                                </span>
+                                            );
+                                        })()}
                                     </div>
                                     <h3 class="text-2xl md:text-3xl font-black uppercase">
                                         {role}
@@ -94,7 +100,7 @@ const experience = await getCollection("experience");
                         </div>
                     </div>
                 );
-            })
+            }))
         }
     </div>
 </section>

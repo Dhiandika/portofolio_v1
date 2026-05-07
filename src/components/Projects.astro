@@ -179,21 +179,12 @@ const INITIAL_SHOW = 9;
                                         format="webp"
                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                     />
-                                ) : thumbnailSrc ? (
-                                    <img
-                                        src={thumbnailSrc}
-                                        alt={title}
-                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                        onerror="this.onerror=null;this.parentElement.querySelector('.no-img-placeholder').style.display='flex';this.style.display='none';"
-                                    />
-                                ) : null}
-                                <div
-                                    class={`no-img-placeholder w-full h-full flex-col items-center justify-center bg-gray-900 gap-2${thumbnailSrc ? " hidden" : " flex"}`}
-                                    style="display: flex;"
-                                >
-                                    <span class="text-5xl font-black text-white/20 uppercase">{title.charAt(0)}</span>
-                                    <span class="text-[10px] font-mono text-white/20 uppercase tracking-widest">No Preview</span>
-                                </div>
+                                ) : (
+                                    <div class="no-img-placeholder w-full h-full flex flex-col items-center justify-center bg-gray-900 gap-2">
+                                        <span class="text-5xl font-black text-white/20 uppercase">{title.charAt(0)}</span>
+                                        <span class="text-[10px] font-mono text-white/20 uppercase tracking-widest">No Preview</span>
+                                    </div>
+                                )}
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
                                 {/* Category badge */}
                                 <span class="absolute top-3 left-3 flex items-center gap-1 bg-neo-yellow text-black text-[10px] font-black px-2 py-1 uppercase tracking-widest border-2 border-black">
@@ -292,22 +283,26 @@ const INITIAL_SHOW = 9;
         <!-- ═══════════ ACHIEVEMENTS TAB ═══════════ -->
         <div id="panel-achievements" class="hidden">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                {certificates.map((cert, index) => {
+                {await Promise.all(certificates.map(async (cert, index) => {
                     const title = lang === 'id' ? cert.data.title_id || cert.data.title : cert.data.title;
                     const description = lang === 'id' ? cert.data.description_id || cert.data.description : cert.data.description;
                     const isHidden = index >= INITIAL_SHOW;
                     const achCategoryIcons: any = { "Course": "ri-book-read-line", "Bootcamp": "ri-terminal-box-line", "Event": "ri-calendar-event-line", "Competition": "ri-medal-line" };
                     const catIcon = achCategoryIcons[cert.data.category || "Course"] || "ri-award-line";
                     const skills = cert.data.skills_verified || [];
+
+                    const certImgPromise = cert.data.image ? projectImages[cert.data.image] : null;
+                    const certOptImg = certImgPromise ? await certImgPromise() : null;
+
                     return (
                         <article
                             data-aos="fade-up"
                             data-aos-delay={String((index % 3) * 80)}
                             class={`achievement-card group border-4 border-white bg-neo-black shadow-[6px_6px_0_0_#fff] hover:shadow-[10px_10px_0_0_#3BFF7E] hover:border-neo-green transition-all duration-300 flex flex-col overflow-hidden${isHidden ? " hidden" : ""}`}
                         >
-                            {cert.data.image ? (
+                            {certOptImg ? (
                                 <div class="relative h-48 overflow-hidden border-b-4 border-white group-hover:border-neo-green transition-colors">
-                                    <img src={cert.data.image} alt={title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null;this.style.opacity='0';" />
+                                    <Image src={certOptImg.default} alt={title} width={600} height={400} format="webp" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                                     <span class="absolute top-3 left-3 flex items-center gap-1 bg-neo-green text-black text-[10px] font-black px-2 py-1 uppercase tracking-widest border-2 border-black">
                                         <i class={catIcon + " text-xs"}></i> {cert.data.category || 'Course'}
@@ -354,7 +349,7 @@ const INITIAL_SHOW = 9;
                             </div>
                         </article>
                     );
-                })}
+                }))}
             </div>
             <div class="flex flex-row flex-wrap justify-center items-center gap-4">
                 {certificates.length > INITIAL_SHOW && (
@@ -371,10 +366,14 @@ const INITIAL_SHOW = 9;
         <!-- ═══════════ DESIGNS TAB ═══════════ -->
         <div id="panel-designs" class="hidden">
             <div id="designs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                {designs.map((design, index) => {
+                {await Promise.all(designs.map(async (design, index) => {
                     const title = lang === "id" && design.data.title_id ? design.data.title_id : design.data.title;
                     const description = lang === "id" && design.data.description_id ? design.data.description_id : design.data.description;
                     const isHidden = index >= INITIAL_SHOW;
+
+                    const designImgPromise = design.data.image ? projectImages[design.data.image] : null;
+                    const designOptImg = designImgPromise ? await designImgPromise() : null;
+
                     return (
                         <article
                             data-aos="fade-up"
@@ -382,7 +381,13 @@ const INITIAL_SHOW = 9;
                             class={`design-card group border-4 border-white bg-neo-black shadow-[6px_6px_0_0_#fff] hover:shadow-[10px_10px_0_0_#FF2D78] hover:border-neo-pink transition-all duration-300 flex flex-col overflow-hidden${isHidden ? " hidden" : ""}`}
                         >
                             <div class="relative h-64 overflow-hidden border-b-4 border-white group-hover:border-neo-pink transition-colors">
-                                <img src={design.data.image} alt={title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                {designOptImg ? (
+                                    <Image src={designOptImg.default} alt={title} width={600} height={400} format="webp" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                ) : (
+                                    <div class="w-full h-full flex items-center justify-center bg-gray-800">
+                                        <i class="ri-palette-line text-5xl text-white/20"></i>
+                                    </div>
+                                )}
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                                     {design.data.link && (
                                         <a href={design.data.link} target="_blank" class="text-white font-black uppercase tracking-widest text-xs border-2 border-white px-3 py-1.5 hover:bg-white hover:text-black transition-colors flex items-center gap-2">
@@ -402,7 +407,7 @@ const INITIAL_SHOW = 9;
                             </div>
                         </article>
                     );
-                })}
+                }))}
             </div>
             <div class="flex flex-row flex-wrap justify-center items-center gap-4">
                 {designs.length > INITIAL_SHOW && (
@@ -416,8 +421,12 @@ const INITIAL_SHOW = 9;
         <!-- ═══════════ BLOG TAB ═══════════ -->
         <div id="panel-blog" class="hidden">
             <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                {allPosts.map((post, index) => {
+                {await Promise.all(allPosts.map(async (post, index) => {
                     const isHidden = index >= INITIAL_SHOW;
+
+                    const blogImgPromise = !post.isExternal && post.coverImage ? projectImages[post.coverImage] : null;
+                    const blogOptImg = blogImgPromise ? await blogImgPromise() : null;
+
                     return (
                         <article
                             data-aos="fade-up"
@@ -427,7 +436,9 @@ const INITIAL_SHOW = 9;
                             <a href={post.link} target={post.isExternal ? "_blank" : "_self"} class="flex flex-col flex-1 h-full">
                                 {/* Thumbnail */}
                                 <div class="relative h-48 overflow-hidden border-b-4 border-white group-hover:border-neo-yellow transition-colors">
-                                    {post.coverImage ? (
+                                    {blogOptImg ? (
+                                        <Image src={blogOptImg.default} alt={post.title} width={600} height={400} format="webp" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                    ) : post.isExternal && post.coverImage ? (
                                         <img src={post.coverImage} alt={post.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                                     ) : (
                                         <div class="w-full h-full flex items-center justify-center bg-gray-900">
@@ -466,7 +477,7 @@ const INITIAL_SHOW = 9;
                             </a>
                         </article>
                     );
-                })}
+                }))}
             </div>
 
             <div class="flex flex-row flex-wrap justify-center items-center gap-4">

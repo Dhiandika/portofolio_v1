@@ -1,3 +1,9 @@
 ---
+// Server-side 301 redirect (SEO-friendly) 
+// Sends browser language-based redirect: ID browsers → /id/, others → /en/
+const acceptLang = Astro.request.headers.get('accept-language') || '';
+const preferIndonesian = acceptLang.toLowerCase().includes('id');
+const targetLang = preferIndonesian ? 'id' : 'en';
+
+return Astro.redirect(`/${targetLang}/`, 301);
 ---
-<meta http-equiv="refresh" content="0;url=/en/" />

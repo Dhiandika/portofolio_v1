@@ -98,11 +98,9 @@ const optimizedImage = imagePromise ? await imagePromise() : null;
                                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                 />
                             ) : (
-                                <img
-                                    src={profileImage}
-                                    alt="Profile"
-                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                                />
+                                <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                                    <i class="ri-user-line text-6xl text-gray-400"></i>
+                                </div>
                             )}
 
                             <!-- Tags/Badges -->

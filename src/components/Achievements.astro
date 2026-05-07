@@ -83,8 +83,6 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                     format="webp"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                                 />
-                            ) : cert.data.image ? (
-                                <img src={cert.data.image} alt={cert.data.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/eeeeee/000000?text=NO+IMAGE';" />
                             ) : (
                                 <div class="w-full h-full flex items-center justify-center bg-gray-200 text-black">
                                     <i class="ri-award-fill text-6xl opacity-30"></i>
@@ -113,7 +111,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                                     data-issuer={cert.data.issuer}
                                     data-date={cert.data.date}
                                     data-desc={desc || ''}
-                                    data-img={cert.data.image || ''}
+                                    data-img={optimizedImage ? optimizedImage.default.src : ''}
                                     data-link={cert.data.link || ''}
                                     data-category={cert.data.category}
                                     data-skills={cert.data.skills_verified ? cert.data.skills_verified.join(',') : ''}
