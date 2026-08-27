@@ -18,7 +18,8 @@ This project serves as a showcase for development skills, projects, and technica
 ## ✨ Key Features
 - **Neo-Brutalist Design System**: Bold typography, high contrast, and tactile UI elements.
 - **Bilingual Support (i18n)**: Seamless switching between **English** and **Indonesian**.
-- **Integrated CMS**: Manage **Projects**, **Blog Posts**, and **Certificates** directly via `/keystatic`.
+- **Integrated CMS**: Manage **Projects**, **Blog Posts**, **Link in Bio**, and **Certificates** directly via `/keystatic`.
+- **Customizable Link in Bio Page**: Neo-Brutalist bio link page accessible at `/links` and `/bio`, fully customizable via Keystatic Admin (`Page Content > Link in Bio Page`).
 - **Advanced Filtering**: Real-time search and tag filtering for content discovery.
 - **Responsive & Accessible**: Optimized for all devices with a focus on usability.
 - **Performance First**: Static Site Generation (SSG) ensures instant page loads.
@@ -57,6 +58,25 @@ This project serves as a showcase for development skills, projects, and technica
    ```
    Open `http://localhost:4321` to view the site.
    Open `http://localhost:4321/keystatic` to access the CMS admin panel.
+
+## 🔐 Admin Panel & Credentials / Akses Masuk Admin
+
+Dashboard admin dikelola melalui **Keystatic CMS** yang berada pada route `/keystatic`.
+
+### 1. Mode Lokal (Local Development)
+Saat dijalankan di komputer lokal (`npm run dev`):
+- **URL Admin Panel**: `http://localhost:4321/keystatic`
+- **Akses & Login**: **Otomatis Langsung Masuk (Tanpa Login / Password)**.
+- *Penjelasan*: Keystatic membaca & menulis langsung ke file JSON/MDX di folder `src/content/` tanpa perlu login.
+
+### 2. Mode Production (Keystatic Cloud)
+Saat situs aktif di production (`https://npemburu.my.id/keystatic`):
+- **URL Admin Panel**: `https://npemburu.my.id/keystatic`
+- **Metode Login**: Single Sign-On (SSO) via **GitHub / Keystatic Cloud OAuth**.
+- **Kredensial / Akun Terotorisasi**:
+  - **Keystatic Cloud Project**: `dhiandika/portofoliov1`
+  - **Username / E-mail Admin**: Akun GitHub pemilik repo (`Dhiandika` / `npemburu6@gmail.com`)
+- **Catatan Tambahan**: Untuk menambah admin/pengguna lain, tambahkan email/username di dashboard [Keystatic Cloud](https://keystatic.cloud/).
 
 ## 📂 Project Structure
 A brief overview of the directory layout:

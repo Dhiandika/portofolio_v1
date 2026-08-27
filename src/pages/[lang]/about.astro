@@ -38,7 +38,7 @@ const t = ui[lang as keyof typeof ui] || ui.en;
                     <div class="relative w-32 h-32 md:w-40 md:h-40 flex-shrink-0 bg-neo-yellow border-4 border-black shadow-[4px_4px_0px_0px_#000]">
                         {about.profileImage ? (
                             <>
-                                <img src={about.profileImage} alt="Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling?.classList.remove('hidden');" />
+                                <img src={about.profileImage} alt="Profile" class="w-full h-full object-cover hover:grayscale transition-all duration-300" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling?.classList.remove('hidden');" />
                                 <div class="hidden w-full h-full bg-gray-200 animate-pulse"></div>
                             </>
                         ) : (

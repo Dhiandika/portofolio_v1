@@ -19,6 +19,7 @@ const defaultNavItems = [
     { href: `/${lang}/achievements`, icon: "ri-trophy-fill",     label: "Awards"    },
     { href: `/${lang}/creation`,     icon: "ri-sparkling-fill",  label: "Creation"  },
     { href: `/${lang}/blog`,         icon: "ri-article-fill",    label: "Blog"      },
+    { href: `/${lang}/links`,        icon: "ri-share-line",       label: "Links"     },
     { href: `/${lang}/dashboard`,    icon: "ri-dashboard-fill",  label: "Dashboard" },
 ];
 
@@ -103,7 +104,7 @@ const customBanner = sidebarConfig?.data?.banner;
         <div class="flex justify-center pb-2" style="margin-top:-32px; position:relative; z-index:2;">
             <div class="w-16 h-16 rounded-full overflow-hidden border-[3px] border-white flex items-center justify-center bg-neo-yellow text-black font-black" style="box-shadow:0 2px 0 0 #000; font-size:1.3rem;">
                 {profilePhoto
-                    ? <img src={profilePhoto} alt={brandName} class="w-full h-full object-cover" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                    ? <img src={profilePhoto} alt={brandName} class="w-full h-full object-cover hover:grayscale transition-all duration-300" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';" />
                     : null
                 }
                 <span class={profilePhoto ? "hidden font-black" : "font-black"}>{initials}</span>
@@ -115,7 +116,7 @@ const customBanner = sidebarConfig?.data?.banner;
     <div id="col-avatar" class="flex-shrink-0 flex justify-center" style="padding-top:20px; padding-bottom:8px; transition:opacity 180ms;">
         <div class="w-11 h-11 rounded-full overflow-hidden border-[3px] border-neo-yellow flex items-center justify-center bg-neo-yellow text-black font-black shrink-0" style="font-size:0.85rem;">
             {profilePhoto
-                ? <img src={profilePhoto} alt={brandName} class="w-full h-full object-cover" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                ? <img src={profilePhoto} alt={brandName} class="w-full h-full object-cover hover:grayscale transition-all duration-300" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';" />
                 : null
             }
             <span class={profilePhoto ? "hidden font-black" : "font-black"}>{initials}</span>
@@ -186,7 +187,7 @@ const customBanner = sidebarConfig?.data?.banner;
             </div>
             <div class="flex justify-center" style="margin-top:-24px; position:relative; z-index:2;">
                 <div class="w-12 h-12 rounded-full overflow-hidden border-4 border-neo-white flex items-center justify-center bg-neo-yellow text-black font-black text-base">
-                    {profilePhoto ? <img src={profilePhoto} alt={brandName} class="w-full h-full object-cover" /> : initials}
+                    {profilePhoto ? <img src={profilePhoto} alt={brandName} class="w-full h-full object-cover hover:grayscale transition-all duration-300" /> : initials}
                 </div>
             </div>
         </div>

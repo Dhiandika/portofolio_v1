@@ -56,11 +56,20 @@ const t = ui[lang] || ui.en;
                         {t.subtitle}
                     </p>
                 </div>
-                <div
-                    class="flex items-center gap-2 font-mono font-bold bg-green-100 text-green-800 px-4 py-2 border-2 border-black shadow-hard animate-pulse"
-                >
-                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                    SYSTEM OPERATIONAL
+                <div class="flex items-center gap-3">
+                    <a
+                        href={`/${lang}/links-dashboard`}
+                        class="flex items-center gap-2 font-mono font-bold bg-neo-yellow text-black px-4 py-2 border-2 border-black shadow-hard hover:bg-black hover:text-neo-yellow transition-all"
+                    >
+                        <i class="ri-bar-chart-box-line text-lg"></i>
+                        LINK IN BIO ANALYTICS →
+                    </a>
+                    <div
+                        class="flex items-center gap-2 font-mono font-bold bg-green-100 text-green-800 px-4 py-2 border-2 border-black shadow-hard animate-pulse"
+                    >
+                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        SYSTEM OPERATIONAL
+                    </div>
                 </div>
             </div>
 

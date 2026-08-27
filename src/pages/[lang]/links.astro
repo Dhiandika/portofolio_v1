@@ -1,0 +1,963 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getEntry, getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'id' } },
+  ];
+}
+
+const { lang = 'en' } = Astro.params;
+
+// Fetch site & links config
+const siteConfig = await getEntry('site', 'config');
+const linksConfig = await getEntry('site', 'links');
+const whoamiConfig = await getEntry('site', 'whoami');
+const aboutConfig = await getEntry('site', 'about');
+
+const site = siteConfig?.data || {} as any;
+const linksData = linksConfig?.data || {} as any;
+
+// Collections for curated content
+const projects = await getCollection('projects');
+const blogs = await getCollection('blog');
+const socialBrands = await getCollection('socialBrands');
+const designs = await getCollection('designs');
+
+// Sort curated default items
+const topProject = projects.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))[0];
+const latestBlog = blogs.sort((a, b) => new Date(b.data.publishedDate).getTime() - new Date(a.data.publishedDate).getTime())[0];
+const topDesigns = designs.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99)).slice(0, 3);
+
+// Dynamic relationship resolution (Keystatic Admin Pickers)
+const topProjectResolved = linksData.featuredProject 
+  ? projects.find(p => p.slug === linksData.featuredProject) || topProject 
+  : topProject;
+
+const latestBlogResolved = linksData.featuredBlog 
+  ? blogs.find(b => b.slug === linksData.featuredBlog) || latestBlog 
+  : latestBlog;
+
+const socialBrandsResolved = (linksData.featuredBrands && linksData.featuredBrands.length > 0)
+  ? socialBrands.filter(b => linksData.featuredBrands.includes(b.slug || b.id))
+  : socialBrands;
+
+const topDesignsResolved = (linksData.featuredDesigns && linksData.featuredDesigns.length > 0)
+  ? designs.filter(d => linksData.featuredDesigns.includes(d.slug || d.id))
+  : topDesigns;
+
+const formatImgSrc = (src?: string | null) => {
+  if (!src) return '';
+  if (src.startsWith('http://') || src.startsWith('https://')) return src;
+  if (src.startsWith('/')) return src;
+  return '/' + src;
+};
+
+// Multilingual resolution
+const title = lang === 'id' ? linksData.title_id || linksData.title || 'Dhiandika | Link in Bio' : linksData.title || 'Dhiandika | Link in Bio';
+const profileName = lang === 'id' ? linksData.profileName_id || linksData.profileName || site.brandName || 'Dhiandika Aditya' : linksData.profileName || site.brandName || 'Dhiandika Aditya';
+const bio = lang === 'id' ? linksData.bio_id || linksData.bio || site.metaDescription_id : linksData.bio || site.metaDescription;
+const statusBadge = lang === 'id' ? linksData.statusBadge_id || linksData.statusBadge : linksData.statusBadge;
+const avatar = formatImgSrc(linksData.avatar) || formatImgSrc(whoamiConfig?.data?.profileImage) || formatImgSrc(aboutConfig?.data?.profileImage) || '/images/avatar.png';
+
+// Default banner: Unsplash dev-themed image (used when no banner uploaded in Keystatic)
+const DEFAULT_BANNER = 'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=1200&q=80&auto=format&fit=crop';
+const coverBanner = formatImgSrc(linksData.coverBanner) || DEFAULT_BANNER;
+const marqueeText = lang === 'id' ? linksData.marqueeText_id || linksData.marqueeText : linksData.marqueeText;
+
+const rawLinks = linksData.links || [
+  {
+    label: 'Main Portfolio Website',
+    label_id: 'Website Portofolio Utama',
+    url: `/${lang}`,
+    icon: 'ri-global-line',
+    badge: 'MAIN',
+    color: 'neo-green',
+    category: 'Main',
+    gridSize: 'full',
+    isHighlighted: true,
+    isActive: true,
+    description: 'Explore my full-stack projects, tech stack, and interactive portfolio.',
+    description_id: 'Jelajahi proyek, tech stack, dan portofolio interaktif saya.'
+  },
+  {
+    label: 'Curated Social Brands & Creations',
+    label_id: 'Kreasi Brand & Konten Sosial',
+    url: `/${lang}/creation`,
+    icon: 'ri-sparkling-fill',
+    badge: 'CREATION',
+    color: 'neo-pink',
+    category: 'Creation',
+    gridSize: 'half',
+    isHighlighted: false,
+    isActive: true,
+    description: 'Holovibe VTuber Union & Shotnime content channels.',
+    description_id: 'Channel konten Holovibe VTuber Union & Shotnime.'
+  },
+  {
+    label: 'Featured Projects',
+    label_id: 'Proyek Unggulan',
+    url: `/${lang}/projects`,
+    icon: 'ri-briefcase-4-line',
+    badge: 'WORKS',
+    color: 'neo-blue',
+    category: 'Portfolio',
+    gridSize: 'half',
+    isHighlighted: false,
+    isActive: true,
+    description: 'Browse web applications, design systems, and mobile apps.',
+    description_id: 'Lihat aplikasi web, sistem desain, dan aplikasi mobile.'
+  },
+  {
+    label: 'Tech Blog & Articles',
+    label_id: 'Blog Tech & Artikel',
+    url: `/${lang}/blog`,
+    icon: 'ri-article-line',
+    badge: 'BLOG',
+    color: 'neo-yellow',
+    category: 'Main',
+    gridSize: 'half',
+    isHighlighted: false,
+    isActive: true,
+    description: 'Read insights and tutorials on modern software engineering.',
+    description_id: 'Baca wawasan dan tutorial tentang rekayasa perangkat lunak.'
+  },
+  {
+    label: 'Download Resume / CV',
+    label_id: 'Unduh Resume / CV',
+    url: `/${lang}/assets`,
+    icon: 'ri-file-pdf-2-line',
+    badge: 'PDF',
+    color: 'neo-purple',
+    category: 'Resources',
+    gridSize: 'half',
+    isHighlighted: false,
+    isActive: true,
+    description: 'Get standard curriculum vitae in PDF format.',
+    description_id: 'Unduh kurikulum vitae resmi dalam format PDF.'
+  }
+];
+
+// ─── Theme Preset Engine ──────────────────────────────────────────────────
+const themePreset = linksData.themePreset || 'default';
+
+const themeStyles = {
+  default: {
+    mainBg: 'bg-neo-white text-neo-black bg-neo-texture',
+    cardBg: 'bg-white text-black border-black shadow-hard',
+    headerCardBg: 'bg-white border-black text-black shadow-hard',
+    textMain: 'text-black',
+    textMuted: 'text-gray-700',
+    accentBadge: 'bg-black text-neo-yellow border-black',
+    searchBg: 'bg-white border-3 border-black text-black placeholder:text-gray-400 shadow-[3px_3px_0px_0px_#000] focus:bg-neo-yellow/20',
+    filterActive: 'bg-black text-neo-yellow border-black shadow-[2px_2px_0px_0px_#000]',
+    filterInactive: 'bg-white text-black border-black hover:bg-neo-yellow shadow-[2px_2px_0px_0px_#000]',
+    footerText: 'text-gray-500',
+    brandCardBg: 'bg-neo-black text-white shadow-hard border-black',
+    designCardBg: 'bg-white text-black shadow-hard border-black',
+    socialCardBg: 'bg-white text-black shadow-hard border-black',
+    featuredProjectBg: 'bg-neo-black text-white shadow-[6px_6px_0px_0px_#000] border-black hover:shadow-[9px_9px_0px_0px_#FBFF48]',
+    featuredBlogBg: 'bg-white text-black shadow-[6px_6px_0px_0px_#000] border-black hover:shadow-[9px_9px_0px_0px_#FF007A]',
+  },
+  cyberpunk: {
+    mainBg: 'bg-[#090B10] text-cyan-50 bg-[radial-gradient(#1c2237_1px,transparent_1px)] [background-size:20px_20px]',
+    cardBg: 'bg-[#111628] text-white border-cyan-400/80 shadow-[5px_5px_0px_0px_#00F0FF]',
+    headerCardBg: 'bg-[#111628] border-cyan-400 text-white shadow-[6px_6px_0px_0px_#FF007A]',
+    textMain: 'text-white',
+    textMuted: 'text-cyan-200/70',
+    accentBadge: 'bg-[#FF007A] text-white border-cyan-400',
+    searchBg: 'bg-[#111628] border-2 border-cyan-400 text-cyan-50 placeholder:text-cyan-600/70 shadow-[3px_3px_0px_0px_#00F0FF] focus:bg-cyan-950/40',
+    filterActive: 'bg-cyan-400 text-black border-cyan-300 font-bold shadow-[2px_2px_0px_0px_#FF007A]',
+    filterInactive: 'bg-[#111628] text-cyan-200 border-cyan-500/50 hover:bg-cyan-900/40 hover:text-cyan-300 shadow-[2px_2px_0px_0px_#00F0FF]',
+    footerText: 'text-cyan-400/60',
+    brandCardBg: 'bg-[#111628] text-white shadow-[6px_6px_0px_0px_#00F0FF] border-cyan-400',
+    designCardBg: 'bg-[#111628] text-white shadow-[6px_6px_0px_0px_#FF007A] border-cyan-400',
+    socialCardBg: 'bg-[#111628] text-white shadow-[6px_6px_0px_0px_#00F0FF] border-cyan-400',
+    featuredProjectBg: 'bg-[#111628] text-white shadow-[6px_6px_0px_0px_#00F0FF] border-cyan-400 hover:shadow-[9px_9px_0px_0px_#FF007A]',
+    featuredBlogBg: 'bg-[#111628] text-white shadow-[6px_6px_0px_0px_#FF007A] border-cyan-400 hover:shadow-[9px_9px_0px_0px_#00F0FF]',
+  },
+  retro: {
+    mainBg: 'bg-[#F7F1E5] text-[#2D241E] bg-[radial-gradient(#d6c9b8_1px,transparent_1px)] [background-size:18px_18px]',
+    cardBg: 'bg-[#FFFDF9] text-[#2D241E] border-[#2D241E] shadow-[5px_5px_0px_0px_#2D241E]',
+    headerCardBg: 'bg-[#FFFDF9] border-[#2D241E] text-[#2D241E] shadow-[6px_6px_0px_0px_#E05A47]',
+    textMain: 'text-[#2D241E]',
+    textMuted: 'text-[#5C4A3E]',
+    accentBadge: 'bg-[#2D241E] text-[#E5A93C] border-[#2D241E]',
+    searchBg: 'bg-[#FFFDF9] border-3 border-[#2D241E] text-[#2D241E] placeholder:text-[#9A8778] shadow-[3px_3px_0px_0px_#2D241E] focus:bg-[#E5A93C]/20',
+    filterActive: 'bg-[#2D241E] text-[#E5A93C] border-[#2D241E] shadow-[2px_2px_0px_0px_#E05A47]',
+    filterInactive: 'bg-[#FFFDF9] text-[#2D241E] border-[#2D241E] hover:bg-[#E5A93C] shadow-[2px_2px_0px_0px_#2D241E]',
+    footerText: 'text-[#7C6A5C]',
+    brandCardBg: 'bg-[#2D241E] text-white shadow-[6px_6px_0px_0px_#E05A47] border-[#2D241E]',
+    designCardBg: 'bg-[#FFFDF9] text-[#2D241E] shadow-[6px_6px_0px_0px_#2D241E] border-[#2D241E]',
+    socialCardBg: 'bg-[#FFFDF9] text-[#2D241E] shadow-[6px_6px_0px_0px_#2D241E] border-[#2D241E]',
+    featuredProjectBg: 'bg-[#2D241E] text-white shadow-[6px_6px_0px_0px_#E5A93C] border-[#2D241E] hover:shadow-[9px_9px_0px_0px_#E05A47]',
+    featuredBlogBg: 'bg-[#FFFDF9] text-[#2D241E] shadow-[6px_6px_0px_0px_#E05A47] border-[#2D241E] hover:shadow-[9px_9px_0px_0px_#E5A93C]',
+  }
+};
+
+const currentTheme = themeStyles[themePreset as keyof typeof themeStyles] || themeStyles.default;
+
+// ─── Advanced Feature Flags ───────────────────────────────────────────────
+const showClickCount    = linksData.showClickCount !== false;
+const enableUTMTracking = linksData.enableUTMTracking !== false;
+const showQRCode        = linksData.showQRCode !== false;
+
+// ─── Schedule + Active Filter ─────────────────────────────────────────────
+const now = new Date();
+const activeLinks = rawLinks
+  .filter((l: any) => {
+    if (l.isActive === false) return false;
+    if (l.scheduledStart && new Date(l.scheduledStart) > now) return false;
+    if (l.scheduledEnd   && new Date(l.scheduledEnd)   < now) return false;
+    return true;
+  })
+  // Pinned links float to the top
+  .sort((a: any, b: any) => {
+    if (a.isPinned && !b.isPinned) return -1;
+    if (!a.isPinned && b.isPinned) return 1;
+    return 0;
+  });
+
+// ─── UTM URL Builder ──────────────────────────────────────────────────────
+function buildUrl(url: string, link: any): string {
+  if (!enableUTMTracking) return url;
+  if (!url || url.startsWith('mailto:') || url.startsWith('tel:') || url.startsWith('#')) return url;
+  try {
+    const u = new URL(url, 'https://placeholder.local');
+    u.searchParams.set('utm_source', link.utmSource || 'linkinbio');
+    u.searchParams.set('utm_medium',  'referral');
+    if (link.utmCampaign) u.searchParams.set('utm_campaign', link.utmCampaign);
+    if (url.startsWith('/')) return u.pathname + u.search;
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
+const socials = linksData.socials || [
+  { platform: 'GitHub', url: site.github || 'https://github.com/Dhiandika', icon: 'ri-github-fill', color: 'white' },
+  { platform: 'LinkedIn', url: site.linkedin || 'https://linkedin.com', icon: 'ri-linkedin-box-fill', color: 'neo-blue' },
+  { platform: 'Instagram', url: site.instagram || 'https://instagram.com', icon: 'ri-instagram-line', color: 'neo-pink' },
+  { platform: 'LeetCode', url: site.leetcode || 'https://leetcode.com/u/Dhiandika_Aditya/', icon: 'ri-code-s-slash-line', color: 'neo-orange' },
+  { platform: 'Email', url: `mailto:${site.email || 'npemburu6@gmail.com'}`, icon: 'ri-mail-send-fill', color: 'neo-green' }
+];
+
+const showFeaturedProject = linksData.showFeaturedProject !== false && topProject;
+const showFeaturedBlog    = linksData.showFeaturedBlog    !== false && latestBlog;
+const showCuratedBrands   = linksData.showCuratedBrands   !== false && socialBrands && socialBrands.length > 0;
+const showCuratedDesigns  = linksData.showCuratedDesigns  !== false && topDesigns   && topDesigns.length > 0;
+const showMarquee         = linksData.showMarquee !== false && marqueeText;
+const showVCard           = linksData.showVCard   !== false;
+const showSearchBar       = linksData.showSearchBar !== false;
+const showCategoryFilter  = linksData.showCategoryFilter !== false;
+const showSocials         = linksData.showSocials !== false && socials && socials.length > 0;
+
+const colorClasses: Record<string, { bg: string; text: string; badgeBg: string }> = {
+  'neo-green':  { bg: 'bg-neo-green',  text: 'text-black', badgeBg: 'bg-black text-neo-green' },
+  'neo-yellow': { bg: 'bg-neo-yellow', text: 'text-black', badgeBg: 'bg-black text-neo-yellow' },
+  'neo-blue':   { bg: 'bg-neo-blue',   text: 'text-black', badgeBg: 'bg-black text-neo-blue' },
+  'neo-pink':   { bg: 'bg-neo-pink',   text: 'text-white', badgeBg: 'bg-white text-black' },
+  'neo-purple': { bg: 'bg-purple-600', text: 'text-white', badgeBg: 'bg-white text-black' },
+  'neo-orange': { bg: 'bg-orange-500', text: 'text-black', badgeBg: 'bg-black text-white' },
+  'white':      { bg: 'bg-white',      text: 'text-black', badgeBg: 'bg-black text-white' },
+};
+---
+
+<Layout title={title} lang={lang}>
+    <main class={`min-h-screen pt-20 pb-20 px-4 md:px-6 relative overflow-x-hidden ${currentTheme.mainBg}`}>
+        <div class="max-w-2xl mx-auto">
+            
+            <!-- Marquee Alert Bar (Running Text Banner) -->
+            {showMarquee && (
+                <div data-aos="fade-down" class="mb-5 overflow-hidden border-4 border-black bg-neo-yellow text-black font-mono font-bold text-xs py-2 shadow-[4px_4px_0px_0px_#000] relative">
+                    <div class="inline-block whitespace-nowrap animate-marquee flex items-center gap-6">
+                        <span>{marqueeText}</span>
+                        <span>✦</span>
+                        <span>{marqueeText}</span>
+                        <span>✦</span>
+                        <span>{marqueeText}</span>
+                    </div>
+                </div>
+            )}
+
+            <!-- Profile Header Card (With Cover Banner Header) -->
+            <div data-aos="zoom-in" class={`border-4 border-black mb-6 relative overflow-hidden ${currentTheme.headerCardBg}`}>
+                <!-- Profile Cover Banner Image -->
+                {coverBanner && (
+                    <div class="h-32 md:h-40 w-full overflow-hidden border-b-4 border-black bg-neo-black relative">
+                        <img 
+                            src={coverBanner} 
+                            alt="Cover Banner" 
+                            class="w-full h-full object-cover hover:grayscale transition-all duration-500" 
+                            onerror="this.onerror=null; this.style.display='none';" 
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                        <!-- Top-Right Badge on Banner -->
+                        <div class="absolute top-2.5 right-2.5 bg-black/80 text-neo-yellow text-[9px] font-mono font-bold px-2 py-0.5 border border-neo-yellow uppercase tracking-widest backdrop-blur-sm">
+                            VERIFIED CREATOR
+                        </div>
+                    </div>
+                )}
+
+                <div class="flex flex-col items-center text-center relative z-10 px-6 pb-6 pt-2">
+                    <!-- Overlapping Avatar Box with Neo Border -->
+                    <div class={`relative w-24 h-24 md:w-28 md:h-28 mb-3 bg-neo-yellow border-4 border-black shadow-[4px_4px_0px_0px_#000] group transition-transform hover:rotate-3 ${coverBanner ? '-mt-14 md:-mt-16' : ''}`}>
+                        <img 
+                            src={avatar} 
+                            alt={profileName} 
+                            class="w-full h-full object-cover group-hover:grayscale transition-all duration-300" 
+                            onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+                        />
+                        <div class="hidden w-full h-full bg-neo-yellow flex items-center justify-center font-black text-3xl text-black">
+                            {profileName.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
+                        </div>
+                        <div class="absolute -bottom-2 -right-2 bg-black text-neo-green text-[9px] font-mono font-bold px-1.5 py-0.5 border-2 border-white uppercase tracking-wider flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-neo-green animate-pulse"></span>
+                            OFFICIAL
+                        </div>
+                    </div>
+
+                    <!-- Name & Verified Badge -->
+                    <h1 class={`text-2xl md:text-3xl font-black uppercase tracking-tight flex items-center justify-center gap-1.5 mb-1 leading-tight ${currentTheme.textMain}`}>
+                        {profileName}
+                        <i class="ri-verified-badge-fill text-neo-blue text-2xl" title="Verified Creator"></i>
+                    </h1>
+
+                    <!-- Status Badge -->
+                    {statusBadge && (
+                        <div class="inline-flex items-center gap-2 bg-black text-white px-3 py-1 text-xs font-mono font-bold border-2 border-black mb-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                            <span class="w-2.5 h-2.5 rounded-full bg-neo-green animate-pulse"></span>
+                            <span>{statusBadge}</span>
+                        </div>
+                    )}
+
+                    <!-- Bio -->
+                    {bio && (
+                        <p class={`font-mono text-xs md:text-sm max-w-md leading-relaxed mb-4 ${currentTheme.textMuted}`}>
+                            {bio}
+                        </p>
+                    )}
+
+                    <!-- Quick Action Bar (With VCard Button) -->
+                    <div class="flex items-center justify-center gap-2 w-full pt-3 border-t-2 border-black/20 font-mono text-xs flex-wrap">
+                        <!-- Share Button -->
+                        <button 
+                            id="btnShare" 
+                            class="flex-1 py-2 px-2.5 bg-neo-yellow border-2 border-black text-black font-bold shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-neo-yellow hover:-translate-y-0.5 transition-all flex items-center justify-center gap-1 cursor-pointer min-w-[90px]"
+                        >
+                            <i class="ri-share-forward-line text-sm"></i>
+                            <span>{lang === 'id' ? 'BAGIKAN' : 'SHARE'}</span>
+                        </button>
+
+                        <!-- Copy Link Button -->
+                        <button 
+                            id="btnCopyLink" 
+                            class="flex-1 py-2 px-2.5 bg-white border-2 border-black text-black font-bold shadow-[2px_2px_0px_0px_#000] hover:bg-neo-green hover:-translate-y-0.5 transition-all flex items-center justify-center gap-1 cursor-pointer min-w-[90px]"
+                        >
+                            <i class="ri-file-copy-line text-sm"></i>
+                            <span>{lang === 'id' ? 'SALIN' : 'COPY'}</span>
+                        </button>
+
+                        <!-- Download VCard Contact Button -->
+                        {showVCard && (
+                            <a 
+                                href="/api/vcard.vcf" 
+                                download 
+                                class="py-2 px-2.5 bg-neo-blue text-black border-2 border-black font-bold shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-neo-blue hover:-translate-y-0.5 transition-all flex items-center justify-center gap-1 cursor-pointer"
+                                title="Download Contact VCard"
+                            >
+                                <i class="ri-contacts-book-2-line text-sm"></i>
+                                <span>VCARD</span>
+                            </a>
+                        )}
+
+                        <!-- Analytics Dashboard Button -->
+                        <a 
+                            href={`/${lang}/links-dashboard`} 
+                            class="py-2 px-2.5 bg-neo-purple text-white border-2 border-black font-bold shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-neo-yellow hover:-translate-y-0.5 transition-all flex items-center justify-center gap-1 cursor-pointer"
+                            title="View Link Analytics & Click Graphs"
+                        >
+                            <i class="ri-bar-chart-box-line text-sm"></i>
+                            <span>STATS</span>
+                        </a>
+
+                        <!-- Language Toggle -->
+                        <a 
+                            href={lang === 'id' ? '/en/links' : '/id/links'} 
+                            class="py-2 px-2.5 bg-neo-pink text-white border-2 border-black font-bold shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white hover:-translate-y-0.5 transition-all flex items-center justify-center gap-1 cursor-pointer"
+                            title="Switch Language"
+                        >
+                            <i class="ri-global-line text-sm"></i>
+                            <span>{lang === 'id' ? 'EN' : 'ID'}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Curation & Filter Tabs -->
+            {showCategoryFilter && (
+                <div data-aos="fade-down" data-aos-delay="50" class="mb-3 flex items-center justify-start gap-1.5 overflow-x-auto pb-2 scrollbar-none font-mono text-xs">
+                    <button class={`filter-tab active px-3 py-1.5 font-bold cursor-pointer whitespace-nowrap border-2 ${currentTheme.filterActive}`} data-filter="ALL">
+                        {lang === 'id' ? 'SEMUA' : 'ALL'} ({activeLinks.length})
+                    </button>
+                    <button class={`filter-tab px-3 py-1.5 font-bold cursor-pointer whitespace-nowrap border-2 ${currentTheme.filterInactive}`} data-filter="Main">
+                        {lang === 'id' ? 'UTAMA' : 'MAIN'}
+                    </button>
+                    <button class={`filter-tab px-3 py-1.5 font-bold cursor-pointer whitespace-nowrap border-2 ${currentTheme.filterInactive}`} data-filter="Creation">
+                        {lang === 'id' ? 'KREASI' : 'CREATION'}
+                    </button>
+                    <button class={`filter-tab px-3 py-1.5 font-bold cursor-pointer whitespace-nowrap border-2 ${currentTheme.filterInactive}`} data-filter="Portfolio">
+                        {lang === 'id' ? 'PORTOFOLIO' : 'PORTFOLIO'}
+                    </button>
+                    <button class={`filter-tab px-3 py-1.5 font-bold cursor-pointer whitespace-nowrap border-2 ${currentTheme.filterInactive}`} data-filter="Resources">
+                        {lang === 'id' ? 'RESOURCES' : 'RESOURCES'}
+                    </button>
+                </div>
+            )}
+
+            <!-- Live Instant Link Search Bar -->
+            {showSearchBar && (
+                <div data-aos="fade-down" data-aos-delay="75" class="mb-4 relative font-mono text-xs">
+                    <i class="ri-search-line absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
+                    <input 
+                        type="text" 
+                        id="linkSearch" 
+                        placeholder={lang === 'id' ? 'Cari link atau kata kunci...' : 'Search links or keywords...'} 
+                        class={`w-full pl-10 pr-4 py-2.5 font-bold focus:outline-none transition-all ${currentTheme.searchBg}`}
+                    />
+                </div>
+            )}
+
+            <!-- Custom Links Grid / Bento Layout -->
+            <div id="linksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 mb-8" data-aos="slide-up" data-aos-delay="100">
+                {activeLinks.map((item: any) => {
+                    const itemLabel = lang === 'id' && item.label_id ? item.label_id : item.label;
+                    const itemDesc = lang === 'id' && item.description_id ? item.description_id : item.description;
+                    const colorStyle = colorClasses[item.color] || colorClasses['neo-green'];
+                    const isHighlight = item.isHighlighted;
+                    const itemCat = item.category || 'Main';
+                    const isHalf = item.gridSize === 'half' && !isHighlight;
+                    const gridSpanClass = isHalf ? 'col-span-1' : 'col-span-1 md:col-span-2';
+
+                    const builtUrl = buildUrl(item.url, item);
+                    const thumbnailSrc = item.thumbnail ? formatImgSrc(item.thumbnail) : null;
+
+                    return (
+                        <a 
+                            href={builtUrl} 
+                            target={item.url.startsWith('http') ? '_blank' : '_self'}
+                            rel={item.url.startsWith('http') ? 'noopener noreferrer' : ''}
+                            data-category={itemCat}
+                            data-label={itemLabel.toLowerCase()}
+                            data-desc={(itemDesc || '').toLowerCase()}
+                            data-url={item.url}
+                            class={`link-item track-link group relative block p-4 border-4 border-black ${colorStyle.bg} ${colorStyle.text} ${gridSpanClass} transition-all duration-200 overflow-hidden ${
+                              isHighlight 
+                                ? 'shadow-[7px_7px_0px_0px_#000] border-l-8 border-l-neo-yellow hover:-translate-y-1.5 hover:-translate-x-1.5 hover:shadow-[10px_10px_0px_0px_#000]' 
+                                : 'shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]'
+                            } active:translate-x-0 active:translate-y-0 active:shadow-none`}
+                        >
+                            <!-- Thumbnail Background (if set in Keystatic) -->
+                            {thumbnailSrc && (
+                                <div class="absolute inset-0 z-0">
+                                    <img src={thumbnailSrc} alt="" class="w-full h-full object-cover opacity-25 group-hover:opacity-40 transition-opacity" />
+                                    <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
+                                </div>
+                            )}
+
+                            <!-- Pinned Indicator -->
+                            {item.isPinned && (
+                                <div class="absolute top-1.5 left-1.5 text-[9px] font-mono font-black bg-black text-neo-yellow px-1.5 py-0.5 border border-neo-yellow z-20 flex items-center gap-1 shadow-[2px_2px_0px_0px_#000]">
+                                    <i class="ri-pushpin-fill text-[10px]"></i> PINNED
+                                </div>
+                            )}
+
+                            <!-- Featured High Voltage Badge -->
+                            {isHighlight && (
+                                <div class="absolute top-0 right-0 bg-neo-yellow text-black text-[9px] font-mono font-black px-2 py-0.5 border-l-2 border-b-2 border-black uppercase tracking-wider flex items-center gap-1 z-10">
+                                    <i class="ri-fire-fill text-neo-pink text-[11px]"></i> HOT & FEATURED
+                                </div>
+                            )}
+
+                            <div class="flex items-center justify-between gap-3 relative z-10">
+                                <!-- Left Icon & Text -->
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-10 h-10 shrink-0 border-2 border-black bg-black text-white flex items-center justify-center text-xl shadow-[2px_2px_0px_0px_rgba(255,255,255,0.4)] group-hover:scale-110 group-hover:rotate-6 transition-transform">
+                                        <i class={item.icon || 'ri-link-m'}></i>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <h2 class="font-black text-sm uppercase tracking-wide leading-tight truncate">
+                                                {itemLabel}
+                                            </h2>
+                                            {item.badge && (
+                                                <span class={`text-[9px] font-mono font-bold px-1.5 py-0.5 border border-black uppercase shrink-0 ${colorStyle.badgeBg}`}>
+                                                    {item.badge}
+                                                </span>
+                                            )}
+                                        </div>
+                                        {itemDesc && (
+                                            <p class="font-mono text-xs opacity-80 truncate mt-0.5">
+                                                {itemDesc}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <!-- Right Arrow Button -->
+                                <div class="w-8 h-8 shrink-0 border-2 border-black bg-white text-black flex items-center justify-center font-black group-hover:bg-black group-hover:text-white group-hover:translate-x-1 transition-all">
+                                    <i class="ri-arrow-right-line text-lg"></i>
+                                </div>
+                            </div>
+
+                            <!-- Click Count Badge (populated by JS fetching /api/link-stats) -->
+                            {showClickCount && (
+                                <div class="click-badge absolute bottom-1.5 right-1.5 hidden items-center gap-1 bg-black/80 text-white text-[9px] font-mono font-bold px-1.5 py-0.5 z-20 backdrop-blur-sm border border-white/30 rounded-xs" data-click-url={item.url}>
+                                    <i class="ri-cursor-line text-[10px] text-neo-yellow"></i>
+                                    <span class="click-count">0</span>
+                                </div>
+                            )}
+                        </a>
+                    );
+                })}
+            </div>
+
+            <!-- Page QR Code Modal -->
+            {showQRCode && (
+                <div id="pageQrModal" class="hidden fixed inset-0 z-[500] flex items-center justify-center p-4" role="dialog" aria-modal="true">
+                    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="pageQrBackdrop"></div>
+                    <div class="relative bg-white border-4 border-black shadow-[8px_8px_0px_0px_#FBFF48] p-6 max-w-xs w-full z-10 text-center">
+                        <button id="pageQrClose" class="absolute top-2 right-2 w-8 h-8 bg-black text-white flex items-center justify-center border-2 border-black font-black hover:bg-neo-red transition-all cursor-pointer"><i class="ri-close-line"></i></button>
+                        <h3 class="font-black text-sm uppercase tracking-wider mb-4 flex items-center justify-center gap-2 text-black">
+                            <i class="ri-qr-code-line text-base text-neo-pink"></i>
+                            {lang === 'id' ? 'SCAN QR CODE' : 'SCAN QR CODE'}
+                        </h3>
+                        <div id="qrCanvas" class="flex justify-center mb-4 border-4 border-black p-3 bg-white"></div>
+                        <p class="font-mono text-[10px] text-gray-600 truncate mb-3" id="qrUrl"></p>
+                        <a id="qrDownload" download="qrcode.png" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neo-yellow border-2 border-black text-black font-mono font-bold text-xs shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-neo-yellow transition-all">
+                            <i class="ri-download-line"></i> DOWNLOAD PNG
+                        </a>
+                    </div>
+                </div>
+            )}
+
+            <!-- Curated Content Showcase: Social Brands -->
+            {showCuratedBrands && (
+                <div data-aos="zoom-in-up" data-aos-delay="120" class={`border-4 p-5 mb-8 relative overflow-hidden ${currentTheme.brandCardBg}`}>
+                    <div class="flex items-center justify-between border-b-2 border-current/20 pb-3 mb-4">
+                        <h3 class="font-mono text-xs font-bold text-neo-pink uppercase tracking-widest flex items-center gap-2">
+                            <i class="ri-sparkling-2-fill text-neo-yellow text-sm"></i>
+                            {lang === 'id' ? 'KREASI BRAND KONTEN' : 'CURATED SOCIAL BRANDS'}
+                        </h3>
+                        <a href={`/${lang}/creation`} class="font-mono text-[10px] text-neo-yellow underline hover:text-white">
+                            {lang === 'id' ? 'Semua Brand' : 'All Brands'} &rarr;
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {socialBrandsResolved.map((brand: any) => {
+                            const mainPlatform = brand.data.platforms?.[0];
+                            return (
+                                <a 
+                                    href={`/${lang}/creation`} 
+                                    class="block p-3 border-2 border-current bg-black/40 hover:bg-black hover:border-neo-pink transition-all group"
+                                >
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full border-2 border-neo-yellow overflow-hidden bg-neo-yellow text-black font-black flex items-center justify-center shrink-0">
+                                            {mainPlatform?.avatar ? (
+                                                <img src={mainPlatform.avatar} alt={brand.id} class="w-full h-full object-cover" onerror="this.onerror=null; this.style.display='none';" />
+                                            ) : (
+                                                <span>{brand.id.slice(0, 2).toUpperCase()}</span>
+                                            )}
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <h4 class="font-black text-xs uppercase text-white truncate group-hover:text-neo-pink">
+                                                {brand.id}
+                                            </h4>
+                                            <p class="font-mono text-[10px] text-neo-green truncate">
+                                                {mainPlatform?.username || '@content'}
+                                            </p>
+                                        </div>
+                                        <i class="ri-external-link-line text-gray-400 group-hover:text-neo-yellow"></i>
+                                    </div>
+                                </a>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
+            <!-- Curated Posters & Designs Showcase -->
+            {showCuratedDesigns && (
+                <div data-aos="flip-up" data-aos-delay="140" class={`border-4 p-5 mb-8 ${currentTheme.designCardBg}`}>
+                    <div class="flex items-center justify-between border-b-2 border-current/20 pb-3 mb-4">
+                        <h3 class="font-mono text-xs font-bold text-neo-purple uppercase tracking-widest flex items-center gap-2">
+                            <i class="ri-palette-line text-neo-blue text-sm"></i>
+                            {lang === 'id' ? 'DESAIN & POSTER KURASI' : 'CURATED DESIGNS & POSTERS'}
+                        </h3>
+                        <span class="font-mono text-[10px] bg-neo-yellow text-black px-2 py-0.5 border border-black font-bold">
+                            {topDesignsResolved.length} ITEMS
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2">
+                        {topDesignsResolved.map((des: any) => (
+                            <a 
+                                href={des.data.link || `/${lang}/creation`} 
+                                target={des.data.link ? '_blank' : '_self'} 
+                                class="block aspect-square border-2 border-black bg-gray-100 overflow-hidden relative group"
+                                title={des.data.title}
+                            >
+                                <img 
+                                    src={des.data.image} 
+                                    alt={des.data.title} 
+                                    class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-300"
+                                    onerror="this.onerror=null; this.src='/images/profileImage.png';"
+                                />
+                                <div class="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-1 text-center">
+                                    <span class="font-mono text-[9px] font-bold text-white uppercase truncate">
+                                        {des.data.title}
+                                    </span>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <!-- Social Media Row -->
+            {showSocials && (
+                <div data-aos="zoom-in" data-aos-delay="150" class={`border-4 p-4 mb-8 ${currentTheme.socialCardBg}`}>
+                    <h3 class="font-mono font-bold text-xs uppercase opacity-70 mb-3 text-center tracking-widest">
+                        {lang === 'id' ? '— HUBUNGI / IKUTI SAYA —' : '— CONNECT WITH ME —'}
+                    </h3>
+                    <div class="flex items-center justify-center flex-wrap gap-2.5">
+                        {socials.map((soc: any) => {
+                            const socColor = colorClasses[soc.color]?.bg || 'bg-white';
+                            return (
+                                <a 
+                                    href={soc.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class={`track-link w-11 h-11 border-2 border-black ${socColor} text-black font-black flex items-center justify-center text-xl shadow-[3px_3px_0px_0px_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[5px_5px_0px_0px_#000] transition-all`}
+                                    title={soc.platform}
+                                >
+                                    <i class={soc.icon || 'ri-external-link-line'}></i>
+                                </a>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
+            <!-- Featured Showcase Section: Top Project & Blog -->
+            {(showFeaturedProject || showFeaturedBlog) && (
+                <div data-aos="zoom-in" data-aos-delay="180" class="space-y-4 mb-8">
+                    <!-- Featured Project Card -->
+                    {showFeaturedProject && topProjectResolved && (
+                        <div class={`border-4 p-4 relative overflow-hidden transition-all ${currentTheme.featuredProjectBg}`}>
+                            <!-- Diagonal Hazard Top Stripe -->
+                            <div class="absolute top-0 left-0 right-0 h-1.5 bg-[repeating-linear-gradient(45deg,#FBFF48,#FBFF48_8px,#000_8px,#000_16px)]"></div>
+
+                            <div class="flex items-center justify-between mb-3 border-b-2 border-current/20 pb-2 pt-1">
+                                <span class="font-mono text-xs font-bold text-neo-green uppercase tracking-wider flex items-center gap-1.5">
+                                    <i class="ri-fire-fill text-neo-yellow text-sm"></i> 
+                                    {lang === 'id' ? 'PROYEK UNGGULAN' : 'FEATURED PROJECT'}
+                                </span>
+                                <a href={`/${lang}/projects`} class="font-mono text-[10px] text-neo-yellow underline hover:text-white">
+                                    {lang === 'id' ? 'Lihat Semua' : 'View All'} &rarr;
+                                </a>
+                            </div>
+
+                            <a href={topProjectResolved.data.link || `/${lang}/projects`} target="_blank" class="track-link flex gap-3.5 group">
+                                {topProjectResolved.data.image && (
+                                    <div class="w-20 h-20 shrink-0 border-2 border-current bg-black overflow-hidden relative">
+                                        <img src={topProjectResolved.data.image} alt={topProjectResolved.data.title} class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all" onerror="this.onerror=null; this.style.display='none';" />
+                                    </div>
+                                )}
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="font-black text-sm uppercase text-neo-yellow truncate group-hover:underline">
+                                        {lang === 'id' && topProjectResolved.data.title_id ? topProjectResolved.data.title_id : topProjectResolved.data.title}
+                                    </h4>
+                                    <p class="font-mono text-xs opacity-80 line-clamp-2 mt-1">
+                                        {lang === 'id' && topProjectResolved.data.description_id ? topProjectResolved.data.description_id : topProjectResolved.data.description}
+                                    </p>
+                                    <div class="flex items-center gap-1.5 mt-2 flex-wrap">
+                                        {topProjectResolved.data.techStack?.slice(0, 3).map((tech: string) => (
+                                            <span class="text-[9px] font-mono bg-white/10 px-1.5 py-0.5 border border-white/30 text-white">
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    )}
+
+                    <!-- Featured Blog Card -->
+                    {showFeaturedBlog && latestBlogResolved && (
+                        <div class={`border-4 p-4 relative transition-all ${currentTheme.featuredBlogBg}`}>
+                            <div class="flex items-center justify-between mb-3 border-b-2 border-current/15 pb-2">
+                                <span class="font-mono text-xs font-bold text-neo-purple uppercase tracking-wider flex items-center gap-1.5">
+                                    <i class="ri-book-open-fill text-neo-pink text-sm"></i> 
+                                    {lang === 'id' ? 'BLOG TERBARU' : 'LATEST BLOG'}
+                                </span>
+                                <a href={`/${lang}/blog`} class="font-mono text-[10px] underline hover:text-neo-pink">
+                                    {lang === 'id' ? 'Baca Blog' : 'Read Blog'} &rarr;
+                                </a>
+                            </div>
+
+                            <a href={`/${lang}/blog/${latestBlogResolved.slug}`} class="track-link block group">
+                                <h4 class="font-black text-sm uppercase truncate group-hover:text-neo-pink transition-colors">
+                                    {lang === 'id' && latestBlogResolved.data.title_id ? latestBlogResolved.data.title_id : latestBlogResolved.data.title}
+                                </h4>
+                                <p class="font-mono text-xs opacity-80 line-clamp-2 mt-1">
+                                    {lang === 'id' && latestBlogResolved.data.excerpt_id ? latestBlogResolved.data.excerpt_id : latestBlogResolved.data.excerpt}
+                                </p>
+                            </a>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            <!-- QR Code Button (Bottom of page) -->
+            {showQRCode && (
+                <div class="flex justify-center mb-8">
+                    <button
+                        id="btnQRCode"
+                        class="flex items-center gap-2 px-5 py-2.5 bg-black text-neo-yellow border-3 border-black font-mono font-bold text-xs shadow-[4px_4px_0px_0px_#FBFF48] hover:bg-neo-yellow hover:text-black hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_#000] transition-all cursor-pointer"
+                    >
+                        <i class="ri-qr-code-line text-base"></i>
+                        {lang === 'id' ? 'QR CODE HALAMAN INI' : 'QR CODE THIS PAGE'}
+                    </button>
+                </div>
+            )}
+
+            <!-- Footer Branding -->
+            <footer class={`text-center font-mono text-xs ${currentTheme.footerText}`}>
+                <p>&copy; {new Date().getFullYear()} {profileName}. Built with Astro & Neo-Brutalist design.</p>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="fixed inset-0 z-[300] bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] p-6 max-w-sm w-full relative">
+            <div class="flex items-center justify-between border-b-4 border-black pb-3 mb-4">
+                <h3 class="font-black text-lg uppercase tracking-tight flex items-center gap-2 text-black">
+                    <i class="ri-share-forward-line text-neo-pink"></i> SHARE LINK IN BIO
+                </h3>
+                <button id="btnCloseShareModal" class="w-8 h-8 border-2 border-black bg-neo-yellow text-black font-black hover:bg-neo-pink transition-colors flex items-center justify-center cursor-pointer">
+                    &times;
+                </button>
+            </div>
+
+            <div class="flex flex-col items-center justify-center mb-5">
+                <div class="p-3 bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] mb-3">
+                    <img 
+                        id="shareQrImage" 
+                        src="" 
+                        alt="QR Code Link" 
+                        class="w-48 h-48 object-contain"
+                    />
+                </div>
+                <p class="font-mono text-xs text-center text-gray-600">
+                    Scan with camera or share this link to connect.
+                </p>
+            </div>
+
+            <div class="space-y-2 font-mono text-xs">
+                <button id="btnModalCopy" class="w-full py-2.5 bg-neo-green text-black border-2 border-black font-bold shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-neo-green transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="ri-file-copy-line"></i> COPY PAGE URL
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[600] bg-black text-neo-yellow border-4 border-white px-5 py-3 font-mono font-bold text-xs uppercase shadow-[6px_6px_0px_0px_#000] hidden items-center gap-2">
+        <i class="ri-checkbox-circle-fill text-neo-green text-base"></i>
+        <span id="toastMsg">LINK COPIED TO CLIPBOARD!</span>
+    </div>
+</Layout>
+
+<script>
+    document.addEventListener('astro:page-load', () => {
+        const btnShare = document.getElementById('btnShare');
+        const btnCopyLink = document.getElementById('btnCopyLink');
+        const shareModal = document.getElementById('shareModal');
+        const btnCloseShareModal = document.getElementById('btnCloseShareModal');
+        const shareQrImage = document.getElementById('shareQrImage') as HTMLImageElement;
+        const btnModalCopy = document.getElementById('btnModalCopy');
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMsg');
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const linkItems = document.querySelectorAll<HTMLElement>('.link-item');
+        const linkSearch = document.getElementById('linkSearch') as HTMLInputElement;
+
+        const currentUrl = window.location.href;
+
+        // Active filter state
+        let currentFilter = 'ALL';
+        let searchQuery = '';
+
+        function applyFilters() {
+            linkItems.forEach(item => {
+                const cat = item.getAttribute('data-category');
+                const label = item.getAttribute('data-label') || '';
+                const desc = item.getAttribute('data-desc') || '';
+
+                const matchesFilter = currentFilter === 'ALL' || cat === currentFilter;
+                const matchesSearch = !searchQuery || label.includes(searchQuery) || desc.includes(searchQuery);
+
+                if (matchesFilter && matchesSearch) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Category Filtering
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                currentFilter = tab.getAttribute('data-filter') || 'ALL';
+                
+                filterTabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.style.opacity = '0.7';
+                });
+                tab.classList.add('active');
+                (tab as HTMLElement).style.opacity = '1';
+
+                applyFilters();
+            });
+        });
+
+        // Live Search Input Listener
+        linkSearch?.addEventListener('input', (e) => {
+            searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+            applyFilters();
+        });
+
+        function showToast(msg: string) {
+            if (toast && toastMsg) {
+                toastMsg.innerText = msg;
+                toast.classList.remove('hidden');
+                toast.classList.add('flex');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                    toast.classList.remove('flex');
+                }, 3000);
+            }
+        }
+
+        // Copy current page URL
+        function copyUrl() {
+            navigator.clipboard.writeText(currentUrl).then(() => {
+                showToast('LINK COPIED TO CLIPBOARD!');
+            }).catch(() => {
+                showToast('FAILED TO COPY LINK');
+            });
+        }
+
+        btnCopyLink?.addEventListener('click', copyUrl);
+        btnModalCopy?.addEventListener('click', copyUrl);
+
+        // Open Share Modal
+        btnShare?.addEventListener('click', () => {
+            if (shareQrImage) {
+                shareQrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(currentUrl)}`;
+            }
+            if (shareModal) {
+                shareModal.classList.remove('hidden');
+                shareModal.classList.add('flex');
+            }
+        });
+
+        // Close Share Modal
+        btnCloseShareModal?.addEventListener('click', () => {
+            if (shareModal) {
+                shareModal.classList.add('hidden');
+                shareModal.classList.remove('flex');
+            }
+        });
+
+        shareModal?.addEventListener('click', (e) => {
+            if (e.target === shareModal) {
+                shareModal.classList.add('hidden');
+                shareModal.classList.remove('flex');
+            }
+        });
+
+        // ─── Click Tracking & Badge Loading ──────────────────────────────
+        const trackLinks = document.querySelectorAll<HTMLAnchorElement>('.track-link');
+
+        trackLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const originalUrl = link.dataset.url || link.href;
+                if (originalUrl) {
+                    fetch('/api/track-click', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: originalUrl }),
+                        keepalive: true,
+                    }).catch(() => {});
+                }
+            });
+        });
+
+        // Load click counts and show badges
+        const clickBadges = document.querySelectorAll<HTMLElement>('.click-badge');
+        if (clickBadges.length > 0) {
+            const urls = Array.from(clickBadges).map(b => b.dataset.clickUrl).filter(Boolean).join(',');
+            fetch(`/api/link-stats?urls=${encodeURIComponent(urls)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.stats) return;
+                    data.stats.forEach((stat: { url: string; clicks: number }) => {
+                        document.querySelectorAll<HTMLElement>(`.click-badge[data-click-url="${CSS.escape(stat.url)}"]`).forEach(badge => {
+                            const countEl = badge.querySelector('.click-count');
+                            if (countEl) countEl.textContent = stat.clicks > 999 ? `${(stat.clicks/1000).toFixed(1)}k` : String(stat.clicks);
+                            if (stat.clicks > 0) {
+                                badge.classList.remove('hidden');
+                                badge.classList.add('flex');
+                            }
+                        });
+                    });
+                })
+                .catch(() => {});
+        }
+
+        // ─── Dedicated Page QR Code Modal ──────────────────────────
+        const btnQRCode    = document.getElementById('btnQRCode');
+        const pageQrModal  = document.getElementById('pageQrModal') as HTMLElement | null;
+        const pageQrBackdrop = document.getElementById('pageQrBackdrop');
+        const pageQrClose  = document.getElementById('pageQrClose');
+        const qrCanvas     = document.getElementById('qrCanvas');
+        const qrUrlEl      = document.getElementById('qrUrl');
+        const qrDownload   = document.getElementById('qrDownload') as HTMLAnchorElement | null;
+
+        function openPageQRModal() {
+            const pageUrl = window.location.href.split('?')[0];
+            if (qrCanvas) {
+                qrCanvas.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&format=png&data=${encodeURIComponent(pageUrl)}" alt="QR Code" class="w-[220px] h-[220px] border-2 border-black" />`;
+            }
+            if (qrUrlEl) qrUrlEl.textContent = pageUrl;
+            if (qrDownload) qrDownload.href = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&format=png&data=${encodeURIComponent(pageUrl)}`;
+            pageQrModal?.classList.remove('hidden');
+        }
+
+        function closePageQRModal() {
+            pageQrModal?.classList.add('hidden');
+        }
+
+        btnQRCode?.addEventListener('click', openPageQRModal);
+        pageQrClose?.addEventListener('click', closePageQRModal);
+        pageQrBackdrop?.addEventListener('click', closePageQRModal);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closePageQRModal(); });
+    });
+</script>

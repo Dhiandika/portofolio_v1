@@ -1,7 +1,10 @@
----
+    ---
 import Layout from "../../../layouts/Layout.astro";
 import { getCollection, getEntry } from "astro:content";
 import { getTechIcon, getTechColor, getTechAbbrev } from "../../../utils/techIcons";
+import { Image, getImage } from "astro:assets";
+
+const projectDetailImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/**/*.{jpeg,jpg,png,gif,webp}');
 
 export const prerender = true;
 
@@ -39,9 +42,24 @@ const categoryIcons: Record<string, string> = {
 };
 const category = project.data.category || "Web";
 const catIcon = categoryIcons[category] || "ri-code-s-slash-line";
+
+// Resolve gallery images via glob
+const resolvedGallery = await Promise.all(
+    galleryImages.map(async (imgPath: string) => {
+        const promise = projectDetailImages[imgPath];
+        if (promise) {
+            const mod = await promise();
+            return mod.default;
+        }
+        return null;
+    })
+);
+const validGallery = resolvedGallery.filter(Boolean) as ImageMetadata[];
+// For client-side JS gallery navigation, collect the resolved .src URLs
+const gallerySrcUrls = validGallery.map(img => img.src);
 ---
 
-<Layout title={`${title} | ${brandName}`} lang={lang} image={project.data.image}>
+<Layout title={`${title} | ${brandName}`} lang={lang} image={validGallery.length > 0 ? validGallery[0].src : undefined}>
 <main class="min-h-screen text-neo-black pt-24 lg:pl-14 pb-24 font-sans border-t-8 border-black">
     <div class="max-w-7xl mx-auto px-6 md:px-12">
 
@@ -148,16 +166,17 @@ const catIcon = categoryIcons[category] || "ri-code-s-slash-line";
             <!-- ══════ RIGHT: Gallery + Key Features ══════ -->
             <div class="lg:col-span-7 flex flex-col gap-8">
                 <!-- Main Image -->
-                {galleryImages.length > 0 && (
+                {validGallery.length > 0 && (
                     <div class="relative border-4 border-black bg-white shadow-[10px_10px_0_0_#000] group">
                         <img
                             id="main-gallery-img"
-                            src={galleryImages[0]}
+                            src={validGallery[0].src}
                             alt={title}
+                            width={validGallery[0].width}
+                            height={validGallery[0].height}
                             class="w-full h-auto object-cover transition-opacity duration-300"
-                            onerror="this.onerror=null;this.style.opacity='0';"
                         />
-                        {galleryImages.length > 1 && (
+                        {validGallery.length > 1 && (
                             <>
                                 <button
                                     class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white text-black flex items-center justify-center border-4 border-black hover:bg-neo-yellow hover:text-black transition-all z-10 shadow-[4px_4px_0_0_#000] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
@@ -168,7 +187,7 @@ const catIcon = categoryIcons[category] || "ri-code-s-slash-line";
                                     onclick="galleryNext()"
                                 ><i class="ri-arrow-right-s-line text-2xl font-black"></i></button>
                                 <div class="absolute bottom-4 right-4 bg-white text-black text-[10px] font-black uppercase px-3 py-1 border-2 border-black shadow-[4px_4px_0_0_#000]">
-                                    <span id="gallery-counter">1</span> / {galleryImages.length}
+                                    <span id="gallery-counter">1</span> / {validGallery.length}
                                 </div>
                             </>
                         )}
@@ -176,15 +195,15 @@ const catIcon = categoryIcons[category] || "ri-code-s-slash-line";
                 )}
 
                 <!-- Thumbnail strip -->
-                {galleryImages.length > 1 && (
+                {validGallery.length > 1 && (
                     <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-                        {galleryImages.map((img, i) => (
+                        {validGallery.map((img, i) => (
                             <button
                                 id={`thumb-${i}`}
                                 class={`flex-shrink-0 w-24 h-16 transition-all border-4 hover:-translate-y-1 shadow-[4px_4px_0_0_#000] ${i === 0 ? "border-neo-yellow bg-neo-yellow" : "border-black bg-white opacity-60 hover:opacity-100"}`}
-                                onclick={`setGalleryImage('${img}', ${i}, ${galleryImages.length})`}
+                                onclick={`setGalleryImage('${img.src}', ${i}, ${validGallery.length})`}
                             >
-                                <img src={img} class="w-full h-full object-cover" onerror="this.onerror=null;this.style.opacity='0';" />
+                                <img src={img.src} class="w-full h-full object-cover" loading="lazy" />
                             </button>
                         ))}
                     </div>
@@ -211,9 +230,9 @@ const catIcon = categoryIcons[category] || "ri-code-s-slash-line";
     </div>
 </main>
 
-<script is:inline define:vars={{ galleryImages }}>
+<script is:inline define:vars={{ gallerySrcUrls }}>
     let currentIndex = 0;
-    const _images = galleryImages || [];
+    const _images = gallerySrcUrls || [];
 
     function setGalleryImage(src, index, total) {
         if (!_images.length) return;

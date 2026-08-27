@@ -1,0 +1,143 @@
+{
+  "title": "Dhiandika | Link in Bio",
+  "title_id": "Dhiandika | Link in Bio",
+  "profileName": "Dhiandika Aditya",
+  "profileName_id": "Dhiandika Aditya",
+  "bio": "Full Stack Developer & Neo-Brutalist Web Creator. Building high-performance apps, data pipelines, and digital content.",
+  "bio_id": "Full Stack Developer & Pembuat Web Neo-Brutalist. Membangun aplikasi performa tinggi, data pipeline, dan konten digital.",
+  "showMarquee": true,
+  "marqueeText": "⚡ WELCOME TO MY OFFICIAL LINK IN BIO! 🚀 OPEN FOR FREELANCE & FULL-STACK PROJECTS 2026 ✦",
+  "marqueeText_id": "⚡ SELAMAT DATANG DI LINK IN BIO RESMI SAYA! 🚀 TERBUKA UNTUK FREELANCE & PROYEK WEB 2026 ✦",
+  "showVCard": true,
+  "vcardEmail": "npemburu6@gmail.com",
+  "vcardPhone": "+628123456789",
+  "vcardJobTitle": "Full-Stack Software Engineer & Creator",
+  "showSearchBar": true,
+  "showCategoryFilter": true,
+  "showSocials": true,
+  "themePreset": "default",
+  "avatar": "/images/avatar.png",
+  "statusBadge": "🟢 Open for Freelance & Collaborations",
+  "statusBadge_id": "🟢 Terbuka untuk Freelance & Kolaborasi",
+  "links": [
+    {
+      "label": "Main Portfolio Website",
+      "label_id": "Website Portofolio Utama",
+      "url": "https://npemburu.my.id",
+      "icon": "ri-global-line",
+      "badge": "MAIN",
+      "color": "neo-green",
+      "category": "Main",
+      "gridSize": "full",
+      "isHighlighted": true,
+      "isActive": true,
+      "description": "Explore my projects, interactive tech stack, and full experience.",
+      "description_id": "Jelajahi proyek, tech stack interaktif, dan pengalaman lengkap saya.",
+      "isPinned": false
+    },
+    {
+      "label": "Curated Social Brands & Creations",
+      "label_id": "Kreasi Brand & Konten Sosial",
+      "url": "https://npemburu.my.id/en/creation",
+      "icon": "ri-sparkling-fill",
+      "badge": "CREATION",
+      "color": "neo-pink",
+      "category": "Creation",
+      "gridSize": "half",
+      "isHighlighted": false,
+      "isActive": true,
+      "description": "Holovibe VTuber Union & Shotnime content channels.",
+      "description_id": "Channel konten Holovibe VTuber Union & Shotnime.",
+      "isPinned": false
+    },
+    {
+      "label": "Featured Projects & Showcase",
+      "label_id": "Proyek & Karya Unggulan",
+      "url": "https://npemburu.my.id/en/projects",
+      "icon": "ri-briefcase-4-line",
+      "badge": "WORKS",
+      "color": "neo-blue",
+      "category": "Portfolio",
+      "gridSize": "half",
+      "isHighlighted": false,
+      "isActive": true,
+      "description": "Curated collection of full-stack web apps and UI creations.",
+      "description_id": "Kumpulan aplikasi web full-stack dan karya UI terkini.",
+      "isPinned": false
+    },
+    {
+      "label": "Tech Blog & Articles",
+      "label_id": "Blog Tech & Artikel",
+      "url": "https://npemburu.my.id/en/blog",
+      "icon": "ri-article-line",
+      "badge": "READ",
+      "color": "neo-yellow",
+      "category": "Main",
+      "gridSize": "half",
+      "isHighlighted": false,
+      "isActive": true,
+      "description": "Tutorials, thoughts, and technical writing on web & data.",
+      "description_id": "Tutorial, opini, dan catatan teknis web & data science.",
+      "isPinned": false
+    },
+    {
+      "label": "Download Resume / CV",
+      "label_id": "Unduh Resume / CV",
+      "url": "https://npemburu.my.id/en/assets",
+      "icon": "ri-file-pdf-2-line",
+      "badge": "PDF",
+      "color": "neo-purple",
+      "category": "Resources",
+      "gridSize": "half",
+      "isHighlighted": false,
+      "isActive": true,
+      "description": "Official resume in English and Indonesian formats.",
+      "description_id": "Resume resmi dalam format Bahasa Inggris dan Indonesia.",
+      "isPinned": false
+    }
+  ],
+  "socials": [
+    {
+      "platform": "GitHub",
+      "url": "https://github.com/Dhiandika",
+      "icon": "ri-github-fill",
+      "color": "white"
+    },
+    {
+      "platform": "LinkedIn",
+      "url": "https://www.linkedin.com/in/i-putu-dhiandika-aditya-permana-/",
+      "icon": "ri-linkedin-box-fill",
+      "color": "neo-blue"
+    },
+    {
+      "platform": "Instagram",
+      "url": "https://www.instagram.com/npemburu6/",
+      "icon": "ri-instagram-line",
+      "color": "neo-pink"
+    },
+    {
+      "platform": "LeetCode",
+      "url": "https://leetcode.com/u/Dhiandika_Aditya/",
+      "icon": "ri-code-s-slash-line",
+      "color": "neo-orange"
+    },
+    {
+      "platform": "Email",
+      "url": "mailto:npemburu6@gmail.com",
+      "icon": "ri-mail-send-fill",
+      "color": "neo-green"
+    }
+  ],
+  "showFeaturedProject": true,
+  "showFeaturedBlog": false,
+  "showCuratedBrands": true,
+  "showCuratedDesigns": false,
+  "featuredBrands": [
+    "holovibe",
+    "shotnime"
+  ],
+  "featuredDesigns": [],
+  "showClickCount": true,
+  "enableUTMTracking": true,
+  "showQRCode": true
+}

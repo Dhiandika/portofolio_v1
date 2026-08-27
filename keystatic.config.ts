@@ -328,12 +328,177 @@ export default config({
                 )
             }
         }),
+        links: singleton({
+            label: 'Link in Bio Page',
+            path: 'src/content/site/links',
+            format: { data: 'json' },
+            schema: {
+                title: fields.text({ label: 'Page Title (EN)', description: 'Tab title for the link in bio page' }),
+                title_id: fields.text({ label: 'Page Title (ID)', description: 'Indonesian translation' }),
+                profileName: fields.text({ label: 'Profile Name (EN)' }),
+                profileName_id: fields.text({ label: 'Profile Name (ID)' }),
+                bio: fields.text({ label: 'Bio / Subtitle (EN)', multiline: true }),
+                bio_id: fields.text({ label: 'Bio / Subtitle (ID)', multiline: true }),
+                coverBanner: fields.image({
+                    label: 'Profile Cover Banner Image',
+                    directory: 'public/images/sidebar',
+                    publicPath: '/images/sidebar/',
+                    description: 'Gambar sampul header profil di halaman Link in Bio.'
+                }),
+                showMarquee: fields.checkbox({ label: 'Show Marquee Alert Running Text Bar', defaultValue: true }),
+                marqueeText: fields.text({ label: 'Marquee Alert Text (EN)', description: 'Teks pengumuman running-text di bagian paling atas (e.g. "🚀 Open for Freelance Projects!")' }),
+                marqueeText_id: fields.text({ label: 'Marquee Alert Text (ID)', description: 'Terjemahan bahasa Indonesia' }),
+                showVCard: fields.checkbox({ label: 'Show VCard Contact Download Button', defaultValue: true }),
+                vcardEmail: fields.text({ label: 'VCard Contact Email', description: 'Email yang dimasukkan dalam file kontak VCard (.vcf)' }),
+                vcardPhone: fields.text({ label: 'VCard Contact Phone', description: 'Nomor telepon yang dimasukkan dalam file kontak VCard (.vcf)' }),
+                vcardJobTitle: fields.text({ label: 'VCard Job Title', description: 'Jabatan/pekerjaan yang dimasukkan dalam VCard' }),
+                showSearchBar: fields.checkbox({ label: 'Show Live Instant Search Bar', defaultValue: true }),
+                showCategoryFilter: fields.checkbox({ label: 'Show Category Filter Tabs', defaultValue: true }),
+                showSocials: fields.checkbox({ label: 'Show Social Media Row at Bottom', defaultValue: true }),
+                themePreset: fields.select({
+                    label: '🎨 Link in Bio Theme Preset',
+                    options: [
+                        { label: 'Neo-Brutalist Light (Default Yellow/White)', value: 'default' },
+                        { label: 'Cyberpunk Dark Mode (Dark Grid & Pink Neon)', value: 'cyberpunk' },
+                        { label: 'Retro Paper Vintage (Warm Yellow & Brown)', value: 'retro' },
+                    ],
+                    defaultValue: 'default'
+                }),
+                avatar: fields.image({
+                    label: 'Profile Avatar Image',
+                    directory: 'public/images',
+                    publicPath: '/images/',
+                }),
+                statusBadge: fields.text({ label: 'Status Badge (EN)', description: 'e.g., "🟢 Available for Projects"' }),
+                statusBadge_id: fields.text({ label: 'Status Badge (ID)', description: 'e.g., "🟢 Terbuka untuk Freelance"' }),
+                links: fields.array(
+                    fields.object({
+                        label: fields.text({ label: 'Link Title (EN)' }),
+                        label_id: fields.text({ label: 'Link Title (ID)' }),
+                        url: fields.text({ label: 'Destination URL' }),
+                        icon: fields.text({ label: 'RemixIcon Class', description: 'e.g. ri-global-line, ri-briefcase-line' }),
+                        badge: fields.text({ label: 'Badge Text', description: 'e.g. "MAIN", "HOT", "NEW", "PDF"' }),
+                        color: fields.select({
+                            label: 'Card Accent Color',
+                            options: [
+                                { label: 'Green', value: 'neo-green' },
+                                { label: 'Yellow', value: 'neo-yellow' },
+                                { label: 'Blue', value: 'neo-blue' },
+                                { label: 'Pink', value: 'neo-pink' },
+                                { label: 'Purple', value: 'neo-purple' },
+                                { label: 'Orange', value: 'neo-orange' },
+                                { label: 'White', value: 'white' },
+                            ],
+                            defaultValue: 'neo-green'
+                        }),
+                        category: fields.select({
+                            label: 'Content Category',
+                            options: [
+                                { label: 'Main Website', value: 'Main' },
+                                { label: 'Creation & Brands', value: 'Creation' },
+                                { label: 'Portfolio & Apps', value: 'Portfolio' },
+                                { label: 'Resources & Downloads', value: 'Resources' },
+                                { label: 'Contact & Other', value: 'Contact' },
+                            ],
+                            defaultValue: 'Main'
+                        }),
+                        gridSize: fields.select({
+                            label: 'Card Grid Size (Bento Grid)',
+                            options: [
+                                { label: 'Full Width (1 Kolom Penuh)', value: 'full' },
+                                { label: 'Half Width (Bento Grid 1/2 Kolom)', value: 'half' },
+                            ],
+                            defaultValue: 'full'
+                        }),
+                        isHighlighted: fields.checkbox({ label: 'Highlight / Pulse Glow Effect', defaultValue: false }),
+                        isActive: fields.checkbox({ label: 'Show on page', defaultValue: true }),
+                        description: fields.text({ label: 'Subtitle / Description' }),
+                        description_id: fields.text({ label: 'Subtitle / Description (ID)' }),
+                        // ─── Advanced Features ──────────────────────────────────────
+                        isPinned: fields.checkbox({ label: '📌 Pin to Top (selalu tampil di paling atas)', defaultValue: false }),
+                        scheduledStart: fields.date({ label: '📅 Schedule Start Date', description: 'Link hanya tampil mulai tanggal ini. Kosongkan jika selalu tampil.' }),
+                        scheduledEnd: fields.date({ label: '📅 Schedule End Date', description: 'Link berhenti tampil setelah tanggal ini. Kosongkan jika tidak ada batas.' }),
+                        utmSource: fields.text({ label: '📊 UTM Source', description: 'e.g. "linkinbio". Otomatis ditambahkan ke URL jika UTM tracking aktif.' }),
+                        utmCampaign: fields.text({ label: '📊 UTM Campaign', description: 'e.g. "portfolio-2026". Untuk tracking sumber kunjungan.' }),
+                        thumbnail: fields.image({ label: '🖼️ Thumbnail Image (opsional)', directory: 'public/images/links', publicPath: '/images/links/', description: 'Gambar latar belakang opsional untuk card link ini.' }),
+                    }),
+                    {
+                        label: 'Links List',
+                        itemLabel: props => props.fields.label.value || 'Link Item'
+                    }
+                ),
+                socials: fields.array(
+                    fields.object({
+                        platform: fields.text({ label: 'Platform Name' }),
+                        url: fields.url({ label: 'Profile URL' }),
+                        icon: fields.text({ label: 'RemixIcon Class', description: 'e.g. ri-github-fill, ri-linkedin-fill' }),
+                        color: fields.select({
+                            label: 'Icon Accent Color',
+                            options: [
+                                { label: 'Green', value: 'neo-green' },
+                                { label: 'Yellow', value: 'neo-yellow' },
+                                { label: 'Blue', value: 'neo-blue' },
+                                { label: 'Pink', value: 'neo-pink' },
+                                { label: 'Purple', value: 'neo-purple' },
+                                { label: 'Orange', value: 'neo-orange' },
+                                { label: 'White', value: 'white' },
+                            ],
+                            defaultValue: 'white'
+                        }),
+                    }),
+                    {
+                        label: 'Social Media Row',
+                        itemLabel: props => props.fields.platform.value || 'Social'
+                    }
+                ),
+                showFeaturedProject: fields.checkbox({ label: 'Show Featured Project Card', defaultValue: true }),
+                showFeaturedBlog: fields.checkbox({ label: 'Show Featured Blog Post Card', defaultValue: true }),
+                showCuratedBrands: fields.checkbox({ label: 'Show Curated Social Brands Showcase (Holovibe, Shotnime)', defaultValue: true }),
+                showCuratedDesigns: fields.checkbox({ label: 'Show Curated Posters & Design Showcase', defaultValue: true }),
+                featuredProject: fields.relationship({
+                    label: '📌 Featured Project (Pilih Proyek Unggulan Spesifik)',
+                    description: 'Pilih proyek spesifik dari koleksi Projects. Jika kosong, akan otomatis mengambil proyek teratas.',
+                    collection: 'projects',
+                }),
+                featuredBlog: fields.relationship({
+                    label: '📌 Featured Blog Post (Pilih Artikel Unggulan Spesifik)',
+                    description: 'Pilih artikel spesifik dari koleksi Blog. Jika kosong, akan otomatis mengambil artikel terbaru.',
+                    collection: 'blog',
+                }),
+                featuredBrands: fields.array(
+                    fields.relationship({
+                        label: 'Pilih Brand',
+                        collection: 'socialBrands',
+                    }),
+                    {
+                        label: '📌 Featured Social Brands (Urutan Brand Terpilih)',
+                        description: 'Pilih brand yang ingin diprioritaskan di showcase.',
+                        itemLabel: props => props.value || 'Social Brand',
+                    }
+                ),
+                featuredDesigns: fields.array(
+                    fields.relationship({
+                        label: 'Pilih Poster/Design',
+                        collection: 'designs',
+                    }),
+                    {
+                        label: '📌 Featured Posters & Designs (Urutan Poster Terpilih)',
+                        description: 'Pilih poster spesifik dari koleksi Graphics & Posters.',
+                        itemLabel: props => props.value || 'Poster Design',
+                    }
+                ),
+                // ─── Analytics & Advanced Feature Toggles ──────────────────────
+                showClickCount: fields.checkbox({ label: '📈 Show Click Count Badge on Link Cards', defaultValue: true, description: 'Tampilkan jumlah klik di pojok kanan bawah setiap link card (menggunakan Redis tracking).' }),
+                enableUTMTracking: fields.checkbox({ label: '📊 Enable UTM Auto-tracking on Links', defaultValue: true, description: 'Otomatis append ?utm_source & utm_campaign ke URL setiap link untuk tracking Google Analytics.' }),
+                showQRCode: fields.checkbox({ label: '📱 Show QR Code Button', defaultValue: true, description: 'Tampilkan tombol floating untuk generate QR Code dari URL halaman Link in Bio ini.' }),
+            }
+        }),
     },
     ui: {
         brand: { name: 'Dhiandika Aditya' },
         navigation: {
             'Site Settings': ['site', 'radar', 'techStack', 'uses', 'estimator', 'sidebar'],
-            'Page Content': ['hero', 'whoami', 'about', 'now'],
+            'Page Content': ['hero', 'whoami', 'about', 'now', 'links'],
             'Blog': ['blog'],
             'Collections': ['projects', 'designs', 'socialBrands', 'career', 'experience', 'education', 'certificates', 'reviews', 'companies', 'assets'],
         },
@@ -457,6 +622,8 @@ export default config({
                 content_id: fields.text({ label: 'Content (ID)', multiline: true, description: 'Indonesian translation.', validation: { isRequired: false } }),
                 keyFeatures: fields.array(fields.text({ label: 'Feature' }), { label: 'Key Features (EN)' }),
                 keyFeatures_id: fields.array(fields.text({ label: 'Feature (ID)' }), { label: 'Key Features (ID)' }),
+                relatedBlog: fields.relationship({ label: '🔗 Related Blog Article (Pilih Artikel Terkait)', collection: 'blog' }),
+                clientCompany: fields.relationship({ label: '🏢 Client / Company (Pilih Perusahaan/Klien)', collection: 'companies' }),
             },
         }),
         experience: collection({
@@ -608,6 +775,7 @@ export default config({
                 subtitle: fields.text({ label: 'Subtitle', description: 'Medium-style subtitle (optional).' }),
                 topics: fields.array(fields.text({ label: 'Topic' }), { label: 'Topics (Tags)' }),
                 canonicalUrl: fields.url({ label: 'Canonical URL', description: 'Original Medium URL (if cross-posted).', validation: { isRequired: false } }),
+                relatedProject: fields.relationship({ label: '🔗 Related Project (Pilih Proyek Terkait)', collection: 'projects' }),
             }
         }),
         certificates: collection({

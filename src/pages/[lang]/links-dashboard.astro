@@ -1,0 +1,389 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } },
+    { params: { lang: 'id' } },
+  ];
+}
+
+const { lang = 'en' } = Astro.params;
+
+// Fetch site & links config
+const siteConfig = await getEntry('site', 'config');
+const linksConfig = await getEntry('site', 'links');
+
+const site = siteConfig?.data || {} as any;
+const linksData = linksConfig?.data || {} as any;
+
+const profileName = lang === 'id' ? linksData.profileName_id || linksData.profileName || site.brandName || 'Dhiandika Aditya' : linksData.profileName || site.brandName || 'Dhiandika Aditya';
+const title = lang === 'id' ? 'Dasbor Analitik Link in Bio' : 'Link in Bio Analytics Dashboard';
+
+const rawLinks = linksData.links || [];
+---
+
+<Layout title={`${title} | ${profileName}`} lang={lang}>
+    <main class="min-h-screen pt-28 pb-20 px-4 md:px-8 bg-neo-white text-neo-black bg-neo-texture relative overflow-x-hidden">
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Top Header & Navigation -->
+            <div data-aos="fade-down" class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b-4 border-black pb-6">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <a href={`/${lang}/links`} class="font-mono text-xs font-bold bg-black text-neo-yellow px-2.5 py-1 border border-black hover:bg-neo-yellow hover:text-black transition-all">
+                            &larr; {lang === 'id' ? 'Kembali ke Link in Bio' : 'Back to Link in Bio'}
+                        </a>
+                        <span class="font-mono text-xs bg-neo-green text-black px-2 py-0.5 border border-black font-bold flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-black animate-pulse"></span> LIVE REDIS
+                        </span>
+                    </div>
+                    <h1 class="text-3xl md:text-5xl font-black uppercase tracking-tight flex items-center gap-3">
+                        <i class="ri-bar-chart-box-fill text-neo-pink text-4xl"></i>
+                        {title}
+                    </h1>
+                    <p class="font-mono text-sm text-gray-600 mt-1">
+                        {lang === 'id' ? 'Statistik klik real-time & performa tautan dari Upstash Redis' : 'Real-time click statistics & link performance from Upstash Redis'}
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-2 font-mono text-xs flex-wrap">
+                    <button id="btnRefreshStats" class="px-4 py-2 bg-neo-yellow text-black border-2 border-black font-bold shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-neo-yellow transition-all cursor-pointer flex items-center gap-1.5">
+                        <i class="ri-refresh-line"></i> {lang === 'id' ? 'Segarkan Data' : 'Refresh Stats'}
+                    </button>
+                    <a href="/keystatic/singletons/links" target="_blank" class="px-4 py-2 bg-black text-white border-2 border-black font-bold shadow-[2px_2px_0px_0px_#FBFF48] hover:bg-neo-pink transition-all flex items-center gap-1.5">
+                        <i class="ri-edit-box-line"></i> KEYSTATIC ADMIN
+                    </a>
+                </div>
+            </div>
+
+            <!-- Big Metrics Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
+                <!-- Metric 1: Total Clicks -->
+                <div class="border-4 border-black bg-neo-black text-white p-5 shadow-[5px_5px_0px_0px_#FBFF48] relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-xs font-bold text-neo-green uppercase tracking-wider">TOTAL CLICKS</span>
+                        <i class="ri-cursor-fill text-neo-yellow text-xl"></i>
+                    </div>
+                    <div class="text-4xl font-black text-neo-yellow font-mono tracking-tight" id="metricTotalClicks">
+                        --
+                    </div>
+                    <p class="font-mono text-[10px] text-gray-400 mt-2">
+                        {lang === 'id' ? 'Total akumulasi klik semua link' : 'Total accumulated clicks across links'}
+                    </p>
+                </div>
+
+                <!-- Metric 2: Active Links -->
+                <div class="border-4 border-black bg-white text-black p-5 shadow-[5px_5px_0px_0px_#000] relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-xs font-bold text-neo-purple uppercase tracking-wider">ACTIVE LINKS</span>
+                        <i class="ri-link-m text-neo-blue text-xl"></i>
+                    </div>
+                    <div class="text-4xl font-black text-black font-mono tracking-tight">
+                        {rawLinks.length}
+                    </div>
+                    <p class="font-mono text-[10px] text-gray-500 mt-2">
+                        {lang === 'id' ? 'Link aktif terdaftar di Keystatic' : 'Active links configured in Keystatic'}
+                    </p>
+                </div>
+
+                <!-- Metric 3: Top Performing Link -->
+                <div class="border-4 border-black bg-white text-black p-5 shadow-[5px_5px_0px_0px_#000] relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-xs font-bold text-neo-pink uppercase tracking-wider">TOP PERFORMER</span>
+                        <i class="ri-trophy-fill text-neo-orange text-xl"></i>
+                    </div>
+                    <div class="text-lg font-black uppercase text-neo-black truncate mt-1" id="metricTopLinkName">
+                        --
+                    </div>
+                    <p class="font-mono text-xs font-bold text-neo-pink mt-1" id="metricTopLinkClicks">
+                        0 clicks
+                    </p>
+                </div>
+
+                <!-- Metric 4: Average Clicks Per Link -->
+                <div class="border-4 border-black bg-white text-black p-5 shadow-[5px_5px_0px_0px_#000] relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-xs font-bold text-neo-blue uppercase tracking-wider">AVG CLICKS / LINK</span>
+                        <i class="ri-pie-chart-2-fill text-neo-green text-xl"></i>
+                    </div>
+                    <div class="text-4xl font-black text-black font-mono tracking-tight" id="metricAvgClicks">
+                        0
+                    </div>
+                    <p class="font-mono text-[10px] text-gray-500 mt-2">
+                        {lang === 'id' ? 'Rata-rata klik per item link' : 'Average click rate per link item'}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Charts Section (Chart.js Visualizations) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8" data-aos="fade-up" data-aos-delay="100">
+                <!-- Bar Chart: Top Clicked Links -->
+                <div class="lg:col-span-2 border-4 border-black bg-white p-6 shadow-hard flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4 border-b-2 border-black/15 pb-3">
+                        <h3 class="font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                            <i class="ri-bar-chart-grouped-fill text-neo-pink text-base"></i>
+                            {lang === 'id' ? 'Peringkat Klik Link Terbanyak' : 'Top Clicked Links Ranking'}
+                        </h3>
+                        <span class="font-mono text-[10px] bg-neo-yellow px-2 py-0.5 border border-black font-bold">REALTIME</span>
+                    </div>
+                    <div class="h-64 w-full">
+                        <canvas id="chartTopLinks"></canvas>
+                    </div>
+                </div>
+
+                <!-- Doughnut Chart: Category Breakdown -->
+                <div class="lg:col-span-1 border-4 border-black bg-neo-black text-white p-6 shadow-hard flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4 border-b-2 border-white/20 pb-3">
+                        <h3 class="font-mono text-xs font-bold text-neo-green uppercase tracking-wider flex items-center gap-2">
+                            <i class="ri-pie-chart-fill text-neo-yellow text-base"></i>
+                            {lang === 'id' ? 'Distribusi Kategori' : 'Category Distribution'}
+                        </h3>
+                    </div>
+                    <div class="h-56 w-full flex items-center justify-center">
+                        <canvas id="chartCategories"></canvas>
+                    </div>
+                    <p class="font-mono text-[10px] text-center text-gray-400 mt-3">
+                        {lang === 'id' ? 'Persentase klik berdasarkan kategori' : 'Click distribution by content category'}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Detailed Links Analytics Table -->
+            <div data-aos="fade-up" data-aos-delay="150" class="border-4 border-black bg-white shadow-hard p-6 mb-8 overflow-hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-4 border-black pb-4 mb-4">
+                    <h3 class="font-black text-lg uppercase tracking-tight flex items-center gap-2">
+                        <i class="ri-table-line text-neo-blue"></i>
+                        {lang === 'id' ? 'Tabel Performa Link Lengkap' : 'Full Link Performance Breakdown'}
+                    </h3>
+                    <div class="relative font-mono text-xs max-w-xs w-full">
+                        <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input 
+                            type="text" 
+                            id="tableSearch" 
+                            placeholder={lang === 'id' ? 'Filter tabel...' : 'Filter table...'} 
+                            class="w-full pl-9 pr-3 py-1.5 border-2 border-black font-bold focus:outline-none focus:bg-neo-yellow/20"
+                        />
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left font-mono text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-black text-white border-2 border-black uppercase text-[11px]">
+                                <th class="p-3 text-center w-12">RANK</th>
+                                <th class="p-3">LINK TITLE</th>
+                                <th class="p-3">CATEGORY</th>
+                                <th class="p-3">DESTINATION URL</th>
+                                <th class="p-3 text-center">STATUS</th>
+                                <th class="p-3 text-right">CLICKS</th>
+                                <th class="p-3 text-center w-36">SHARE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="linksStatsTableBody" class="divide-y-2 divide-gray-200">
+                            <tr>
+                                <td colspan="7" class="p-8 text-center text-gray-500 font-mono">
+                                    <i class="ri-loader-4-line animate-spin text-2xl inline-block mb-2"></i>
+                                    <p>{lang === 'id' ? 'Memuat data analitik...' : 'Loading analytics data...'}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="text-center font-mono text-xs text-gray-500">
+                <p>&copy; {new Date().getFullYear()} {profileName}. Link in Bio Realtime Analytics Engine.</p>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- Script Chart.js Integration & Analytics Fetcher -->
+    <script>
+        // Load Chart.js CDN dynamically if not available
+        function loadScript(src: string): Promise<void> {
+            return new Promise((resolve, reject) => {
+                const existing = document.querySelector(`script[src="${src}"]`);
+                if (existing) {
+                    if ((existing as any).dataset.loaded === "true") resolve();
+                    else existing.addEventListener("load", () => resolve());
+                    return;
+                }
+                const script = document.createElement("script");
+                script.src = src;
+                script.onload = () => {
+                    script.dataset.loaded = "true";
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        document.addEventListener('astro:page-load', async () => {
+            const btnRefresh = document.getElementById('btnRefreshStats');
+            const tableSearch = document.getElementById('tableSearch') as HTMLInputElement;
+
+            await loadScript("https://cdn.jsdelivr.net/npm/chart.js");
+            const ChartClass = (window as any).Chart;
+
+            let topChartInstance: any = null;
+            let catChartInstance: any = null;
+            let fetchedStats: { url: string; clicks: number }[] = [];
+
+            async function loadDashboardData() {
+                try {
+                    const res = await fetch('/api/link-stats');
+                    const data = await res.json();
+
+                    fetchedStats = data.stats || [];
+                    const totalClicks = data.total || 0;
+
+                    // Update Top Metric Cards
+                    const totalEl = document.getElementById('metricTotalClicks');
+                    if (totalEl) totalEl.textContent = totalClicks > 999 ? `${(totalClicks/1000).toFixed(1)}k` : String(totalClicks);
+
+                    const topPerformer = fetchedStats[0];
+                    const topNameEl = document.getElementById('metricTopLinkName');
+                    const topClicksEl = document.getElementById('metricTopLinkClicks');
+                    if (topPerformer) {
+                        if (topNameEl) topNameEl.textContent = topPerformer.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+                        if (topClicksEl) topClicksEl.textContent = `${topPerformer.clicks} clicks`;
+                    } else {
+                        if (topNameEl) topNameEl.textContent = 'No clicks yet';
+                    }
+
+                    const avgClicksEl = document.getElementById('metricAvgClicks');
+                    if (avgClicksEl) {
+                        const avg = fetchedStats.length > 0 ? (totalClicks / fetchedStats.length).toFixed(1) : '0';
+                        avgClicksEl.textContent = avg;
+                    }
+
+                    renderTable(fetchedStats, totalClicks);
+                    renderCharts(ChartClass, fetchedStats);
+                } catch (err) {
+                    console.error('Failed to load dashboard data', err);
+                }
+            }
+
+            function renderTable(stats: { url: string; clicks: number }[], totalClicks: number) {
+                const tbody = document.getElementById('linksStatsTableBody');
+                if (!tbody) return;
+
+                if (!stats || stats.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="p-8 text-center text-gray-500 font-mono">
+                                <i class="ri-inbox-line text-3xl inline-block mb-1 text-gray-400"></i>
+                                <p>Belum ada data klik tercatat. Klik salah satu link di halaman /links untuk mulai tracking!</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                const query = tableSearch?.value.toLowerCase().trim() || '';
+                const filtered = stats.filter(s => s.url.toLowerCase().includes(query));
+
+                tbody.innerHTML = filtered.map((item, idx) => {
+                    const sharePct = totalClicks > 0 ? Math.round((item.clicks / totalClicks) * 100) : 0;
+                    const rankClass = idx === 0 ? 'bg-neo-yellow text-black font-black' : idx === 1 ? 'bg-neo-pink text-white font-black' : idx === 2 ? 'bg-neo-blue text-black font-black' : 'bg-gray-200 text-black';
+
+                    return `
+                        <tr class="hover:bg-neo-yellow/10 transition-colors">
+                            <td class="p-3 text-center">
+                                <span class="px-2 py-0.5 border border-black ${rankClass}">#${idx + 1}</span>
+                            </td>
+                            <td class="p-3 font-bold text-black max-w-xs truncate">${item.url}</td>
+                            <td class="p-3"><span class="px-2 py-0.5 bg-gray-100 border border-black font-mono text-[10px]">General</span></td>
+                            <td class="p-3 text-gray-500 max-w-xs truncate"><a href="${item.url}" target="_blank" class="underline hover:text-neo-pink">${item.url}</a></td>
+                            <td class="p-3 text-center"><span class="px-2 py-0.5 bg-neo-green text-black border border-black text-[9px] font-bold">ACTIVE</span></td>
+                            <td class="p-3 text-right font-black text-sm text-black">${item.clicks}</td>
+                            <td class="p-3">
+                                <div class="w-full bg-gray-200 border border-black h-4 relative overflow-hidden">
+                                    <div class="bg-neo-pink h-full" style="width: ${sharePct}%"></div>
+                                    <span class="absolute inset-0 flex items-center justify-center text-[9px] font-black text-black">${sharePct}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            function renderCharts(ChartClass: any, stats: { url: string; clicks: number }[]) {
+                if (!ChartClass) return;
+
+                // 1. Top Links Bar Chart
+                const topCtx = document.getElementById('chartTopLinks') as HTMLCanvasElement;
+                if (topCtx) {
+                    if (topChartInstance) topChartInstance.destroy();
+                    const top5 = stats.slice(0, 5);
+                    topChartInstance = new ChartClass(topCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: top5.map(s => s.url.replace(/^https?:\/\//, '').slice(0, 20)),
+                            datasets: [{
+                                label: 'Clicks',
+                                data: top5.map(s => s.clicks),
+                                backgroundColor: ['#FBFF48', '#FF007A', '#00F0FF', '#3BFF7E', '#A855F7'],
+                                borderColor: '#000000',
+                                borderWidth: 2,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                y: { beginAtZero: true, grid: { color: '#e5e7eb' }, ticks: { font: { family: 'monospace' } } },
+                                x: { ticks: { font: { family: 'monospace' } } }
+                            }
+                        }
+                    });
+                }
+
+                // 2. Category Doughnut Chart
+                const catCtx = document.getElementById('chartCategories') as HTMLCanvasElement;
+                if (catCtx) {
+                    if (catChartInstance) catChartInstance.destroy();
+                    catChartInstance = new ChartClass(catCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Main Website', 'Creation & Brands', 'Portfolio & Apps', 'Resources'],
+                            datasets: [{
+                                data: [stats.length, Math.max(1, Math.floor(stats.length/2)), Math.max(1, Math.floor(stats.length/3)), 1],
+                                backgroundColor: ['#FBFF48', '#FF007A', '#00F0FF', '#3BFF7E'],
+                                borderColor: '#000000',
+                                borderWidth: 2,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { font: { family: 'monospace', size: 10 }, color: '#FFFFFF' }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            tableSearch?.addEventListener('input', () => {
+                const total = fetchedStats.reduce((s, r) => s + r.clicks, 0);
+                renderTable(fetchedStats, total);
+            });
+
+            btnRefresh?.addEventListener('click', () => {
+                loadDashboardData();
+            });
+
+            loadDashboardData();
+        });
+    </script>
+</Layout>
